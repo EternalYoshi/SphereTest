@@ -190,8 +190,8 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			char buf[256];
 			sprintf_s(buf, "Thread detected: %lu (Total threads: %zu)\n",
 				CurrentThreadId, renderThreads.size());
-			printf(buf, "Thread detected: %lu (Total threads: %zu)\n",
-				CurrentThreadId, renderThreads.size());
+			//printf(buf, "Thread detected: %lu (Total threads: %zu)\n",
+			//	CurrentThreadId, renderThreads.size());
 			OutputDebugStringA(buf);
 
 			// First thread becomes the main render thread
@@ -505,10 +505,10 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 		if (kiero::init(kiero::RenderType::D3D9) == kiero::Status::Success)
 		{
 
-			AllocConsole();
-			freopen("conin$", "r", stdin);
-			freopen("conout$", "w", stdout);
-			freopen("conout$", "w", stderr);
+			//AllocConsole();
+			//freopen("conin$", "r", stdin);
+			//freopen("conout$", "w", stdout);
+			//freopen("conout$", "w", stderr);
 
 			kiero::bind(42, (void**)&oEndScene, hkEndScene);
 			attached = true;

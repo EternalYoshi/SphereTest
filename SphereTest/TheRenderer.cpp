@@ -13,7 +13,7 @@
 
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZRHW|D3DFVF_DIFFUSE)
 #define D3DFVF_TEXTUREVERTEX (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)
-
+//IDirect3DBaseTexture9* oldTexture;
 LPDIRECT3DVERTEXBUFFER9 g_pVB = NULL; // Buffer to hold vertices
 #define D3DX_PI 3.1415926535897932384626
 
@@ -26,14 +26,15 @@ struct TEXTUREVERTEX {
 void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 {
 	// Backups up the state.
-	DWORD alphaBlend, srcBlend, destBlend, fvf;
+	DWORD alphaBlend, srcBlend, destBlend, fvf, zwriteenable;
 	DWORD alphaOp, alphaArg1, alphaArg2;
-	IDirect3DBaseTexture9* oldTexture;
-	IDirect3DBaseTexture9* oldTexture2;
+	//IDirect3DBaseTexture9* oldTexture;
+	//IDirect3DBaseTexture9* oldTexture2;
 
 	pDevice->GetRenderState(D3DRS_ALPHABLENDENABLE, &alphaBlend);
 	pDevice->GetRenderState(D3DRS_SRCBLEND, &srcBlend);
 	pDevice->GetRenderState(D3DRS_DESTBLEND, &destBlend);
+	pDevice->GetRenderState(D3DRS_ZWRITEENABLE, &zwriteenable);
 	pDevice->GetFVF(&fvf);
 	pDevice->GetTexture(0, &oldTexture);
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAOP, &alphaOp);
@@ -44,6 +45,7 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -65,11 +67,15 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, alphaBlend);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, destBlend);
-	pDevice->SetFVF(fvf);
-	pDevice->SetTexture(0, oldTexture);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, zwriteenable);
+
+
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, alphaOp);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, alphaArg1);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, alphaArg2);
+
+	pDevice->SetTexture(0, oldTexture);
+	pDevice->SetFVF(fvf);
 
 	if (oldTexture) oldTexture->Release();
 }
@@ -77,14 +83,15 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 {
 	// Backup state
-	DWORD alphaBlend, srcBlend, destBlend, fvf;
+	DWORD alphaBlend, srcBlend, destBlend, fvf, zwriteenable;
 	DWORD alphaOp, alphaArg1, alphaArg2;
-	IDirect3DBaseTexture9* oldTexture;
-	IDirect3DBaseTexture9* oldTexture2;
+	//IDirect3DBaseTexture9* oldTexture;
+	//IDirect3DBaseTexture9* oldTexture2;
 
 	pDevice->GetRenderState(D3DRS_ALPHABLENDENABLE, &alphaBlend);
 	pDevice->GetRenderState(D3DRS_SRCBLEND, &srcBlend);
 	pDevice->GetRenderState(D3DRS_DESTBLEND, &destBlend);
+	pDevice->GetRenderState(D3DRS_ZWRITEENABLE, &zwriteenable);
 	pDevice->GetFVF(&fvf);
 	pDevice->GetTexture(0, &oldTexture2);
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAOP, &alphaOp);
@@ -95,7 +102,7 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -117,12 +124,14 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, alphaBlend);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, destBlend);
-	pDevice->SetFVF(fvf);
-	pDevice->SetTexture(0, oldTexture2);
+	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, zwriteenable);
+	
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, alphaOp);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, alphaArg1);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, alphaArg2);
 
+	pDevice->SetTexture(0, oldTexture2);
+	pDevice->SetFVF(fvf);
 	if (oldTexture2) oldTexture2->Release();
 }
 
@@ -574,7 +583,7 @@ HurtboxR GetHurtBoxScreenPos(Hurtbox HBox)
 
 	HurtboxR NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 48, 60, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 200, 60, 0);
 	NewBoxR.Radius = HBox.CollData.Radius * 3;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
@@ -625,7 +634,7 @@ HitboxR GetHitboxScreenPos(Hitbox HBox)
 
 	HitboxR NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(180, 0, 0, 64, 60, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 200, 60, 0);
 	NewBoxR.Radius = HBox.Radius * 3;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;

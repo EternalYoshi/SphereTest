@@ -5617,15 +5617,7 @@ void UMVC3Menu::Draw()
 				ImGui::Text("Need to be in Training Mode.");
 			}
 
-
-
-
-
-
-
-
-
-
+			ImGui::Text("Based on UMVC3Hook by ermaccer with some\ncode from HKHaan's repository used to power\nthis tool.");
 
 
 
