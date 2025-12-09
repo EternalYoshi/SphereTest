@@ -23,6 +23,18 @@ struct TEXTUREVERTEX {
 	float u, v;
 };
 
+void ReleaseHitboxRenderTarget()
+{
+	if (g_pRenderTexture1) { g_pRenderTexture1->Release(); g_pRenderTexture1 = NULL; }
+	if (g_pRenderSurface1) { g_pRenderSurface1->Release(); g_pRenderSurface1 = NULL; }
+	if (g_pDepthStencilSurface1) { g_pDepthStencilSurface1->Release(); g_pDepthStencilSurface1 = NULL; }
+	if (g_pRenderTexture2) { g_pRenderTexture2->Release(); g_pRenderTexture2 = NULL; }
+	if (g_pRenderSurface2) { g_pRenderSurface2->Release(); g_pRenderSurface2 = NULL; }
+	if (g_pDepthStencilSurface2) { g_pDepthStencilSurface2->Release(); g_pDepthStencilSurface2 = NULL; }
+	g_renderTargetCreated1 = false;
+	g_renderTargetCreated2 = false;
+}
+
 void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 {
 	// Backups up the state.
@@ -78,6 +90,7 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->SetFVF(fvf);
 
 	if (oldTexture) oldTexture->Release();
+	//if (oldTexture2) oldTexture2->Release();
 }
 
 void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
@@ -120,6 +133,8 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 
 	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(TEXTUREVERTEX));
 
+	
+
 	// Restore state
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, alphaBlend);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
@@ -132,6 +147,8 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 
 	pDevice->SetTexture(0, oldTexture2);
 	pDevice->SetFVF(fvf);
+
+	//if (oldTexture) oldTexture->Release();
 	if (oldTexture2) oldTexture2->Release();
 }
 
@@ -563,7 +580,7 @@ HurtboxR GetHurtBoxScreenPos(Hurtbox HBox)
 	AverageY = (HBox.SecondaryY + HBox.DeFactoY) / 2;
 	AverageZ = (HBox.SecondaryZ + HBox.DeFactoZ) / 2;
 
-	glm::vec3 position(AverageX, AverageY, AverageZ);
+	glm::vec3 position(HBox.CollData.Coordinates.X, HBox.CollData.Coordinates.Y, HBox.CollData.Coordinates.Z);
 
 	//Next the view matrix.
 	glm::mat4 viewMatrix = glm::lookAt(
@@ -660,12 +677,15 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 1 Hurtboxes
 	data.P1C1ActiveSpheres.clear();
 	data.P1C1ActiveSpheres.resize(P1C1Hurtboxes.size());
-	if (P1C1VulnState != 4 && P1C1VulnState != 0x1C && P1C1CharState != 0x280C && P1C1CharState != 0x100 && P1C1CharState != 0x20000
-		&& P1C1CurAnmchrID != 0x85 && P1C1CurAnmchrID != 0x155 && P1C1CurAnmchrID != 0x88)
+	if(sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P1C1Hurtboxes.size(); i++)
+		if (P1C1VulnState != 4 && P1C1VulnState != 0x1C && P1C1CharState != 0x280C && P1C1CharState != 0x100 && P1C1CharState != 0x20000
+			&& P1C1CurAnmchrID != 0x85 && P1C1CurAnmchrID != 0x155 && P1C1CurAnmchrID != 0x88)
 		{
-			data.P1C1ActiveSpheres[i] = GetHurtBoxScreenPos(P1C1Hurtboxes[i]);
+			for (int i = 0; i < P1C1Hurtboxes.size(); i++)
+			{
+				data.P1C1ActiveSpheres[i] = GetHurtBoxScreenPos(P1C1Hurtboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -673,12 +693,15 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 2 Hurtboxes
 	data.P1C2ActiveSpheres.clear();
 	data.P1C2ActiveSpheres.resize(P1C2Hurtboxes.size());
-	if (P1C2VulnState != 4 && P1C2VulnState != 0x1C && P1C2CharState != 0x280C && P1C2CharState != 0x100 && P1C2CharState != 0x20000
-		&& P1C2CurAnmchrID != 0x85 && P1C2CurAnmchrID != 0x155 && P1C2CurAnmchrID != 0x88)
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P1C2Hurtboxes.size(); i++)
+		if (P1C2VulnState != 4 && P1C2VulnState != 0x1C && P1C2CharState != 0x280C && P1C2CharState != 0x100 && P1C2CharState != 0x20000
+			&& P1C2CurAnmchrID != 0x85 && P1C2CurAnmchrID != 0x155 && P1C2CurAnmchrID != 0x88)
 		{
-			data.P1C2ActiveSpheres[i] = GetHurtBoxScreenPos(P1C2Hurtboxes[i]);
+			for (int i = 0; i < P1C2Hurtboxes.size(); i++)
+			{
+				data.P1C2ActiveSpheres[i] = GetHurtBoxScreenPos(P1C2Hurtboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -686,12 +709,15 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 3 Hurtboxes
 	data.P1C3ActiveSpheres.clear();
 	data.P1C3ActiveSpheres.resize(P1C3Hurtboxes.size());
-	if (P1C3VulnState != 4 && P1C3VulnState != 0x1C && P1C3CharState != 0x280C && P1C3CharState != 0x100 && P1C3CharState != 0x20000
-		&& P1C3CurAnmchrID != 0x85 && P1C3CurAnmchrID != 0x155 && P1C3CurAnmchrID != 0x88)
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P1C3Hurtboxes.size(); i++)
+		if (P1C3VulnState != 4 && P1C3VulnState != 0x1C && P1C3CharState != 0x280C && P1C3CharState != 0x100 && P1C3CharState != 0x20000
+			&& P1C3CurAnmchrID != 0x85 && P1C3CurAnmchrID != 0x155 && P1C3CurAnmchrID != 0x88)
 		{
-			data.P1C3ActiveSpheres[i] = GetHurtBoxScreenPos(P1C3Hurtboxes[i]);
+			for (int i = 0; i < P1C3Hurtboxes.size(); i++)
+			{
+				data.P1C3ActiveSpheres[i] = GetHurtBoxScreenPos(P1C3Hurtboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -699,12 +725,15 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 1 Hurtboxes
 	data.P2C1ActiveSpheres.clear();
 	data.P2C1ActiveSpheres.resize(P2C1Hurtboxes.size());
-	if (P2C1VulnState != 4 && P2C1VulnState != 0x1C && P2C1CharState != 0x280C && P2C1CharState != 0x100 && P2C1CharState != 0x20000
-		&& P2C1CurAnmchrID != 0x85 && P2C1CurAnmchrID != 0x155 && P2C1CurAnmchrID != 0x88)
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P2C1Hurtboxes.size(); i++)
+		if (P2C1VulnState != 4 && P2C1VulnState != 0x1C && P2C1CharState != 0x280C && P2C1CharState != 0x100 && P2C1CharState != 0x20000
+			&& P2C1CurAnmchrID != 0x85 && P2C1CurAnmchrID != 0x155 && P2C1CurAnmchrID != 0x88)
 		{
-			data.P2C1ActiveSpheres[i] = GetHurtBoxScreenPos(P2C1Hurtboxes[i]);
+			for (int i = 0; i < P2C1Hurtboxes.size(); i++)
+			{
+				data.P2C1ActiveSpheres[i] = GetHurtBoxScreenPos(P2C1Hurtboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -712,12 +741,15 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 2 Hurtboxes
 	data.P2C2ActiveSpheres.clear();
 	data.P2C2ActiveSpheres.resize(P2C2Hurtboxes.size());
-	if (P2C2VulnState != 4 && P2C2VulnState != 0x1C && P2C2CharState != 0x280C && P2C2CharState != 0x100 && P2C2CharState != 0x20000
-		&& P2C2CurAnmchrID != 0x85 && P2C2CurAnmchrID != 0x155 && P2C2CurAnmchrID != 0x88)
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P2C2Hurtboxes.size(); i++)
+		if (P2C2VulnState != 4 && P2C2VulnState != 0x1C && P2C2CharState != 0x280C && P2C2CharState != 0x100 && P2C2CharState != 0x20000
+			&& P2C2CurAnmchrID != 0x85 && P2C2CurAnmchrID != 0x155 && P2C2CurAnmchrID != 0x88)
 		{
-			data.P2C2ActiveSpheres[i] = GetHurtBoxScreenPos(P2C2Hurtboxes[i]);
+			for (int i = 0; i < P2C2Hurtboxes.size(); i++)
+			{
+				data.P2C2ActiveSpheres[i] = GetHurtBoxScreenPos(P2C2Hurtboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -725,12 +757,15 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 3 Hurtboxes
 	data.P2C3ActiveSpheres.clear();
 	data.P2C3ActiveSpheres.resize(P2C3Hurtboxes.size());
-	if (P2C3VulnState != 4 && P2C3VulnState != 0x1C && P2C3CharState != 0x280C && P2C3CharState != 0x100 && P2C3CharState != 0x20000
-		&& P2C3CurAnmchrID != 0x85 && P2C3CurAnmchrID != 0x155 && P2C3CurAnmchrID != 0x88)
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P2C3Hurtboxes.size(); i++)
+		if (P2C3VulnState != 4 && P2C3VulnState != 0x1C && P2C3CharState != 0x280C && P2C3CharState != 0x100 && P2C3CharState != 0x20000
+			&& P2C3CurAnmchrID != 0x85 && P2C3CurAnmchrID != 0x155 && P2C3CurAnmchrID != 0x88)
 		{
-			data.P2C3ActiveSpheres[i] = GetHurtBoxScreenPos(P2C3Hurtboxes[i]);
+			for (int i = 0; i < P2C3Hurtboxes.size(); i++)
+			{
+				data.P2C3ActiveSpheres[i] = GetHurtBoxScreenPos(P2C3Hurtboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -738,11 +773,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 1 H1tboxes
 	data.P1C1ActiveHitSpheres.clear();
 	data.P1C1ActiveHitSpheres.resize(P1C1HitboxCount);
-	if (P1C1HitboxCount && (P1C1ActiveATIChunk.RemainingActiveFrames != 0 && P1C1ActiveATIChunk.FramesBeforeActive < 1))
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P1C1Hitboxes.size(); i++)
+		if (P1C1HitboxCount && (P1C1ActiveATIChunk.RemainingActiveFrames != 0 && P1C1ActiveATIChunk.FramesBeforeActive < 1))
 		{
-			data.P1C1ActiveHitSpheres[i] = GetHitboxScreenPos(P1C1Hitboxes[i]);
+			for (int i = 0; i < P1C1Hitboxes.size(); i++)
+			{
+				data.P1C1ActiveHitSpheres[i] = GetHitboxScreenPos(P1C1Hitboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -750,11 +788,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 2 H1tboxes
 	data.P1C2ActiveHitSpheres.clear();
 	data.P1C2ActiveHitSpheres.resize(P1C2HitboxCount);
-	if (P1C2HitboxCount && (P1C2ActiveATIChunk.RemainingActiveFrames != 0 && P1C2ActiveATIChunk.FramesBeforeActive < 1))
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P1C2Hitboxes.size(); i++)
+		if (P1C2HitboxCount && (P1C2ActiveATIChunk.RemainingActiveFrames != 0 && P1C2ActiveATIChunk.FramesBeforeActive < 1))
 		{
-			data.P1C2ActiveHitSpheres[i] = GetHitboxScreenPos(P1C2Hitboxes[i]);
+			for (int i = 0; i < P1C2Hitboxes.size(); i++)
+			{
+				data.P1C2ActiveHitSpheres[i] = GetHitboxScreenPos(P1C2Hitboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -762,11 +803,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 3 H1tboxes
 	data.P1C3ActiveHitSpheres.clear();
 	data.P1C3ActiveHitSpheres.resize(P1C3HitboxCount);
-	if (P1C3HitboxCount && (P1C3ActiveATIChunk.RemainingActiveFrames != 0 && P1C3ActiveATIChunk.FramesBeforeActive < 1))
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P1C3Hitboxes.size(); i++)
+		if (P1C3HitboxCount && (P1C3ActiveATIChunk.RemainingActiveFrames != 0 && P1C3ActiveATIChunk.FramesBeforeActive < 1))
 		{
-			data.P1C3ActiveHitSpheres[i] = GetHitboxScreenPos(P1C3Hitboxes[i]);
+			for (int i = 0; i < P1C3Hitboxes.size(); i++)
+			{
+				data.P1C3ActiveHitSpheres[i] = GetHitboxScreenPos(P1C3Hitboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -774,11 +818,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 1 H1tboxes
 	data.P2C1ActiveHitSpheres.clear();
 	data.P2C1ActiveHitSpheres.resize(P2C1HitboxCount);
-	if (P2C1HitboxCount && (P2C1ActiveATIChunk.RemainingActiveFrames != 0 && P2C1ActiveATIChunk.FramesBeforeActive < 1))
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P2C1Hitboxes.size(); i++)
+		if (P2C1HitboxCount && (P2C1ActiveATIChunk.RemainingActiveFrames != 0 && P2C1ActiveATIChunk.FramesBeforeActive < 1))
 		{
-			data.P2C1ActiveHitSpheres[i] = GetHitboxScreenPos(P2C1Hitboxes[i]);
+			for (int i = 0; i < P2C1Hitboxes.size(); i++)
+			{
+				data.P2C1ActiveHitSpheres[i] = GetHitboxScreenPos(P2C1Hitboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -786,11 +833,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 2 H1tboxes
 	data.P2C2ActiveHitSpheres.clear();
 	data.P2C2ActiveHitSpheres.resize(P2C2HitboxCount);
-	if (P2C2HitboxCount && (P2C2ActiveATIChunk.RemainingActiveFrames != 0 && P2C2ActiveATIChunk.FramesBeforeActive < 1))
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P2C2Hitboxes.size(); i++)
+		if (P2C2HitboxCount && (P2C2ActiveATIChunk.RemainingActiveFrames != 0 && P2C2ActiveATIChunk.FramesBeforeActive < 1))
 		{
-			data.P2C2ActiveHitSpheres[i] = GetHitboxScreenPos(P2C2Hitboxes[i]);
+			for (int i = 0; i < P2C2Hitboxes.size(); i++)
+			{
+				data.P2C2ActiveHitSpheres[i] = GetHitboxScreenPos(P2C2Hitboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -798,11 +848,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 3 H1tboxes
 	data.P2C3ActiveHitSpheres.clear();
 	data.P2C3ActiveHitSpheres.resize(P2C3HitboxCount);
-	if (P2C3HitboxCount && (P2C3ActiveATIChunk.RemainingActiveFrames != 0 && P2C3ActiveATIChunk.FramesBeforeActive < 1))
+	if (sAction && MatchFlag == 0)
 	{
-		for (int i = 0; i < P2C3Hitboxes.size(); i++)
+		if (P2C3HitboxCount && (P2C3ActiveATIChunk.RemainingActiveFrames != 0 && P2C3ActiveATIChunk.FramesBeforeActive < 1))
 		{
-			data.P2C3ActiveHitSpheres[i] = GetHitboxScreenPos(P2C3Hitboxes[i]);
+			for (int i = 0; i < P2C3Hitboxes.size(); i++)
+			{
+				data.P2C3ActiveHitSpheres[i] = GetHitboxScreenPos(P2C3Hitboxes[i]);
+			}
 		}
 	}
 #pragma endregion
@@ -814,30 +867,36 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 1 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{
-		data.P1C1ChildActiveSpheres.clear();
-		data.P1C1ChildActiveSpheres.resize(ChildHurtboxes.size());
-
-		if (P1Child1TempVulnState != 4 && P1Child1TempVulnState != 0x1C && P1Child1TempCharState != 0x280C
-			&& P1Child1TempCharState != 0x100 && P1Child1TempCharState != 0x20000
-			&& P1Child1CurAnmchrID != 0x85 && P1Child1CurAnmchrID != 0x155 && P1Child1CurAnmchrID != 0x88)
-		{
-			for (int i = 0; i < ChildHurtboxes.size(); i++)
-			{
-				data.P1C1ChildActiveSpheres[i] = GetHurtBoxScreenPos(ChildHurtboxes[i]);
-			}
-		}
 
 		EmptyTheChildLists();
 		GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree);
 
+		data.P1C1ChildActiveSpheres.clear();
+		data.P1C1ChildActiveSpheres.resize(ChildHurtboxes.size());
+		if (sAction && MatchFlag == 0)
+		{
+
+			if (P1Child1TempVulnState != 4 && P1Child1TempVulnState != 0x1C && P1Child1TempCharState != 0x280C
+				&& P1Child1TempCharState != 0x100 && P1Child1TempCharState != 0x20000
+				&& P1Child1CurAnmchrID != 0x85 && P1Child1CurAnmchrID != 0x155 && P1Child1CurAnmchrID != 0x88)
+			{
+				for (int i = 0; i < ChildHurtboxes.size(); i++)
+				{
+					data.P1C1ChildActiveSpheres[i] = GetHurtBoxScreenPos(ChildHurtboxes[i]);
+				}
+			}
+		}
+
 		data.P1C1Child1ActiveHitSpheres.clear();
 		data.P1C1Child1ActiveHitSpheres.resize(ChildHitboxes.size());
-
-		if (ChildHitboxes.size() > 0)
+		if (sAction && MatchFlag == 0)
 		{
-			for (int i = 0; i < ChildHitboxes.size(); i++)
+			if (ChildHitboxes.size() > 0)
 			{
-				data.P1C1Child1ActiveHitSpheres[i] = GetHitboxScreenPos(ChildHitboxes[i]);
+				for (int i = 0; i < ChildHitboxes.size(); i++)
+				{
+					data.P1C1Child1ActiveHitSpheres[i] = GetHitboxScreenPos(ChildHitboxes[i]);
+				}
 			}
 		}
 	}

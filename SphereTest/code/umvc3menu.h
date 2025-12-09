@@ -25,6 +25,7 @@ inline uint64_t Player2CharNodeTree;
 inline uint64_t BaseFighterUpdateMethod = 0x14004bd30;
 inline uint64_t sGameConfig;
 inline uint64_t uActionSideCamera;
+inline int MatchFlag;
 inline bool ToolActive = true;
 inline float NearPlane;
 inline float FarPlane;

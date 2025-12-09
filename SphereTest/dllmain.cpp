@@ -46,17 +46,7 @@ bool initialized = false;
 bool DisplaySpheres = false;
 bool ImGuiInitialized = false;
 
-void ReleaseHitboxRenderTarget()
-{
-	if (g_pRenderTexture1) { g_pRenderTexture1->Release(); g_pRenderTexture1 = NULL; }
-	if (g_pRenderSurface1) { g_pRenderSurface1->Release(); g_pRenderSurface1 = NULL; }
-	if (g_pDepthStencilSurface1) { g_pDepthStencilSurface1->Release(); g_pDepthStencilSurface1 = NULL; }
-	if (g_pRenderTexture2) { g_pRenderTexture2->Release(); g_pRenderTexture2 = NULL; }
-	if (g_pRenderSurface2) { g_pRenderSurface2->Release(); g_pRenderSurface2 = NULL; }
-	if (g_pDepthStencilSurface2) { g_pDepthStencilSurface2->Release(); g_pDepthStencilSurface2 = NULL; }
-	g_renderTargetCreated1 = false;
-	g_renderTargetCreated2 = false;
-}
+
 
 bool CreateHurtboxRenderTarget(LPDIRECT3DDEVICE9 pDevice)
 {

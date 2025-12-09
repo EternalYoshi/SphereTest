@@ -96,6 +96,7 @@ void GetMainPointers()
 		if (sAction) {
 			Player1TeamTable = *(uint64_t*)_addr(sAction + 0x350);
 			Player2TeamTable = *(uint64_t*)_addr(sAction + 0x610);
+			MatchFlag = *(int*)_addr(sAction + 0x118);
 		}
 		sGameConfig = *(uint64_t*)_addr(0x140D50F88);
 		PointerToGameSpeedA = *(uint64_t*)_addr(0x140E177e8);
