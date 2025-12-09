@@ -442,6 +442,7 @@
     <ClInclude Include="glm\vec3.hpp" />
     <ClInclude Include="glm\vec4.hpp" />
     <ClInclude Include="glm\vector_relational.hpp" />
+    <ClInclude Include="Globals.h" />
     <ClInclude Include="gui\imgui\imconfig.h" />
     <ClInclude Include="gui\imgui\imgui.h" />
     <ClInclude Include="gui\imgui\imgui_impl_dx9.h" />
@@ -477,6 +478,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="glm\detail\glm.cpp" />
     <ClCompile Include="glm\glm.cppm" />
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="gui\imgui\imgui.cpp" />
     <ClCompile Include="gui\imgui\imgui_demo.cpp" />
     <ClCompile Include="gui\imgui\imgui_draw.cpp" />

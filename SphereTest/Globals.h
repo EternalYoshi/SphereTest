@@ -5,14 +5,14 @@
 
 #include <d3d9.h>
 
-inline IDirect3DTexture9* g_pRenderTexture = nullptr;
-inline IDirect3DSurface9* g_pRenderSurface = nullptr;
-inline IDirect3DSurface9* g_pOldRenderTarget = nullptr;
-inline IDirect3DSurface9* g_pOldDepthStencil = nullptr;
+//inline IDirect3DTexture9* g_pRenderTexture = nullptr;
+//inline IDirect3DSurface9* g_pRenderSurface = nullptr;
+//inline IDirect3DSurface9* g_pOldRenderTarget = nullptr;
+//inline IDirect3DSurface9* g_pOldDepthStencil = nullptr;
 
-extern LPDIRECT3DTEXTURE9 g_pCircleTexture;
-extern LPDIRECT3DSURFACE9 g_pCircleSurface;
-extern LPDIRECT3DSURFACE9 g_pOldRenderTarget;
+//extern LPDIRECT3DTEXTURE9 g_pCircleTexture;
+//extern LPDIRECT3DSURFACE9 g_pCircleSurface;
+//extern LPDIRECT3DSURFACE9 g_pOldRenderTarget;
 
 //Attempted to make a render target Texture for the Green Stuff.
 inline LPDIRECT3DTEXTURE9 g_pRenderTexture1 = NULL;
