@@ -133,14 +133,14 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 
 	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(TEXTUREVERTEX));
 
-	
+
 
 	// Restore state
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, alphaBlend);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, destBlend);
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, zwriteenable);
-	
+
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, alphaOp);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, alphaArg1);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, alphaArg2);
@@ -590,18 +590,21 @@ HurtboxR GetHurtBoxScreenPos(Hurtbox HBox)
 	);
 
 	//Then the Projection and view.
-
 	float FovR = glm::radians(mFOV);
 	glm::highp_mat4 Projection = glm::perspective<float>(FovR, 1600.0f / 900.0f, NearPlane, FarPlane);
-
 	glm::vec4 View = glm::vec4(0, 0, 1600, 900);
 
+	//Now for the radius to adapt to zoom levels.
+	glm::vec3 offsetPosition = position + glm::vec3(HBox.CollData.Radius, 0, 0);
+	glm::vec2 offsetResult = glm::project(offsetPosition, viewMatrix, Projection, View);
 	glm::vec2 result = glm::project(position, viewMatrix, Projection, View);
-
+	
+	float screenRadius = glm::distance(result, offsetResult) * 1.0f;
+	
 	HurtboxR NewBoxR;
 	NewBoxR.Enabled = true;
 	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 200, 60, 0);
-	NewBoxR.Radius = HBox.CollData.Radius * 3;
+	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
 	NewBoxR.Position.Z = 0;
@@ -645,14 +648,18 @@ HitboxR GetHitboxScreenPos(Hitbox HBox)
 
 	glm::vec4 View = glm::vec4(0, 0, 1600, 900);
 
+	//Now for the radius to adapt to zoom levels.
+	glm::vec3 offsetPosition = position + glm::vec3(HBox.Radius, 0, 0);
+	glm::vec2 offsetResult = glm::project(offsetPosition, viewMatrix, Projection, View);
+
 	glm::vec2 result = glm::project(position, viewMatrix, Projection, View);
 	glm::vec2 resulttwo = glm::project(positiontwo, viewMatrix, Projection, View);
-
+	float screenRadius = glm::distance(result, offsetResult) * 1.0f;
 
 	HitboxR NewBoxR;
 	NewBoxR.Enabled = true;
 	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 200, 60, 0);
-	NewBoxR.Radius = HBox.Radius * 3;
+	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
 	NewBoxR.Position.Z = 0;
@@ -677,7 +684,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 1 Hurtboxes
 	data.P1C1ActiveSpheres.clear();
 	data.P1C1ActiveSpheres.resize(P1C1Hurtboxes.size());
-	if(sAction && MatchFlag == 0)
+	if (sAction && MatchFlag == 0)
 	{
 		if (P1C1VulnState != 4 && P1C1VulnState != 0x1C && P1C1CharState != 0x280C && P1C1CharState != 0x100 && P1C1CharState != 0x20000
 			&& P1C1CurAnmchrID != 0x85 && P1C1CurAnmchrID != 0x155 && P1C1CurAnmchrID != 0x88)
@@ -689,7 +696,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 		}
 	}
 #pragma endregion
-	
+
 #pragma region Player 1 Character 2 Hurtboxes
 	data.P1C2ActiveSpheres.clear();
 	data.P1C2ActiveSpheres.resize(P1C2Hurtboxes.size());
@@ -860,9 +867,9 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	}
 #pragma endregion
 
-//========Shot Stuff Coming soon.
+	//========Shot Stuff Coming soon.
 
-//========Child Character stuff.
+	//========Child Character stuff.
 
 #pragma region Player 1 Character 1 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
@@ -899,6 +906,9 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 				}
 			}
 		}
+
+
+
 	}
 #pragma endregion
 
@@ -1200,7 +1210,7 @@ void RenderTheSpheres(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtbo
 		P1C1ChildActiveSpheres.resize(ChildHurtboxes.size());
 
 		//Meant to turn off display for character when Snapped out, Dead, or Invul. Second line checks anmchr state for certain states.
-		if (P1Child1TempVulnState != 4 && P1Child1TempVulnState != 0x1C && P1Child1TempCharState != 0x280C 
+		if (P1Child1TempVulnState != 4 && P1Child1TempVulnState != 0x1C && P1Child1TempCharState != 0x280C
 			&& P1Child1TempCharState != 0x100 && P1Child1TempCharState != 0x20000
 			&& P1Child1CurAnmchrID != 0x85 && P1Child1CurAnmchrID != 0x155 && P1Child1CurAnmchrID != 0x88)
 		{
