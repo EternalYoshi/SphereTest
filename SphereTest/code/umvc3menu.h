@@ -608,6 +608,8 @@ inline byte P1Child1TempVulnState;
 inline int P1Child1TempCharState;
 inline int P1Child1CurAnmchrID;
 
+inline bool Emptytied = false;
+
 inline std::vector<int> ChildCharacterCurAnmchrID;
 
 inline uint32_t DebugPointerOfSorts;
@@ -1298,8 +1300,28 @@ inline std::vector<HitboxR> P2C1ActiveHitSpheres;
 inline std::vector<HitboxR> P2C2ActiveHitSpheres;
 inline std::vector<HitboxR> P2C3ActiveHitSpheres;
 
-inline std::vector<HurtboxR> P1C1ChildActiveSpheres;
-inline std::vector<HitboxR> P1C1Child1ActiveHitSpheres;
+//inline std::vector<HurtboxR> P1C1ChildActiveSpheres;
+//inline std::vector<HitboxR> P1C1Child1ActiveHitSpheres;
+
+//Going to use a struct to get the data that I care about.
+struct ChildData {
+	//int HostCharacterID;
+	PlayerATIStuff ChildActiveATIChunk;
+	std::vector<Hurtbox> ChildActiveSpheres;
+	std::vector<Hitbox> Child1ActiveHitSpheres;
+	int CurAnmchrID;
+	int ChildCharState;
+	byte ChildVulnState;
+	float WeirdFloat;
+};
+inline std::vector<ChildData> P1C1ActiveChildData;
+inline std::vector<ChildData> P1C2ActiveChildData;
+inline std::vector<ChildData> P1C3ActiveChildData;
+
+inline std::vector<ChildData> P2C1ActiveChildData;
+inline std::vector<ChildData> P2C2ActiveChildData;
+inline std::vector<ChildData> P2C3ActiveChildData;
+
 
 
 //class UMVC3Menu {
@@ -1398,6 +1420,8 @@ static void GetCharacterHurtboxData(std::vector<Hurtbox> PlayerHurtboxes, int Hu
 
 void GetHurtboxData();
 
+void RemoveAllSpheres();
+
 void GetHitboxDataPart1();
 
 void RemoveAllInstalls();
@@ -1435,7 +1459,9 @@ void GetAnmchrIDs();
 
 void GetEvenMorePlayerData();
 
-void GetChildCharacterData(uint64_t PlayerPtr, int CharacterID, uint64_t NodeTree);
+std::vector<ChildData> GetChildCharacterData(uint64_t PlayerPtr, int CharacterID, uint64_t NodeTree, std::vector<ChildData> ActiveChildData);
+
+ChildData GetChildCollisionData(uint64_t PlayerPtr, uint64_t ChildPtr);
 
 void EmptyTheChildLists();
 

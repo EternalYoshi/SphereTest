@@ -237,6 +237,21 @@ struct SphereDataBuffer {
 	//Player Child Hit/Hurtspheres.
 	std::vector<HurtboxR> P1C1ChildActiveSpheres;
 	std::vector<HitboxR> P1C1Child1ActiveHitSpheres;
+
+	std::vector<HurtboxR> P1C2ChildActiveSpheres;
+	std::vector<HitboxR> P1C2Child1ActiveHitSpheres;
+
+	std::vector<HurtboxR> P1C3ChildActiveSpheres;
+	std::vector<HitboxR> P1C3Child1ActiveHitSpheres;
+
+	std::vector<HurtboxR> P2C1ChildActiveSpheres;
+	std::vector<HitboxR> P2C1Child1ActiveHitSpheres;
+
+	std::vector<HurtboxR> P2C2ChildActiveSpheres;
+	std::vector<HitboxR> P2C2Child1ActiveHitSpheres;
+
+	std::vector<HurtboxR> P2C3ChildActiveSpheres;
+	std::vector<HitboxR> P2C3Child1ActiveHitSpheres;
 	bool Valid = false;
 };
 
@@ -598,16 +613,20 @@ HurtboxR GetHurtBoxScreenPos(Hurtbox HBox)
 	glm::vec3 offsetPosition = position + glm::vec3(HBox.CollData.Radius, 0, 0);
 	glm::vec2 offsetResult = glm::project(offsetPosition, viewMatrix, Projection, View);
 	glm::vec2 result = glm::project(position, viewMatrix, Projection, View);
-	
+
 	float screenRadius = glm::distance(result, offsetResult) * 1.0f;
-	
+
 	HurtboxR NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 200, 60, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 128, 60, 0);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
 	NewBoxR.Position.Z = 0;
+
+	//glm::vec4 viewPos = viewMatrix * glm::vec4(position, 1.0f);
+	//printf("World Y: %.2f, View Y: %.2f, Screen Y: %.2f, Camera Y: %.2f\n",
+	//	position.y, viewPos.y, result.y, CameraPos.y);
 
 	return NewBoxR;
 	//return HurtboxR(result.x, result.y, 0.0f, D3DCOLOR_RGBA(0, 250, 0, 70, 60, 0), (HBox.CollData.Radius * 2), true);
@@ -658,7 +677,7 @@ HitboxR GetHitboxScreenPos(Hitbox HBox)
 
 	HitboxR NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 200, 60, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 60, 0);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
@@ -876,35 +895,39 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	{
 
 		EmptyTheChildLists();
-		GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree);
-
+		P1C1ActiveChildData = GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree, P1C1ActiveChildData);
 		data.P1C1ChildActiveSpheres.clear();
-		data.P1C1ChildActiveSpheres.resize(ChildHurtboxes.size());
-		if (sAction && MatchFlag == 0)
-		{
-
-			if (P1Child1TempVulnState != 4 && P1Child1TempVulnState != 0x1C && P1Child1TempCharState != 0x280C
-				&& P1Child1TempCharState != 0x100 && P1Child1TempCharState != 0x20000
-				&& P1Child1CurAnmchrID != 0x85 && P1Child1CurAnmchrID != 0x155 && P1Child1CurAnmchrID != 0x88)
-			{
-				for (int i = 0; i < ChildHurtboxes.size(); i++)
-				{
-					data.P1C1ChildActiveSpheres[i] = GetHurtBoxScreenPos(ChildHurtboxes[i]);
-				}
-			}
-		}
-
 		data.P1C1Child1ActiveHitSpheres.clear();
-		data.P1C1Child1ActiveHitSpheres.resize(ChildHitboxes.size());
+
 		if (sAction && MatchFlag == 0)
 		{
-			if (ChildHitboxes.size() > 0)
+			for (int n = 0; n < P1C1ActiveChildData.size(); n++)
 			{
-				for (int i = 0; i < ChildHitboxes.size(); i++)
+				if (P1C1ActiveChildData[n].ChildVulnState != 0x0 && P1C1ActiveChildData[n].WeirdFloat != 0 && P1C1ActiveChildData[n].ChildCharState != 0x280C
+					&& P1C1ActiveChildData[n].ChildCharState != 0x100 && P1C1ActiveChildData[n].ChildCharState != 0x20000
+					&& P1C1ActiveChildData[n].CurAnmchrID != 0x85 && P1C1ActiveChildData[n].CurAnmchrID != 0x155 && P1C1ActiveChildData[n].CurAnmchrID != 0x88)
 				{
-					data.P1C1Child1ActiveHitSpheres[i] = GetHitboxScreenPos(ChildHitboxes[i]);
+					for (int i = 0; i < P1C1ActiveChildData[n].ChildActiveSpheres.size(); i++)
+					{
+						data.P1C1ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C1ActiveChildData[n].ChildActiveSpheres[i]));
+					}
 				}
+
+				if(P1C1ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C1ActiveChildData[n].WeirdFloat != 0 && P1C1ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+				{
+					for (int i = 0; i < P1C1ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+					{
+						data.P1C1Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C1ActiveChildData[n].Child1ActiveHitSpheres[i]));
+					}
+				}
+
+
 			}
+
+
+
+
+
 		}
 
 
@@ -1203,47 +1226,47 @@ void RenderTheSpheres(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtbo
 
 #pragma region Player 1 Character 1 Child Hurtboxes & Hitboxes(If applicable)
 
-	if (Player1CharNodeTree && Player2CharNodeTree)
-	{
-		//For the hurtboxes.
-		P1C1ChildActiveSpheres.clear();
-		P1C1ChildActiveSpheres.resize(ChildHurtboxes.size());
+	//if (Player1CharNodeTree && Player2CharNodeTree)
+	//{
+	//	//For the hurtboxes.
+	//	P1C1ChildActiveSpheres.clear();
+	//	P1C1ChildActiveSpheres.resize(ChildHurtboxes.size());
 
-		//Meant to turn off display for character when Snapped out, Dead, or Invul. Second line checks anmchr state for certain states.
-		if (P1Child1TempVulnState != 4 && P1Child1TempVulnState != 0x1C && P1Child1TempCharState != 0x280C
-			&& P1Child1TempCharState != 0x100 && P1Child1TempCharState != 0x20000
-			&& P1Child1CurAnmchrID != 0x85 && P1Child1CurAnmchrID != 0x155 && P1Child1CurAnmchrID != 0x88)
-		{
-			for (int i = 0; i < ChildHurtboxes.size(); i++)
-			{
-				P1C1ChildActiveSpheres[i] = GetHurtBoxScreenPos(ChildHurtboxes[i]);
-			}
-		}
+	//	//Meant to turn off display for character when Snapped out, Dead, or Invul. Second line checks anmchr state for certain states.
+	//	if (P1Child1TempVulnState != 4 && P1Child1TempVulnState != 0x1C && P1Child1TempCharState != 0x280C
+	//		&& P1Child1TempCharState != 0x100 && P1Child1TempCharState != 0x20000
+	//		&& P1Child1CurAnmchrID != 0x85 && P1Child1CurAnmchrID != 0x155 && P1Child1CurAnmchrID != 0x88)
+	//	{
+	//		for (int i = 0; i < ChildHurtboxes.size(); i++)
+	//		{
+	//			P1C1ChildActiveSpheres[i] = GetHurtBoxScreenPos(ChildHurtboxes[i]);
+	//		}
+	//	}
 
-		ProcessHurtSpheres(pDevice, 32, P1C1ChildActiveSpheres);
+	//	ProcessHurtSpheres(pDevice, 32, P1C1ChildActiveSpheres);
 
-		//For Hitboxes.
+	//	//For Hitboxes.
 
-		EmptyTheChildLists();
-		GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree);
+	//	EmptyTheChildLists();
+	//	GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree);
 
-		P1C1Child1ActiveHitSpheres.clear();
-		P1C1Child1ActiveHitSpheres.resize(ChildHitboxes.size());
+	//	P1C1Child1ActiveHitSpheres.clear();
+	//	P1C1Child1ActiveHitSpheres.resize(ChildHitboxes.size());
 
-		if (ChildHitboxes.size() > 0)
-		{
-
-
-			for (int i = 0; i < ChildHitboxes.size(); i++)
-			{
-				P1C1Child1ActiveHitSpheres[i] = GetHitboxScreenPos(ChildHitboxes[i]);
-			}
-		}
-		//For Child hitboxes. Test with this first.
-		ProcessHitCapsules(pDevice, 32, P1C1Child1ActiveHitSpheres);
+	//	if (ChildHitboxes.size() > 0)
+	//	{
 
 
-	}
+	//		for (int i = 0; i < ChildHitboxes.size(); i++)
+	//		{
+	//			P1C1Child1ActiveHitSpheres[i] = GetHitboxScreenPos(ChildHitboxes[i]);
+	//		}
+	//	}
+	//	//For Child hitboxes. Test with this first.
+	//	ProcessHitCapsules(pDevice, 32, P1C1Child1ActiveHitSpheres);
+
+
+	//}
 
 #pragma endregion
 

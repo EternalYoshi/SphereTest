@@ -238,6 +238,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		CheckIfInMatch();
 		if (InMatch)
 		{
+			Emptytied = false;
 			TickUpdates();
 			GetPlayerData();
 			GetCharacterIDs();
@@ -246,6 +247,10 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			GetCameraStuff();
 			GetEvenMorePlayerData();
 			GetChildCharacters();
+		}
+		else if(!Emptytied)
+		{
+			RemoveAllSpheres();
 		}
 	}
 

@@ -234,10 +234,36 @@ void EmptyTheChildLists()
 	ChildHurtboxes.clear();
 	ChildCharacterActiveATIChunks.clear();
 	ChildCharacterCurAnmchrID.clear();
+	P1C1ActiveChildData.clear();
+	P1C2ActiveChildData.clear();
+	P1C3ActiveChildData.clear();
+	P2C1ActiveChildData.clear();
+	P2C2ActiveChildData.clear();
+	P2C3ActiveChildData.clear();
 }
 
-void GetChildCharacterData(uint64_t PlayerPtr, int CharacterID, uint64_t NodeTree)
+//Intended to eliminate the spheres if not in Training Mode through emptying all the spheres proccessed previously.
+void RemoveAllSpheres()
 {
+	EmptyTheChildLists();
+	P1C1Hitboxes.clear();
+	P1C2Hitboxes.clear();
+	P1C3Hitboxes.clear();
+	P2C1Hitboxes.clear();
+	P2C2Hitboxes.clear();
+	P2C3Hitboxes.clear();
+	P1C1Hurtboxes.clear();
+	P1C2Hurtboxes.clear();
+	P1C3Hurtboxes.clear();
+	P2C1Hurtboxes.clear();
+	P2C2Hurtboxes.clear();
+	P2C3Hurtboxes.clear();
+	Emptytied = true;
+}
+
+ChildData GetChildCollisionData(uint64_t PlayerPtr, uint64_t ChildPtr)
+{
+	ChildData Child;
 	uint64_t TempCA = 0;
 	uint64_t TempCB = 0;
 	uint64_t TempCC = 0;
@@ -252,8 +278,174 @@ void GetChildCharacterData(uint64_t PlayerPtr, int CharacterID, uint64_t NodeTre
 	uint64_t tttt = 0;
 	uint64_t ttttt = 0;
 	uint64_t tttttt = 0;
+	int HitxCount = 0;
+	int HurtXCount = 0;
+	PlayerATIStuff ChildATIChunk;
+
+	TempCA = ChildPtr;
+	TempCA = *(uint64_t*)_addr(TempCA + 0x4200);
+
+	Child.ChildCharState = *(int*)(ChildPtr + 0x14FC);
+	Child.ChildVulnState = *(byte*)(ChildPtr + 0x1510);
+	Child.CurAnmchrID = *((int*)(ChildPtr + 0x1310));
+	Child.WeirdFloat = *((float*)(ChildPtr + 0x22F8));
+
+	if (TempCA)
+	{
+		TempCB = *(uint64_t*)_addr(TempCA + 0x30);
+
+		HitxCount = *((int*)(TempCA + 0x20));
+
+		//ATI Chunks.
+
+		Child.CurAnmchrID = (*((int*)(ChildPtr + 0x1310)));
+
+		ChildATIChunk;
+		ChildATIChunk.AtiID = *((int*)(ChildPtr + 0x18A0));
+		ChildATIChunk.FramesBeforeActive = *((float*)(ChildPtr + 0x18AC));
+		ChildATIChunk.RemainingActiveFrames = *((float*)(ChildPtr + 0x18B0));
+		ChildATIChunk.MaybeRecoveryFrames = *((float*)(ChildPtr + 0x18B8));
+		ChildATIChunk.ATIFrame = *((float*)(ChildPtr + 0x18BC));
+
+		Child.ChildActiveATIChunk = ChildATIChunk;
+
+		//For Hitboxes.
+
+		for (int i = 0; i < HitxCount; i++)
+		{
+			TempCC = TempCB;
+			TempCD = *(uint64_t*)_addr(TempCB);
+			Hitbox Chits;
+			Chits.ContainerPos.x = *(float*)(TempCD + 0x20);
+			Chits.ContainerPos.y = *(float*)(TempCD + 0x24);
+			Chits.ContainerPos.z = *(float*)(TempCD + 0x28);
+			Chits.Radius = *(float*)(TempCD + 0x38);
+			Chits.PointerToCapsuleData = *(uint64_t*)(TempCD + 0x10);
+
+			//Checks if pointer is valid before going in there.
+			if (Chits.PointerToCapsuleData)
+			{
+
+				//Then we use the pointer here to go to the capsule data.
+				Capsule = *(uint64_t*)_addr(TempCD + 0x10);
+
+				Chits.CapsulePrimaryPos.x = *((float*)(Capsule + 0x20));
+				Chits.CapsulePrimaryPos.y = *((float*)(Capsule + 0x24));
+				Chits.CapsulePrimaryPos.z = *((float*)(Capsule + 0x28));
+
+				Chits.CapsuleSecondPos.x = *((float*)(Capsule + 0x30));
+				Chits.CapsuleSecondPos.y = *((float*)(Capsule + 0x34));
+				Chits.CapsuleSecondPos.z = *((float*)(Capsule + 0x38));
+
+				Child.Child1ActiveHitSpheres.push_back(Chits);
+
+			}
+			TempCB = TempCB + 8;
+		}
+
+		//For Hurtboxes.
+		t = *(uint64_t*)_addr(ChildPtr + 0x4E10);
+		if (t && t < 0x140000000)
+		{
+			tt = *(uint64_t*)_addr(t + 0x30);
+			tttt = tt;
+
+			if (tt && tt < 0x140000000) {
+				//This is for getting the hurtbox count.
+				for (size_t i = 0; i < 100; i++)
+				{
+					ttt = *(uint64_t*)_addr(tt);
+					if (ttt == 0) {
+						break;
+					}
+					//tt++;;
+					tt = tt + 8;
+					HurtXCount++;
+				}
+
+				//uint64_t* HurtboxPointers = new uint64_t[HurtXCount];
+				tt = tttt;
+
+
+				if (HurtXCount && HurtXCount < 255)
+					//Once More, but this time for the Hurtbox pointers.
+				{
+					for (int j = 0; j < HurtXCount; j++)
+					{
+						v = *(uint64_t*)_addr(tt);
+						//HurtboxPointers[j] = v;
+						//Stuff to get the relevant data.
+						//v goes to a cHitPrimSphere node;
+						if (v) {
+							ttttt = *(uint64_t*)_addr(v);;
+							Hurtbox HBx;
+
+							HBx.PointerIdentifier = *(uint64_t*)_addr(v);
+							HBx.PointerToMoreData = *(uint64_t*)_addr(v + 0x10);
+
+							//For the defacto coordinates.
+							HBx.DeFactoX = *(float*)(ttttt + 0x30);
+							HBx.DeFactoY = *(float*)(ttttt + 0x34);
+							HBx.DeFactoZ = *(float*)(ttttt + 0x38);
+
+							if (HBx.PointerToMoreData) {
+
+								HBx.SecondaryX = *((float*)(v + 0x20));
+								HBx.SecondaryY = *((float*)(v + 0x24));
+								HBx.SecondaryZ = *((float*)(v + 0x28));
+
+								HBx.CollData.Coordinates.X = *((float*)(HBx.PointerToMoreData + 0x20));
+								HBx.CollData.Coordinates.Y = *((float*)(HBx.PointerToMoreData + 0x24));
+								HBx.CollData.Coordinates.Z = *((float*)(HBx.PointerToMoreData + 0x28));
+								HBx.CollData.Radius = *((float*)(HBx.PointerToMoreData + 0x2C));
+
+
+
+								Child.ChildActiveSpheres.push_back(HBx);
+
+								tt = tt + 8;
+							}
+							else
+							{
+								//break;
+							}
+						}
+					}
+				}
+
+			}
+		}
+
+	}
+
+	return Child;
+
+}
+
+std::vector<ChildData> GetChildCharacterData(uint64_t PlayerPtr, int CharacterID, uint64_t NodeTree, std::vector<ChildData> ActiveChildData)
+{
+	uint64_t TempCA = 0;
+	uint64_t TempCB = 0;
+	uint64_t TempCC = 0;
+	uint64_t TempCD = 0;
+	uint64_t TempCE = 0;
+	uint64_t TempCF = 0;
+	uint64_t TempTreeJump = 0;
+	uint64_t Capsule = 0;
+	uint64_t v = 0;
+	uint64_t t = 0;
+	uint64_t tt = 0;
+	uint64_t ttt = 0;
+	uint64_t tttt = 0;
+	uint64_t ttttt = 0;
+	uint64_t tttttt = 0;
 	uint64_t ATIChunkPtr = 0;
 	uint64_t ChildPtr = 0;
+	uint64_t Child2Ptr = 0;
+	uint64_t Child3Ptr = 0;
+	uint64_t Child4Ptr = 0;
+	uint64_t Child5Ptr = 0;
+	PlayerATIStuff ChildATIChunk;
 	int HitxCount = 0;
 	int HurtXCount = 0;
 	if (PlayerPtr)
@@ -261,176 +453,58 @@ void GetChildCharacterData(uint64_t PlayerPtr, int CharacterID, uint64_t NodeTre
 		TempCA = *(uint64_t*)_addr(NodeTree + 0x10);
 		TempCA = *(uint64_t*)_addr(TempCA + 0x10);
 		TempCA = *(uint64_t*)_addr(TempCA + 0x10);
-		if(TempCA)
+		TempTreeJump = TempCA;
+		if (TempCA)
 		{
 			TempCA = *(uint64_t*)_addr(TempCA + 0x8);
 			ChildPtr = TempCA;
-			TempCA = *(uint64_t*)_addr(TempCA + 0x4200);
-
-			P1Child1TempCharState = *(int*)(ChildPtr + 0x14FC);
-			P1Child1TempVulnState = *(byte*)(ChildPtr + 0x14FC);
-			P1Child1CurAnmchrID = *((int*)(ChildPtr + 0x1310));
-			if (TempCA)
+			if (ChildPtr)
 			{
-				TempCB = *(uint64_t*)_addr(TempCA + 0x30);
-				if (TempCB)
+				ActiveChildData.push_back(GetChildCollisionData(PlayerPtr, ChildPtr));
+				TempCA = *(uint64_t*)_addr(TempTreeJump + 0x10);
+
+				//For the 2nd child.
+				if (TempCA)
 				{
-					switch (CharacterID)
+					Child2Ptr = *(uint64_t*)_addr(TempCA + 0x8);
+					ActiveChildData.push_back(GetChildCollisionData(PlayerPtr, Child2Ptr));
+					TempCA = *(uint64_t*)_addr(TempTreeJump + 0x10);
+					TempCA = *(uint64_t*)_addr(TempCA + 0x10);
+
+					//For the 3rd child.
+					if (TempCA)
 					{
-					case 9:
-						HitxCount = *((int*)(TempCA + 0x20));
+						Child3Ptr = *(uint64_t*)_addr(TempCA + 0x8);
+						ActiveChildData.push_back(GetChildCollisionData(PlayerPtr, Child3Ptr));
+						TempCA = *(uint64_t*)_addr(TempTreeJump + 0x10);
+						TempCA = *(uint64_t*)_addr(TempCA + 0x10);
+						TempCA = *(uint64_t*)_addr(TempCA + 0x10);
 
-						//ATI Chunks.
-						ChildCharacterCurAnmchrID.push_back(*((int*)(ChildPtr + 0x1310)));
-
-						PlayerATIStuff ChildATIChunk;
-						ChildATIChunk.AtiID = *((int*)(ChildPtr + 0x18A0));
-						ChildATIChunk.FramesBeforeActive = *((float*)(ChildPtr + 0x18AC));
-						ChildATIChunk.RemainingActiveFrames = *((float*)(ChildPtr + 0x18B0));
-						ChildATIChunk.MaybeRecoveryFrames = *((float*)(ChildPtr + 0x18B8));
-						ChildATIChunk.ATIFrame = *((float*)(ChildPtr + 0x18BC));
-
-						ChildCharacterActiveATIChunks.push_back(ChildATIChunk);
-
-						//For Hitboxes.
-
-						for (int i = 0; i < HitxCount; i++)
+						//For the 4th child.
+						if (TempCA)
 						{
-							TempCC = TempCB;
-							TempCD = *(uint64_t*)_addr(TempCB);
-							Hitbox Chits;
-							Chits.ContainerPos.x = *(float*)(TempCD + 0x20);
-							Chits.ContainerPos.y = *(float*)(TempCD + 0x24);
-							Chits.ContainerPos.z = *(float*)(TempCD + 0x28);
-							Chits.Radius = *(float*)(TempCD + 0x38);
-							Chits.PointerToCapsuleData = *(uint64_t*)(TempCD + 0x10);
+							Child4Ptr = *(uint64_t*)_addr(TempCA + 0x8);
+							ActiveChildData.push_back(GetChildCollisionData(PlayerPtr, Child4Ptr));
+							TempCA = *(uint64_t*)_addr(TempTreeJump + 0x10);
+							TempCA = *(uint64_t*)_addr(TempCA + 0x10);
+							TempCA = *(uint64_t*)_addr(TempCA + 0x10);
+							TempCA = *(uint64_t*)_addr(TempCA + 0x10);
 
-							//Checks if pointer is valid before going in there.
-							if (Chits.PointerToCapsuleData)
+							//For the 5th child.
+							if (TempCA)
 							{
-
-								//Then we use the pointer here to go to the capsule data.
-								Capsule = *(uint64_t*)_addr(TempCD + 0x10);
-
-								Chits.CapsulePrimaryPos.x = *((float*)(Capsule + 0x20));
-								Chits.CapsulePrimaryPos.y = *((float*)(Capsule + 0x24));
-								Chits.CapsulePrimaryPos.z = *((float*)(Capsule + 0x28));
-
-								Chits.CapsuleSecondPos.x = *((float*)(Capsule + 0x30));
-								Chits.CapsuleSecondPos.y = *((float*)(Capsule + 0x34));
-								Chits.CapsuleSecondPos.z = *((float*)(Capsule + 0x38));
-
-								ChildHitboxes.push_back(Chits);
-
-							}
-							TempCB = TempCB + 8;
-						}
-
-						//For Hurtboxes.
-						t = *(uint64_t*)_addr(ChildPtr + 0x4E10);
-						if (t && t < 0x140000000)
-						{
-							tt = *(uint64_t*)_addr(t + 0x30);
-							tttt = tt;
-
-							if (tt && tt < 0x140000000) {
-								//This is for getting the hurtbox count.
-								for (size_t i = 0; i < 100; i++)
-								{
-									ttt = *(uint64_t*)_addr(tt);
-									if (ttt == 0) {
-										break;
-									}
-									//tt++;;
-									tt = tt + 8;
-									HurtXCount++;
-								}
-
-								//uint64_t* HurtboxPointers = new uint64_t[HurtXCount];
-								tt = tttt;
-
-
-								if (HurtXCount && HurtXCount < 255)
-									//Once More, but this time for the Hurtbox pointers.
-								{
-									for (int j = 0; j < HurtXCount; j++)
-									{
-										v = *(uint64_t*)_addr(tt);
-										//HurtboxPointers[j] = v;
-										//Stuff to get the relevant data.
-										//v goes to a cHitPrimSphere node;
-										if (v) {
-											ttttt = *(uint64_t*)_addr(v);;
-											Hurtbox HBx;
-
-											HBx.PointerIdentifier = *(uint64_t*)_addr(v);
-											HBx.PointerToMoreData = *(uint64_t*)_addr(v + 0x10);
-
-											//For the defacto coordinates.
-											HBx.DeFactoX = *(float*)(ttttt + 0x30);
-											HBx.DeFactoY = *(float*)(ttttt + 0x34);
-											HBx.DeFactoZ = *(float*)(ttttt + 0x38);
-
-											if (HBx.PointerToMoreData) {
-
-												HBx.SecondaryX = *((float*)(v + 0x20));
-												HBx.SecondaryY = *((float*)(v + 0x24));
-												HBx.SecondaryZ = *((float*)(v + 0x28));
-
-												HBx.CollData.Coordinates.X = *((float*)(HBx.PointerToMoreData + 0x20));
-												HBx.CollData.Coordinates.Y = *((float*)(HBx.PointerToMoreData + 0x24));
-												HBx.CollData.Coordinates.Z = *((float*)(HBx.PointerToMoreData + 0x28));
-												HBx.CollData.Radius = *((float*)(HBx.PointerToMoreData + 0x2C));
-
-
-
-												ChildHurtboxes.push_back(HBx);
-
-												tt = tt + 8;
-											}
-											else
-											{
-												//break;
-											}
-										}
-									}
-								}
+								Child5Ptr = *(uint64_t*)_addr(TempCA + 0x8);
+								ActiveChildData.push_back(GetChildCollisionData(PlayerPtr, Child5Ptr));
 
 							}
 						}
-
-
-
-
-						break;
-
-					case 13:
-
-						break;
-
-					case 15:
-						break;
-
-					case 23:
-						break;
-
-					case 24:
-						break;
-
-					case 49:
-						break;
-
-					default:
-						break;
-
 					}
 				}
 			}
 		}
-
-
 	}
 
+	return ActiveChildData;
 }
 
 void GetAnmchrIDs()
@@ -3369,7 +3443,7 @@ static void GetCharacterHurtboxData(std::vector<Hurtbox> PlayerHurtboxes, int Hu
 	//P2ProjectileCount = 0;
 
 	t = *(uint64_t*)_addr(PlayerPtr + 0x4E10);
-	if (t && t < 0x140000000 && t != 0xffffffff)
+	if (t && t < 0x140000000 && t != 0xffffffff && t != 0x10000000f)
 	{
 		tt = *(uint64_t*)_addr(t + 0x30);
 		tttt = tt;
@@ -3399,8 +3473,8 @@ static void GetCharacterHurtboxData(std::vector<Hurtbox> PlayerHurtboxes, int Hu
 			tt = tttt;
 
 
-			if(HurtboxCount && HurtboxCount < 255)
-			//Once More, but this time for the Hurtbox pointers.
+			if (HurtboxCount && HurtboxCount < 255)
+				//Once More, but this time for the Hurtbox pointers.
 			{
 				for (int j = 0; j < HurtboxCount; j++)
 				{
@@ -3449,7 +3523,7 @@ static void GetCharacterHurtboxData(std::vector<Hurtbox> PlayerHurtboxes, int Hu
 					}
 				}
 			}
-		
+
 		}
 
 		if (PlayerPtr == P1Character1Data)

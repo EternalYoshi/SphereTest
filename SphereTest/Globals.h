@@ -29,6 +29,6 @@ inline LPDIRECT3DSURFACE9 g_pRenderSurface2 = NULL;
 inline LPDIRECT3DSURFACE9 g_pDepthStencilSurface2 = NULL;
 inline bool g_renderTargetCreated2 = false;
 
-inline float g_hitboxAlpha = 0.5;
+inline float g_hitboxAlpha = 0.9f;
 
 #endif
