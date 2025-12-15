@@ -691,6 +691,11 @@ HitboxR GetHitboxScreenPos(Hitbox HBox)
 
 }
 
+//void UpdateSphereData()
+//{
+//
+//}
+
 // This is meant to update the Hit/Hurtsphere data and is only meant to be called once per game frame somehow.
 void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes, std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes, std::vector<Hurtbox> P2C3Hurtboxes)
 {
@@ -888,6 +893,8 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	//========Shot Stuff Coming soon.
 
+	EmptyShotLists();
+
 	//========Child Character stuff.
 
 #pragma region Player 1 Character 1 Child Hurtboxes & Hitboxes
@@ -935,6 +942,185 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	}
 #pragma endregion
 
+#pragma region Player 1 Character 2 Child Hurtboxes & Hitboxes
+	if (Player1CharNodeTree && Player2CharNodeTree)
+	{
+		P1C2ActiveChildData = GetChildCharacterData(P1Character2Data, P1Character2ID, Player1CharNodeTree, P1C2ActiveChildData);
+		data.P1C2ChildActiveSpheres.clear();
+		data.P1C2Child1ActiveHitSpheres.clear();
+
+		if (sAction && MatchFlag == 0)
+		{
+			for (int n = 0; n < P1C2ActiveChildData.size(); n++)
+			{
+				if (P1C2ActiveChildData[n].ChildVulnState != 0x0 && P1C2ActiveChildData[n].WeirdFloat != 0 && P1C2ActiveChildData[n].ChildCharState != 0x280C
+					&& P1C2ActiveChildData[n].ChildCharState != 0x100 && P1C2ActiveChildData[n].ChildCharState != 0x20000
+					&& P1C2ActiveChildData[n].CurAnmchrID != 0x85 && P1C2ActiveChildData[n].CurAnmchrID != 0x155 && P1C2ActiveChildData[n].CurAnmchrID != 0x88)
+				{
+					for (int i = 0; i < P1C2ActiveChildData[n].ChildActiveSpheres.size(); i++)
+					{
+						data.P1C2ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C2ActiveChildData[n].ChildActiveSpheres[i]));
+					}
+				}
+
+				if (P1C2ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C2ActiveChildData[n].WeirdFloat != 0 && P1C2ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+				{
+					for (int i = 0; i < P1C2ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+					{
+						data.P1C2Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C2ActiveChildData[n].Child1ActiveHitSpheres[i]));
+					}
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
+#pragma region Player 1 Character 3 Child Hurtboxes & Hitboxes
+	if (Player1CharNodeTree && Player2CharNodeTree)
+	{
+		P1C3ActiveChildData = GetChildCharacterData(P1Character3Data, P1Character3ID, Player1CharNodeTree, P1C3ActiveChildData);
+		data.P1C3ChildActiveSpheres.clear();
+		data.P1C3Child1ActiveHitSpheres.clear();
+
+		if (sAction && MatchFlag == 0)
+		{
+			for (int n = 0; n < P1C3ActiveChildData.size(); n++)
+			{
+				if (P1C3ActiveChildData[n].ChildVulnState != 0x0 && P1C3ActiveChildData[n].WeirdFloat != 0 && P1C3ActiveChildData[n].ChildCharState != 0x280C
+					&& P1C3ActiveChildData[n].ChildCharState != 0x100 && P1C3ActiveChildData[n].ChildCharState != 0x20000
+					&& P1C3ActiveChildData[n].CurAnmchrID != 0x85 && P1C3ActiveChildData[n].CurAnmchrID != 0x155 && P1C3ActiveChildData[n].CurAnmchrID != 0x88)
+				{
+					for (int i = 0; i < P1C3ActiveChildData[n].ChildActiveSpheres.size(); i++)
+					{
+						data.P1C3ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C3ActiveChildData[n].ChildActiveSpheres[i]));
+					}
+				}
+
+				if (P1C3ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C3ActiveChildData[n].WeirdFloat != 0 && P1C3ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+				{
+					for (int i = 0; i < P1C3ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+					{
+						data.P1C3Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C3ActiveChildData[n].Child1ActiveHitSpheres[i]));
+					}
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
+#pragma region Player 2 Character 1 Child Hurtboxes & Hitboxes
+	if (Player1CharNodeTree && Player2CharNodeTree)
+	{
+		P2C1ActiveChildData = GetChildCharacterData(P2Character1Data, P2Character1ID, Player2CharNodeTree, P2C1ActiveChildData);
+		data.P2C1ChildActiveSpheres.clear();
+		data.P2C1Child1ActiveHitSpheres.clear();
+
+		if (sAction && MatchFlag == 0)
+		{
+			for (int n = 0; n < P2C1ActiveChildData.size(); n++)
+			{
+				if (P2C1ActiveChildData[n].ChildVulnState != 0x0 && P2C1ActiveChildData[n].WeirdFloat != 0 && P2C1ActiveChildData[n].ChildCharState != 0x280C
+					&& P2C1ActiveChildData[n].ChildCharState != 0x100 && P2C1ActiveChildData[n].ChildCharState != 0x20000
+					&& P2C1ActiveChildData[n].CurAnmchrID != 0x85 && P2C1ActiveChildData[n].CurAnmchrID != 0x155 && P2C1ActiveChildData[n].CurAnmchrID != 0x88)
+				{
+					for (int i = 0; i < P2C1ActiveChildData[n].ChildActiveSpheres.size(); i++)
+					{
+						data.P2C1ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C1ActiveChildData[n].ChildActiveSpheres[i]));
+					}
+				}
+
+				if (P2C1ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C1ActiveChildData[n].WeirdFloat != 0 && P2C1ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+				{
+					for (int i = 0; i < P2C1ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+					{
+						data.P2C1Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C1ActiveChildData[n].Child1ActiveHitSpheres[i]));
+					}
+				}
+
+
+			}
+
+
+
+
+
+		}
+
+
+
+	}
+#pragma endregion
+
+#pragma region Player 2 Character 2 Child Hurtboxes & Hitboxes
+	if (Player1CharNodeTree && Player2CharNodeTree)
+	{
+		P2C2ActiveChildData = GetChildCharacterData(P2Character2Data, P2Character2ID, Player2CharNodeTree, P2C2ActiveChildData);
+		data.P2C2ChildActiveSpheres.clear();
+		data.P2C2Child1ActiveHitSpheres.clear();
+
+		if (sAction && MatchFlag == 0)
+		{
+			for (int n = 0; n < P2C2ActiveChildData.size(); n++)
+			{
+				if (P2C2ActiveChildData[n].ChildVulnState != 0x0 && P2C2ActiveChildData[n].WeirdFloat != 0 && P2C2ActiveChildData[n].ChildCharState != 0x280C
+					&& P2C2ActiveChildData[n].ChildCharState != 0x100 && P2C2ActiveChildData[n].ChildCharState != 0x20000
+					&& P2C2ActiveChildData[n].CurAnmchrID != 0x85 && P2C2ActiveChildData[n].CurAnmchrID != 0x155 && P2C2ActiveChildData[n].CurAnmchrID != 0x88)
+				{
+					for (int i = 0; i < P2C2ActiveChildData[n].ChildActiveSpheres.size(); i++)
+					{
+						data.P2C2ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C2ActiveChildData[n].ChildActiveSpheres[i]));
+					}
+				}
+
+				if (P2C2ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C2ActiveChildData[n].WeirdFloat != 0 && P2C2ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+				{
+					for (int i = 0; i < P2C2ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+					{
+						data.P2C2Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C2ActiveChildData[n].Child1ActiveHitSpheres[i]));
+					}
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
+#pragma region Player 2 Character 3 Child Hurtboxes & Hitboxes
+	if (Player1CharNodeTree && Player2CharNodeTree)
+	{
+		P2C3ActiveChildData = GetChildCharacterData(P2Character3Data, P2Character3ID, Player2CharNodeTree, P2C3ActiveChildData);
+		data.P2C3ChildActiveSpheres.clear();
+		data.P2C3Child1ActiveHitSpheres.clear();
+
+		if (sAction && MatchFlag == 0)
+		{
+			for (int n = 0; n < P2C3ActiveChildData.size(); n++)
+			{
+				if (P2C3ActiveChildData[n].ChildVulnState != 0x0 && P2C3ActiveChildData[n].WeirdFloat != 0 && P2C3ActiveChildData[n].ChildCharState != 0x280C
+					&& P2C3ActiveChildData[n].ChildCharState != 0x100 && P2C3ActiveChildData[n].ChildCharState != 0x20000
+					&& P2C3ActiveChildData[n].CurAnmchrID != 0x85 && P2C3ActiveChildData[n].CurAnmchrID != 0x155 && P2C3ActiveChildData[n].CurAnmchrID != 0x88)
+				{
+					for (int i = 0; i < P2C3ActiveChildData[n].ChildActiveSpheres.size(); i++)
+					{
+						data.P2C3ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C3ActiveChildData[n].ChildActiveSpheres[i]));
+					}
+				}
+
+				if (P2C3ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C3ActiveChildData[n].WeirdFloat != 0 && P2C3ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+				{
+					for (int i = 0; i < P2C3ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+					{
+						data.P2C3Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C3ActiveChildData[n].Child1ActiveHitSpheres[i]));
+					}
+				}
+			}
+		}
+
+	}
+#pragma endregion
+
 
 	data.Valid = true;
 
@@ -973,6 +1159,17 @@ void RenderSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 	// Render child spheres
 	ProcessHurtSpheres(pDevice, 32, data.P1C1ChildActiveSpheres);
 	ProcessHitCapsules(pDevice, 32, data.P1C1Child1ActiveHitSpheres);
+	ProcessHurtSpheres(pDevice, 32, data.P1C2ChildActiveSpheres);
+	ProcessHitCapsules(pDevice, 32, data.P1C2Child1ActiveHitSpheres);
+	ProcessHurtSpheres(pDevice, 32, data.P1C3ChildActiveSpheres);
+	ProcessHitCapsules(pDevice, 32, data.P1C3Child1ActiveHitSpheres);
+
+	ProcessHurtSpheres(pDevice, 32, data.P2C1ChildActiveSpheres);
+	ProcessHitCapsules(pDevice, 32, data.P2C1Child1ActiveHitSpheres);
+	ProcessHurtSpheres(pDevice, 32, data.P2C2ChildActiveSpheres);
+	ProcessHitCapsules(pDevice, 32, data.P2C2Child1ActiveHitSpheres);
+	ProcessHurtSpheres(pDevice, 32, data.P2C3ChildActiveSpheres);
+	ProcessHitCapsules(pDevice, 32, data.P2C3Child1ActiveHitSpheres);
 }
 
 void RenderTheSpheres(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes, std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes, std::vector<Hurtbox> P2C3Hurtboxes)

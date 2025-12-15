@@ -438,6 +438,9 @@ inline uint64_t sTargetNode;
 inline uint64_t sTargetShot;
 inline uint64_t P1Shots;
 inline uint64_t P2Shots;
+inline std::vector< uint64_t>Player1ShotPointers;
+inline std::vector< uint64_t>Player2ShotPointers;
+
 inline int ShotCount;
 
 inline float P1C1GroundHitstunTimer;
@@ -1322,7 +1325,22 @@ inline std::vector<ChildData> P2C1ActiveChildData;
 inline std::vector<ChildData> P2C2ActiveChildData;
 inline std::vector<ChildData> P2C3ActiveChildData;
 
+//Struct I made to get relevant data
+struct ShotData {
+	uint64_t ShotVTAddress;
+	uint64_t rAtkInfoPtr;
+	std::vector<Hurtbox> ShotActiveSpheres;
+	std::vector<Hitbox> ShotActiveHitSpheres;
+	vector FirstVector;
+	vector SecondVector;
+	vector ThirdVector;
+	float FirstRadius;
+	float SecondRadius;
+	float ThirdRadius;
+};
 
+inline std::vector<ShotData> Player1Shots;
+inline std::vector<ShotData> Player2Shots;
 
 //class UMVC3Menu {
 //public:
@@ -1408,6 +1426,8 @@ void SetMeters();
 
 void GetShots();
 
+ShotData GetShotData();
+
 static std::string HashToTypeName(uint64_t Hash);
 
 static void GetCharacterHurtboxData(std::vector<Hurtbox> PlayerHurtboxes, int HurtboxCount, uint64_t PlayerPtr);
@@ -1445,7 +1465,7 @@ void ResetSettings();
 
 void LeftSideInputDisplay();
 
-void GetShots();
+void EmptyShotLists();
 
 void GetHitstunTimers();
 

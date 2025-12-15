@@ -242,6 +242,14 @@ void EmptyTheChildLists()
 	P2C3ActiveChildData.clear();
 }
 
+void EmptyShotLists()
+{
+	Player1ShotPointers.clear();
+	Player2ShotPointers.clear();
+	Player1Shots.clear();
+	Player2Shots.clear();
+}
+
 //Intended to eliminate the spheres if not in Training Mode through emptying all the spheres proccessed previously.
 void RemoveAllSpheres()
 {
@@ -2899,11 +2907,73 @@ void SetMeters()
 
 void GetShots()
 {
+	uint64_t TempT;
+	uint64_t TempU;
+	uint64_t TempV;
+
+	Player1ShotPointers.clear();
+	Player2ShotPointers.clear();
+	Player1Shots.clear();
+	Player2Shots.clear();
+
 	sShotList = *(uint64_t*)_addr(0x140D47F98);
 	P1Shots = *(uint64_t*)_addr(0x140D47FA0);
 	P2Shots = *(uint64_t*)_addr(0x140D47FC8);
 
+	uint64_t CurrentPtr = *(uint64_t*)_addr(0x140D47FA0);
+	uint64_t IPtr = 0x8;
+	//For Player 1. Thanks anotak.
+	while (CurrentPtr && CurrentPtr != 0xFFFFFFFF && CurrentPtr != 0x140D47F98 && CurrentPtr != 0x140D47FC0)
+	{
+		Player1ShotPointers.push_back(CurrentPtr);
+		ShotData shotstuff;
+
+		TempT = CurrentPtr;
+		//rAtkInfo..?
+		shotstuff.rAtkInfoPtr = CurrentPtr + 0x40;
+
+		//Shot file.
+		TempU = *(uint64_t*)_addr(CurrentPtr + 0x18);
+		if(TempU && TempU != 0xFFFFFFFF)
+		{
+			shotstuff.ShotVTAddress = *(uint64_t*)_addr(TempU);
+
+			shotstuff.FirstVector.X = *(float*)_addr(TempU + 0x50);
+			shotstuff.FirstVector.Y = *(float*)_addr(TempU + 0x54);
+			shotstuff.FirstVector.Z = *(float*)_addr(TempU + 0x58);
+
+			shotstuff.SecondVector.X = *(float*)_addr(TempU + 0xB0);
+			shotstuff.SecondVector.Y = *(float*)_addr(TempU + 0xB4);
+			shotstuff.SecondVector.Z = *(float*)_addr(TempU + 0xB8);
+
+			shotstuff.ThirdVector.X = *(float*)_addr(TempU + 0xF0);
+			shotstuff.ThirdVector.Y = *(float*)_addr(TempU + 0xF4);
+			shotstuff.ThirdVector.Z = *(float*)_addr(TempU + 0xF8);
+
+			//shotstuff.FirstRadius = *(float*)_addr(P1Shots + 0x5C);
+			//shotstuff.SecondRadius = *(float*)_addr(P1Shots + 0x60);
+			//shotstuff.ThirdRadius = *(float*)_addr(P1Shots + 0x64);
+
+
+			CurrentPtr = *(uint64_t*)_addr(0x140D47FA0 + IPtr);
+			IPtr = IPtr + 0x8;
+			Player1Shots.push_back(shotstuff);
+		}
+
+
+	}
+
+
+
+
 }
+
+//ShotData GetShotData()
+//{
+//
+//
+//
+//}
 
 void GetDebugData()
 {

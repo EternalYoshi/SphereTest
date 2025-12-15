@@ -247,6 +247,10 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			GetCameraStuff();
 			GetEvenMorePlayerData();
 			GetChildCharacters();
+			if(Player1CharNodeTree && Player2CharNodeTree)
+			{
+				GetShots();
+			}
 		}
 		else if(!Emptytied)
 		{
