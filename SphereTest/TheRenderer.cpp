@@ -252,6 +252,11 @@ struct SphereDataBuffer {
 
 	std::vector<HurtboxR> P2C3ChildActiveSpheres;
 	std::vector<HitboxR> P2C3Child1ActiveHitSpheres;
+
+	//Shots.
+	std::vector<HitboxR> P1ShotsActiveHitSpheres;
+	std::vector<HitboxR> P2ShotsActiveHitSpheres;
+
 	bool Valid = false;
 };
 
@@ -891,9 +896,28 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	}
 #pragma endregion
 
-	//========Shot Stuff Coming soon.
+	//========Shot Stuff WIP.
 
 	EmptyShotLists();
+	GetShots();
+	data.P1ShotsActiveHitSpheres.clear();
+	data.P2ShotsActiveHitSpheres.clear();
+	if (sAction && MatchFlag == 0)
+	{
+		//Player 1 Shots.
+		for (int n = 0; n < P1ShotHitboxes.size(); n++)
+		{
+			data.P1ShotsActiveHitSpheres.push_back(GetHitboxScreenPos(P1ShotHitboxes[n]));
+		}
+
+		//Player 2 Shots.
+		for (int nn = 0; nn < P2ShotHitboxes.size(); nn++)
+		{
+			data.P2ShotsActiveHitSpheres.push_back(GetHitboxScreenPos(P2ShotHitboxes[nn]));
+		}
+	}
+
+
 
 	//========Child Character stuff.
 
@@ -1140,7 +1164,7 @@ void RenderSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 
 	const SphereDataBuffer& data = FBuffers[read];
 
-	// Render all hurtboxes
+	//Renders all hurtboxes.
 	ProcessHurtSpheres(pDevice, 32, data.P1C1ActiveSpheres);
 	ProcessHurtSpheres(pDevice, 32, data.P1C2ActiveSpheres);
 	ProcessHurtSpheres(pDevice, 32, data.P1C3ActiveSpheres);
@@ -1148,7 +1172,7 @@ void RenderSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 	ProcessHurtSpheres(pDevice, 32, data.P2C2ActiveSpheres);
 	ProcessHurtSpheres(pDevice, 32, data.P2C3ActiveSpheres);
 
-	// Render all hitboxes
+	//Renders all hitboxes.
 	ProcessHitCapsules(pDevice, 32, data.P1C1ActiveHitSpheres);
 	ProcessHitCapsules(pDevice, 32, data.P1C2ActiveHitSpheres);
 	ProcessHitCapsules(pDevice, 32, data.P1C3ActiveHitSpheres);
@@ -1156,7 +1180,7 @@ void RenderSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 	ProcessHitCapsules(pDevice, 32, data.P2C2ActiveHitSpheres);
 	ProcessHitCapsules(pDevice, 32, data.P2C3ActiveHitSpheres);
 
-	// Render child spheres
+	//Render child spheres.
 	ProcessHurtSpheres(pDevice, 32, data.P1C1ChildActiveSpheres);
 	ProcessHitCapsules(pDevice, 32, data.P1C1Child1ActiveHitSpheres);
 	ProcessHurtSpheres(pDevice, 32, data.P1C2ChildActiveSpheres);
@@ -1170,6 +1194,12 @@ void RenderSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 	ProcessHitCapsules(pDevice, 32, data.P2C2Child1ActiveHitSpheres);
 	ProcessHurtSpheres(pDevice, 32, data.P2C3ChildActiveSpheres);
 	ProcessHitCapsules(pDevice, 32, data.P2C3Child1ActiveHitSpheres);
+
+	//Render Shot HitSpheres.
+	ProcessHitCapsules(pDevice, 32, data.P1ShotsActiveHitSpheres);
+	ProcessHitCapsules(pDevice, 32, data.P2ShotsActiveHitSpheres);
+
+
 }
 
 void RenderTheSpheres(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes, std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes, std::vector<Hurtbox> P2C3Hurtboxes)

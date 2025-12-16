@@ -1245,8 +1245,12 @@ inline std::vector<Hitbox> P2C1Hitboxes;
 inline std::vector<Hitbox> P2C2Hitboxes;
 inline std::vector<Hitbox> P2C3Hitboxes;
 
+inline std::vector<Hitbox> P1ShotHitboxes;
+inline std::vector<Hitbox> P2ShotHitboxes;
+
 inline std::vector<Hurtbox> ChildHurtboxes;
 inline std::vector<Hitbox> ChildHitboxes;
+
 
 
 struct ProjectileData
@@ -1337,6 +1341,8 @@ struct ShotData {
 	float FirstRadius;
 	float SecondRadius;
 	float ThirdRadius;
+	int PeculiarCounter;
+	uint64_t FirstCollPtr;
 };
 
 inline std::vector<ShotData> Player1Shots;

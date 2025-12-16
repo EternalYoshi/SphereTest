@@ -249,7 +249,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			GetChildCharacters();
 			if(Player1CharNodeTree && Player2CharNodeTree)
 			{
-				GetShots();
+				//GetShots();
 			}
 		}
 		else if(!Emptytied)
