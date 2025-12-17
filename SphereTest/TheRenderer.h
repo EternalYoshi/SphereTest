@@ -21,8 +21,8 @@ void RenderFromBuffer(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtbo
 	std::vector<Hurtbox> P2C3Hurtboxes);
 
 //};
-void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<HurtboxR>& ActiveSpheres);
-void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<HitboxR>& ActiveSpheres);
+void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitSphere>& ActiveSpheres);
+void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitCapsule>& ActiveSpheres);
 
 // A structure for our custom vertex type
 struct CUSTOMVERTEX

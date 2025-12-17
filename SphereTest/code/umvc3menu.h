@@ -664,6 +664,7 @@ struct cHitPrimSphere {
 	int mOfs6C;
 };
 
+//Spheres.
 struct Hurtbox
 {
 	long PointerIdentifier;
@@ -686,6 +687,7 @@ struct Hurtbox
 	float DeFactoZ;
 };
 
+//Capsules.
 struct Hitbox
 {
 	long ContainerIdentifier;
@@ -1245,8 +1247,11 @@ inline std::vector<Hitbox> P2C1Hitboxes;
 inline std::vector<Hitbox> P2C2Hitboxes;
 inline std::vector<Hitbox> P2C3Hitboxes;
 
-inline std::vector<Hitbox> P1ShotHitboxes;
-inline std::vector<Hitbox> P2ShotHitboxes;
+inline std::vector<Hitbox> P1ShotHitCapsules;
+inline std::vector<Hitbox> P2ShotHitCapsules;
+
+inline std::vector<Hurtbox> P1ShotHitSpheres;
+inline std::vector<Hurtbox> P2ShotHitSpheres;
 
 inline std::vector<Hurtbox> ChildHurtboxes;
 inline std::vector<Hitbox> ChildHitboxes;
@@ -1266,7 +1271,7 @@ struct ProjectileData
 
 inline std::vector<ProjectileData> ActiveShots;
 
-struct HurtboxR{
+struct PrimHitSphere{
 	vector Position;
 	unsigned long Color;
 	bool Enabled;
@@ -1282,7 +1287,7 @@ struct HurtboxR{
 	//}
 };
 
-struct HitboxR {
+struct PrimHitCapsule {
 	vector Position;
 	unsigned long Color;
 	bool Enabled;
@@ -1290,22 +1295,22 @@ struct HitboxR {
 	vector Position2;
 };
 
-inline std::vector<HurtboxR> P1C1ActiveSpheres;
-inline std::vector<HurtboxR> P1C2ActiveSpheres;
-inline std::vector<HurtboxR> P1C3ActiveSpheres;
+inline std::vector<PrimHitSphere> P1C1ActiveSpheres;
+inline std::vector<PrimHitSphere> P1C2ActiveSpheres;
+inline std::vector<PrimHitSphere> P1C3ActiveSpheres;
 
-inline std::vector<HurtboxR> P2C1ActiveSpheres;
-inline std::vector<HurtboxR> P2C2ActiveSpheres;
-inline std::vector<HurtboxR> P2C3ActiveSpheres;
+inline std::vector<PrimHitSphere> P2C1ActiveSpheres;
+inline std::vector<PrimHitSphere> P2C2ActiveSpheres;
+inline std::vector<PrimHitSphere> P2C3ActiveSpheres;
 
 //P1C1ActiveHitSpheres
-inline std::vector<HitboxR> P1C1ActiveHitSpheres;
-inline std::vector<HitboxR> P1C2ActiveHitSpheres;
-inline std::vector<HitboxR> P1C3ActiveHitSpheres;
+inline std::vector<PrimHitCapsule> P1C1ActiveHitSpheres;
+inline std::vector<PrimHitCapsule> P1C2ActiveHitSpheres;
+inline std::vector<PrimHitCapsule> P1C3ActiveHitSpheres;
 
-inline std::vector<HitboxR> P2C1ActiveHitSpheres;
-inline std::vector<HitboxR> P2C2ActiveHitSpheres;
-inline std::vector<HitboxR> P2C3ActiveHitSpheres;
+inline std::vector<PrimHitCapsule> P2C1ActiveHitSpheres;
+inline std::vector<PrimHitCapsule> P2C2ActiveHitSpheres;
+inline std::vector<PrimHitCapsule> P2C3ActiveHitSpheres;
 
 //inline std::vector<HurtboxR> P1C1ChildActiveSpheres;
 //inline std::vector<HitboxR> P1C1Child1ActiveHitSpheres;
@@ -1333,14 +1338,15 @@ inline std::vector<ChildData> P2C3ActiveChildData;
 struct ShotData {
 	uint64_t ShotVTAddress;
 	uint64_t rAtkInfoPtr;
+	bool CollIsCapsule;
 	std::vector<Hurtbox> ShotActiveSpheres;
 	std::vector<Hitbox> ShotActiveHitSpheres;
 	vector FirstVector;
 	vector SecondVector;
 	vector ThirdVector;
-	float FirstRadius;
-	float SecondRadius;
-	float ThirdRadius;
+	//float FirstRadius;
+	//float SecondRadius;
+	//float ThirdRadius;
 	int PeculiarCounter;
 	uint64_t FirstCollPtr;
 };

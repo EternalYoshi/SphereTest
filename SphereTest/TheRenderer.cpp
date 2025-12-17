@@ -219,43 +219,45 @@ bool CreateCapsuleTarget(IDirect3DDevice9* device, int width, int height) {
 // Sphere data buffer structure
 struct SphereDataBuffer {
 	//Player Character Hurtboxes.
-	std::vector<HurtboxR> P1C1ActiveSpheres;
-	std::vector<HurtboxR> P1C2ActiveSpheres;
-	std::vector<HurtboxR> P1C3ActiveSpheres;
-	std::vector<HurtboxR> P2C1ActiveSpheres;
-	std::vector<HurtboxR> P2C2ActiveSpheres;
-	std::vector<HurtboxR> P2C3ActiveSpheres;
+	std::vector<PrimHitSphere> P1C1ActiveSpheres;
+	std::vector<PrimHitSphere> P1C2ActiveSpheres;
+	std::vector<PrimHitSphere> P1C3ActiveSpheres;
+	std::vector<PrimHitSphere> P2C1ActiveSpheres;
+	std::vector<PrimHitSphere> P2C2ActiveSpheres;
+	std::vector<PrimHitSphere> P2C3ActiveSpheres;
 
 	//Player Character Hitboxes.
-	std::vector<HitboxR> P1C1ActiveHitSpheres;
-	std::vector<HitboxR> P1C2ActiveHitSpheres;
-	std::vector<HitboxR> P1C3ActiveHitSpheres;
-	std::vector<HitboxR> P2C1ActiveHitSpheres;
-	std::vector<HitboxR> P2C2ActiveHitSpheres;
-	std::vector<HitboxR> P2C3ActiveHitSpheres;
+	std::vector<PrimHitCapsule> P1C1ActiveHitSpheres;
+	std::vector<PrimHitCapsule> P1C2ActiveHitSpheres;
+	std::vector<PrimHitCapsule> P1C3ActiveHitSpheres;
+	std::vector<PrimHitCapsule> P2C1ActiveHitSpheres;
+	std::vector<PrimHitCapsule> P2C2ActiveHitSpheres;
+	std::vector<PrimHitCapsule> P2C3ActiveHitSpheres;
 
 	//Player Child Hit/Hurtspheres.
-	std::vector<HurtboxR> P1C1ChildActiveSpheres;
-	std::vector<HitboxR> P1C1Child1ActiveHitSpheres;
+	std::vector<PrimHitSphere> P1C1ChildActiveSpheres;
+	std::vector<PrimHitCapsule> P1C1Child1ActiveHitSpheres;
 
-	std::vector<HurtboxR> P1C2ChildActiveSpheres;
-	std::vector<HitboxR> P1C2Child1ActiveHitSpheres;
+	std::vector<PrimHitSphere> P1C2ChildActiveSpheres;
+	std::vector<PrimHitCapsule> P1C2Child1ActiveHitSpheres;
 
-	std::vector<HurtboxR> P1C3ChildActiveSpheres;
-	std::vector<HitboxR> P1C3Child1ActiveHitSpheres;
+	std::vector<PrimHitSphere> P1C3ChildActiveSpheres;
+	std::vector<PrimHitCapsule> P1C3Child1ActiveHitSpheres;
 
-	std::vector<HurtboxR> P2C1ChildActiveSpheres;
-	std::vector<HitboxR> P2C1Child1ActiveHitSpheres;
+	std::vector<PrimHitSphere> P2C1ChildActiveSpheres;
+	std::vector<PrimHitCapsule> P2C1Child1ActiveHitSpheres;
 
-	std::vector<HurtboxR> P2C2ChildActiveSpheres;
-	std::vector<HitboxR> P2C2Child1ActiveHitSpheres;
+	std::vector<PrimHitSphere> P2C2ChildActiveSpheres;
+	std::vector<PrimHitCapsule> P2C2Child1ActiveHitSpheres;
 
-	std::vector<HurtboxR> P2C3ChildActiveSpheres;
-	std::vector<HitboxR> P2C3Child1ActiveHitSpheres;
+	std::vector<PrimHitSphere> P2C3ChildActiveSpheres;
+	std::vector<PrimHitCapsule> P2C3Child1ActiveHitSpheres;
 
 	//Shots.
-	std::vector<HitboxR> P1ShotsActiveHitSpheres;
-	std::vector<HitboxR> P2ShotsActiveHitSpheres;
+	std::vector<PrimHitCapsule> P1ShotsActiveHitCapsules;
+	std::vector<PrimHitCapsule> P2ShotsActiveHitCapsules;
+	std::vector<PrimHitSphere> P1ShotsActiveHitSpheres;
+	std::vector<PrimHitSphere> P2ShotsActiveHitSpheres;
 
 	bool Valid = false;
 };
@@ -370,7 +372,7 @@ void circleFilled(LPDIRECT3DDEVICE9 pDevice, float x, float y, float rad, int re
 	if (g_pVB != NULL) g_pVB->Release();
 }
 
-void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<HurtboxR>& ActiveSpheres)
+void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitSphere>& ActiveSpheres)
 {
 	//Check if empty.
 	if (ActiveSpheres.empty()) return;
@@ -444,7 +446,7 @@ void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 
 }
 
-void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<HitboxR>& ActiveSpheres)
+void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitCapsule>& ActiveSpheres)
 {
 	//Check if empty.
 	if (ActiveSpheres.empty()) return;
@@ -591,7 +593,7 @@ void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 
 }
 
-HurtboxR GetHurtBoxScreenPos(Hurtbox HBox)
+PrimHitSphere GetHurtBoxScreenPos(Hurtbox HBox)
 {
 	//First the base coordinates of the hurtbox.
 
@@ -621,7 +623,7 @@ HurtboxR GetHurtBoxScreenPos(Hurtbox HBox)
 
 	float screenRadius = glm::distance(result, offsetResult) * 1.0f;
 
-	HurtboxR NewBoxR;
+	PrimHitSphere NewBoxR;
 	NewBoxR.Enabled = true;
 	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 128, 60, 0);
 	NewBoxR.Radius = screenRadius;
@@ -638,7 +640,54 @@ HurtboxR GetHurtBoxScreenPos(Hurtbox HBox)
 
 }
 
-HitboxR GetHitboxScreenPos(Hitbox HBox)
+//Because Shots can use Spheres as collisions.
+PrimHitSphere GetRedSphereScreenPos(Hurtbox HBox)
+{
+	//First the base coordinates of the hurtbox.
+
+	//float AverageX, AverageY, AverageZ;
+	//AverageX = (HBox.SecondaryX + HBox.DeFactoX) / 2;
+	//AverageY = (HBox.SecondaryY + HBox.DeFactoY) / 2;
+	//AverageZ = (HBox.SecondaryZ + HBox.DeFactoZ) / 2;
+
+	glm::vec3 position(HBox.CollData.Coordinates.X, HBox.CollData.Coordinates.Y, HBox.CollData.Coordinates.Z);
+
+	//Next the view matrix.
+	glm::mat4 viewMatrix = glm::lookAt(
+		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),    // CameraPos
+		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),	 // TargetPos
+		glm::vec3(0, 1, 0)									 // CameraUp
+	);
+
+	//Then the Projection and view.
+	float FovR = glm::radians(mFOV);
+	glm::highp_mat4 Projection = glm::perspective<float>(FovR, 1600.0f / 900.0f, NearPlane, FarPlane);
+	glm::vec4 View = glm::vec4(0, 0, 1600, 900);
+
+	//Now for the radius to adapt to zoom levels.
+	glm::vec3 offsetPosition = position + glm::vec3(HBox.CollData.Radius, 0, 0);
+	glm::vec2 offsetResult = glm::project(offsetPosition, viewMatrix, Projection, View);
+	glm::vec2 result = glm::project(position, viewMatrix, Projection, View);
+
+	float screenRadius = glm::distance(result, offsetResult) * 1.0f;
+
+	PrimHitSphere NewBoxR;
+	NewBoxR.Enabled = true;
+	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 60, 0);
+	NewBoxR.Radius = screenRadius;
+	NewBoxR.Position.X = result.x;
+	NewBoxR.Position.Y = result.y;
+	NewBoxR.Position.Z = 0;
+
+	//glm::vec4 viewPos = viewMatrix * glm::vec4(position, 1.0f);
+	//printf("World Y: %.2f, View Y: %.2f, Screen Y: %.2f, Camera Y: %.2f\n",
+	//	position.y, viewPos.y, result.y, CameraPos.y);
+
+	return NewBoxR;
+
+}
+
+PrimHitCapsule GetHitboxScreenPos(Hitbox HBox)
 {
 
 	//First the coordinates of the first part of the capsule.
@@ -680,7 +729,7 @@ HitboxR GetHitboxScreenPos(Hitbox HBox)
 	glm::vec2 resulttwo = glm::project(positiontwo, viewMatrix, Projection, View);
 	float screenRadius = glm::distance(result, offsetResult) * 1.0f;
 
-	HitboxR NewBoxR;
+	PrimHitCapsule NewBoxR;
 	NewBoxR.Enabled = true;
 	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 60, 0);
 	NewBoxR.Radius = screenRadius;
@@ -900,21 +949,35 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	EmptyShotLists();
 	GetShots();
+	data.P1ShotsActiveHitCapsules.clear();
+	data.P2ShotsActiveHitCapsules.clear();
 	data.P1ShotsActiveHitSpheres.clear();
 	data.P2ShotsActiveHitSpheres.clear();
+
 	if (sAction && MatchFlag == 0)
 	{
 		//Player 1 Shots.
-		for (int n = 0; n < P1ShotHitboxes.size(); n++)
+		for (int n = 0; n < P1ShotHitCapsules.size(); n++)
 		{
-			data.P1ShotsActiveHitSpheres.push_back(GetHitboxScreenPos(P1ShotHitboxes[n]));
+			data.P1ShotsActiveHitCapsules.push_back(GetHitboxScreenPos(P1ShotHitCapsules[n]));
+		}
+
+		for (int n = 0; n < P1ShotHitSpheres.size(); n++)
+		{
+			data.P1ShotsActiveHitSpheres.push_back(GetRedSphereScreenPos(P1ShotHitSpheres[n]));
 		}
 
 		//Player 2 Shots.
-		for (int nn = 0; nn < P2ShotHitboxes.size(); nn++)
+		for (int nn = 0; nn < P2ShotHitCapsules.size(); nn++)
 		{
-			data.P2ShotsActiveHitSpheres.push_back(GetHitboxScreenPos(P2ShotHitboxes[nn]));
+			data.P2ShotsActiveHitCapsules.push_back(GetHitboxScreenPos(P2ShotHitCapsules[nn]));
 		}
+
+		for (int n = 0; n < P2ShotHitSpheres.size(); n++)
+		{
+			data.P2ShotsActiveHitSpheres.push_back(GetRedSphereScreenPos(P2ShotHitSpheres[n]));
+		}
+
 	}
 
 
@@ -1196,9 +1259,10 @@ void RenderSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 	ProcessHitCapsules(pDevice, 32, data.P2C3Child1ActiveHitSpheres);
 
 	//Render Shot HitSpheres.
-	ProcessHitCapsules(pDevice, 32, data.P1ShotsActiveHitSpheres);
-	ProcessHitCapsules(pDevice, 32, data.P2ShotsActiveHitSpheres);
-
+	ProcessHitCapsules(pDevice, 32, data.P1ShotsActiveHitCapsules);
+	ProcessHitCapsules(pDevice, 32, data.P2ShotsActiveHitCapsules);
+	ProcessHurtSpheres(pDevice, 32, data.P1ShotsActiveHitSpheres);
+	ProcessHurtSpheres(pDevice, 32, data.P2ShotsActiveHitSpheres);
 
 }
 

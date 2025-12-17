@@ -248,8 +248,10 @@ void EmptyShotLists()
 	Player2ShotPointers.clear();
 	Player1Shots.clear();
 	Player2Shots.clear();
-	P1ShotHitboxes.clear();
-	P2ShotHitboxes.clear();
+	P1ShotHitCapsules.clear();
+	P2ShotHitCapsules.clear();
+	P1ShotHitSpheres.clear();
+	P2ShotHitSpheres.clear();
 }
 
 //Intended to eliminate the spheres if not in Training Mode through emptying all the spheres proccessed previously.
@@ -2917,25 +2919,27 @@ void GetShots()
 	uint64_t TempY;
 	uint64_t TempZ;
 	uint64_t ContainerPtr;
-	uint64_t CapsulePtr;
+	uint64_t CollisionPtr;
+	uint64_t CollVtable;
 
 	Player1ShotPointers.clear();
 	Player2ShotPointers.clear();
-	Player1Shots.clear();
-	Player2Shots.clear();
+	//Player1Shots.clear();
+	//Player2Shots.clear();
 
-	P1ShotHitboxes.clear();
-	P2ShotHitboxes.clear();
+	//P1ShotHitboxes.clear();
+	//P2ShotHitboxes.clear();
 
 	sShotList = *(uint64_t*)_addr(0x140D47F98);
 	P1Shots = *(uint64_t*)_addr(0x140D47FA0);
 	P2Shots = *(uint64_t*)_addr(0x140D47FC8);
 
 	uint64_t CurrentPtr = *(uint64_t*)_addr(0x140D47FA0);
-	uint64_t IPtr = 0x8;
+	uint64_t IPtr = CurrentPtr;
 	//For Player 1. Thanks anotak.
 	while (CurrentPtr && CurrentPtr != 0xFFFFFFFF && CurrentPtr != 0x140D47F98 && CurrentPtr != 0x140D47FC0)
 	{
+		IPtr = CurrentPtr;
 		Player1ShotPointers.push_back(CurrentPtr);
 		ShotData shotstuff;
 
@@ -2949,63 +2953,90 @@ void GetShots()
 		{
 			shotstuff.ShotVTAddress = *(uint64_t*)_addr(TempU);
 
-			//shotstuff.FirstVector.X = *(float*)_addr(TempU + 0x50);
-			//shotstuff.FirstVector.Y = *(float*)_addr(TempU + 0x54);
-			//shotstuff.FirstVector.Z = *(float*)_addr(TempU + 0x58);
+			shotstuff.FirstVector.X = *(float*)_addr(TempU + 0x50);
+			shotstuff.FirstVector.Y = *(float*)_addr(TempU + 0x54);
+			shotstuff.FirstVector.Z = *(float*)_addr(TempU + 0x58);
 
-			//shotstuff.SecondVector.X = *(float*)_addr(TempU + 0xB0);
-			//shotstuff.SecondVector.Y = *(float*)_addr(TempU + 0xB4);
-			//shotstuff.SecondVector.Z = *(float*)_addr(TempU + 0xB8);
+			shotstuff.SecondVector.X = *(float*)_addr(TempU + 0xB0);
+			shotstuff.SecondVector.Y = *(float*)_addr(TempU + 0xB4);
+			shotstuff.SecondVector.Z = *(float*)_addr(TempU + 0xB8);
 
-			//shotstuff.ThirdVector.X = *(float*)_addr(TempU + 0xF0);
-			//shotstuff.ThirdVector.Y = *(float*)_addr(TempU + 0xF4);
-			//shotstuff.ThirdVector.Z = *(float*)_addr(TempU + 0xF8);
+			shotstuff.ThirdVector.X = *(float*)_addr(TempU + 0xF0);
+			shotstuff.ThirdVector.Y = *(float*)_addr(TempU + 0xF4);
+			shotstuff.ThirdVector.Z = *(float*)_addr(TempU + 0xF8);
 
-			//shotstuff.FirstRadius = *(float*)_addr(P1Shots + 0x5C);
-			//shotstuff.SecondRadius = *(float*)_addr(P1Shots + 0x60);
-			//shotstuff.ThirdRadius = *(float*)_addr(P1Shots + 0x64);
-
-			shotstuff.PeculiarCounter = *(float*)_addr(TempU + 0x2054);
+			shotstuff.PeculiarCounter = *(int*)_addr(TempU + 0x2054);
 			shotstuff.FirstCollPtr = *(uint64_t*)_addr(TempU + 0x2058);
 			if (shotstuff.FirstCollPtr)
 			{
 				TempV = *(uint64_t*)_addr(shotstuff.FirstCollPtr + 0x30);
 				if(TempV)
 				{
-					ContainerPtr = *(uint64_t*)_addr(TempV);
-					if(ContainerPtr)
-					{
-						CapsulePtr = *(uint64_t*)_addr(ContainerPtr + 0x10);
-
-						Hitbox ShotBox;
-						ShotBox.ContainerPos.x = *(float*)(ContainerPtr + 0x20);
-						ShotBox.ContainerPos.y = *(float*)(ContainerPtr + 0x24);
-						ShotBox.ContainerPos.z = *(float*)(ContainerPtr + 0x28);
-						ShotBox.Radius = *(float*)_addr(ContainerPtr + 0x38);
-						ShotBox.PointerToCapsuleData = CapsulePtr;
-
-						//Checks if the pointer actually points to somewhere.
-						if (CapsulePtr)
+					//This is where the while loop should be.
+					while(*(uint64_t*)_addr(TempV) != 0x0 && *(uint64_t*)_addr(TempV) != 0xFFFFFFFF)
+					{						
+						ContainerPtr = *(uint64_t*)_addr(TempV);
+						if (ContainerPtr)
 						{
-							ShotBox.CapsulePrimaryPos.x = *((float*)(CapsulePtr + 0x20));
-							ShotBox.CapsulePrimaryPos.y = *((float*)(CapsulePtr + 0x24));
-							ShotBox.CapsulePrimaryPos.z = *((float*)(CapsulePtr + 0x28));
+							CollisionPtr = *(uint64_t*)_addr(ContainerPtr + 0x10);
+							//Checks if the pointer actually points to somewhere.
+							if (CollisionPtr)
+							{
+								//Checks if Capsule or Sphere.
+								CollVtable = *(uint64_t*)_addr(CollisionPtr);
 
-							ShotBox.CapsuleSecondPos.x = *((float*)(CapsulePtr + 0x30));
-							ShotBox.CapsuleSecondPos.y = *((float*)(CapsulePtr + 0x34));
-							ShotBox.CapsuleSecondPos.z = *((float*)(CapsulePtr + 0x38));
+								//If Capsule.
+								if (CollVtable == 0x140a6b000)
+								{
+									Hitbox ShotBox;
+									ShotBox.ContainerPos.x = *(float*)(ContainerPtr + 0x20);
+									ShotBox.ContainerPos.y = *(float*)(ContainerPtr + 0x24);
+									ShotBox.ContainerPos.z = *(float*)(ContainerPtr + 0x28);
+									ShotBox.Radius = *(float*)_addr(ContainerPtr + 0x38);
+									ShotBox.PointerToCapsuleData = CollisionPtr;
+
+									ShotBox.CapsulePrimaryPos.x = *((float*)(CollisionPtr + 0x20));
+									ShotBox.CapsulePrimaryPos.y = *((float*)(CollisionPtr + 0x24));
+									ShotBox.CapsulePrimaryPos.z = *((float*)(CollisionPtr + 0x28));
+
+									ShotBox.CapsuleSecondPos.x = *((float*)(CollisionPtr + 0x30));
+									ShotBox.CapsuleSecondPos.y = *((float*)(CollisionPtr + 0x34));
+									ShotBox.CapsuleSecondPos.z = *((float*)(CollisionPtr + 0x38));
+
+									P1ShotHitCapsules.push_back(ShotBox);
+								}
+								//Else if a Sphere.
+								else if (CollVtable == 0x140a6ae10)
+								{
+									Hurtbox ShotSphere;
+									ShotSphere.CollData.Radius = *(float*)_addr(CollisionPtr + 0x2C);
+									ShotSphere.PointerToMoreData = CollisionPtr;
+
+									ShotSphere.CollData.Coordinates.X = *((float*)(CollisionPtr + 0x20));
+									ShotSphere.CollData.Coordinates.Y = *((float*)(CollisionPtr + 0x24));
+									ShotSphere.CollData.Coordinates.Z = *((float*)(CollisionPtr + 0x28));
+
+									P1ShotHitSpheres.push_back(ShotSphere);
+								}
+
+
+							}
+
+
+
 						}
-
-
-						P1ShotHitboxes.push_back(ShotBox);
+						TempV = TempV + 0x08;
 					}
+				
+				
 				}
 
 			}
 
 			//Ending of the loop.
-			CurrentPtr = *(uint64_t*)_addr(0x140D47FA0 + IPtr);
 			IPtr = IPtr + 0x8;
+			CurrentPtr = *(uint64_t*)_addr(IPtr);
+			
 			Player1Shots.push_back(shotstuff);
 		}
 
@@ -3018,6 +3049,7 @@ void GetShots()
 	//For Player 2.
 	while (CurrentPtr && CurrentPtr != 0xFFFFFFFF && CurrentPtr != 0x140D47F98 && CurrentPtr != 0x140D47FC0)
 	{
+		IPtr = CurrentPtr;
 		Player2ShotPointers.push_back(CurrentPtr);
 		ShotData shotstuff;
 
@@ -3031,67 +3063,90 @@ void GetShots()
 		{
 			shotstuff.ShotVTAddress = *(uint64_t*)_addr(TempU);
 
-			//These vectors turned out to be unimportant.
-			//shotstuff.FirstVector.X = *(float*)_addr(TempU + 0x50);
-			//shotstuff.FirstVector.Y = *(float*)_addr(TempU + 0x54);
-			//shotstuff.FirstVector.Z = *(float*)_addr(TempU + 0x58);
+			shotstuff.FirstVector.X = *(float*)_addr(TempU + 0x50);
+			shotstuff.FirstVector.Y = *(float*)_addr(TempU + 0x54);
+			shotstuff.FirstVector.Z = *(float*)_addr(TempU + 0x58);
 
-			//shotstuff.SecondVector.X = *(float*)_addr(TempU + 0xB0);
-			//shotstuff.SecondVector.Y = *(float*)_addr(TempU + 0xB4);
-			//shotstuff.SecondVector.Z = *(float*)_addr(TempU + 0xB8);
+			shotstuff.SecondVector.X = *(float*)_addr(TempU + 0xB0);
+			shotstuff.SecondVector.Y = *(float*)_addr(TempU + 0xB4);
+			shotstuff.SecondVector.Z = *(float*)_addr(TempU + 0xB8);
 
-			//shotstuff.ThirdVector.X = *(float*)_addr(TempU + 0xF0);
-			//shotstuff.ThirdVector.Y = *(float*)_addr(TempU + 0xF4);
-			//shotstuff.ThirdVector.Z = *(float*)_addr(TempU + 0xF8);
+			shotstuff.ThirdVector.X = *(float*)_addr(TempU + 0xF0);
+			shotstuff.ThirdVector.Y = *(float*)_addr(TempU + 0xF4);
+			shotstuff.ThirdVector.Z = *(float*)_addr(TempU + 0xF8);
 
-			//shotstuff.FirstRadius = *(float*)_addr(P1Shots + 0x5C);
-			//shotstuff.SecondRadius = *(float*)_addr(P1Shots + 0x60);
-			//shotstuff.ThirdRadius = *(float*)_addr(P1Shots + 0x64);
-
-			//Gets the relevant data hoepfully.
-
-			shotstuff.PeculiarCounter = *(float*)_addr(TempU + 0x2054);
+			shotstuff.PeculiarCounter = *(int*)_addr(TempU + 0x2054);
 			shotstuff.FirstCollPtr = *(uint64_t*)_addr(TempU + 0x2058);
-			if (shotstuff.FirstCollPtr) 
+			if (shotstuff.FirstCollPtr)
 			{
 				TempV = *(uint64_t*)_addr(shotstuff.FirstCollPtr + 0x30);
-				if(TempV)
+				if (TempV)
 				{
-					ContainerPtr = *(uint64_t*)_addr(TempV);
-					if(ContainerPtr)
+					//This is where the while loop should be.
+					while (*(uint64_t*)_addr(TempV) != 0x0 && *(uint64_t*)_addr(TempV) != 0xFFFFFFFF)
 					{
-						CapsulePtr = *(uint64_t*)_addr(ContainerPtr + 0x10);
-
-						Hitbox ShotBox;
-						ShotBox.ContainerPos.x = *(float*)(ContainerPtr + 0x20);
-						ShotBox.ContainerPos.y = *(float*)(ContainerPtr + 0x24);
-						ShotBox.ContainerPos.z = *(float*)(ContainerPtr + 0x28);
-						ShotBox.Radius = *(float*)_addr(ContainerPtr + 0x38);
-						ShotBox.PointerToCapsuleData = CapsulePtr;
-
-						//Checks if the pointer actually points to somewhere.
-						if (CapsulePtr)
+						ContainerPtr = *(uint64_t*)_addr(TempV);
+						if (ContainerPtr)
 						{
-							ShotBox.CapsulePrimaryPos.x = *((float*)(CapsulePtr + 0x20));
-							ShotBox.CapsulePrimaryPos.y = *((float*)(CapsulePtr + 0x24));
-							ShotBox.CapsulePrimaryPos.z = *((float*)(CapsulePtr + 0x28));
+							CollisionPtr = *(uint64_t*)_addr(ContainerPtr + 0x10);
+							//Checks if the pointer actually points to somewhere.
+							if (CollisionPtr)
+							{
+								//Checks if Capsule or Sphere.
+								CollVtable = *(uint64_t*)_addr(CollisionPtr);
 
-							ShotBox.CapsuleSecondPos.x = *((float*)(CapsulePtr + 0x30));
-							ShotBox.CapsuleSecondPos.y = *((float*)(CapsulePtr + 0x34));
-							ShotBox.CapsuleSecondPos.z = *((float*)(CapsulePtr + 0x38));
+								//If Capsule.
+								if (CollVtable == 0x140a6b000)
+								{
+									Hitbox ShotBox;
+									ShotBox.ContainerPos.x = *(float*)(ContainerPtr + 0x20);
+									ShotBox.ContainerPos.y = *(float*)(ContainerPtr + 0x24);
+									ShotBox.ContainerPos.z = *(float*)(ContainerPtr + 0x28);
+									ShotBox.Radius = *(float*)_addr(ContainerPtr + 0x38);
+									ShotBox.PointerToCapsuleData = CollisionPtr;
+
+									ShotBox.CapsulePrimaryPos.x = *((float*)(CollisionPtr + 0x20));
+									ShotBox.CapsulePrimaryPos.y = *((float*)(CollisionPtr + 0x24));
+									ShotBox.CapsulePrimaryPos.z = *((float*)(CollisionPtr + 0x28));
+
+									ShotBox.CapsuleSecondPos.x = *((float*)(CollisionPtr + 0x30));
+									ShotBox.CapsuleSecondPos.y = *((float*)(CollisionPtr + 0x34));
+									ShotBox.CapsuleSecondPos.z = *((float*)(CollisionPtr + 0x38));
+
+									P2ShotHitCapsules.push_back(ShotBox);
+								}
+								//Else if a Sphere.
+								else if (CollVtable == 0x140a6ae10)
+								{
+									Hurtbox ShotSphere;
+									ShotSphere.CollData.Radius = *(float*)_addr(CollisionPtr + 0x2C);
+									ShotSphere.PointerToMoreData = CollisionPtr;
+
+									ShotSphere.CollData.Coordinates.X = *((float*)(CollisionPtr + 0x20));
+									ShotSphere.CollData.Coordinates.Y = *((float*)(CollisionPtr + 0x24));
+									ShotSphere.CollData.Coordinates.Z = *((float*)(CollisionPtr + 0x28));
+
+									P2ShotHitSpheres.push_back(ShotSphere);
+								}
+
+
+							}
+
+
+
 						}
-
-
-						P2ShotHitboxes.push_back(ShotBox);
+						TempV = TempV + 0x08;
 					}
+
+
 				}
 
 			}
 
-
 			//Ending of the loop.
-			CurrentPtr = *(uint64_t*)_addr(0x140D47FA0 + IPtr);
 			IPtr = IPtr + 0x8;
+			CurrentPtr = *(uint64_t*)_addr(IPtr);
+
 			Player2Shots.push_back(shotstuff);
 		}
 
