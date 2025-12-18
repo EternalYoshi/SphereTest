@@ -22,6 +22,9 @@
 typedef long(__stdcall* EndScene)(LPDIRECT3DDEVICE9);
 typedef LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
+//Defines the debug symbol.
+#define DEBUG  
+
 using namespace Memory::VP;
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -46,6 +49,7 @@ bool initialized = false;
 bool DisplaySpheres = false;
 bool ImGuiInitialized = false;
 
+static int64 timer = GetTickCount64();
 
 
 bool CreateHurtboxRenderTarget(LPDIRECT3DDEVICE9 pDevice)
@@ -130,25 +134,27 @@ void InitImGui(LPDIRECT3DDEVICE9 pDevice)
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
-	switch (uMsg)
-	{
-	case WM_KILLFOCUS:
-		TheMenu->m_bIsFocused = false;
-		break;
-	case WM_SETFOCUS:
-		TheMenu->m_bIsFocused = true;
-		break;
-		break;
-	default:
-		break;
-	}
+#ifdef DEBUG
 
-	if (TheMenu->GetActiveState())
-	{
-		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
-		return true;
-	}
+	//switch (uMsg)
+	//{
+	//case WM_KILLFOCUS:
+	//	TheMenu->m_bIsFocused = false;
+	//	break;
+	//case WM_SETFOCUS:
+	//	TheMenu->m_bIsFocused = true;
+	//	break;
+	//	break;
+	//default:
+	//	break;
+	//}
 
+	//if (TheMenu->GetActiveState())
+	//{
+	//	ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+	//	return true;
+	//}
+#endif
 	return CallWindowProc(oWndProc, hWnd, uMsg, wParam, lParam);
 }
 
@@ -199,7 +205,9 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		pDevice->GetCreationParameters(&params);
 		window = params.hFocusWindow;
 		oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)WndProc);
-		InitImGui(pDevice);
+#ifdef DEBUG
+		//InitImGui(pDevice);
+#endif
 		initialized = true;
 		//hitboxRenderer = new HitboxRender();
 	}
@@ -209,19 +217,21 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	//Becuase of the above, also ONLY render ImGui stuff on main thread.
 	if (CurrentThreadId == MainRenderThread && initialized)
 	{
-		ImGui_ImplDX9_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-		ImGui::GetIO().MouseDrawCursor = false;
+#ifdef DEBUG
+		//ImGui_ImplDX9_NewFrame();
+		//ImGui_ImplWin32_NewFrame();
+		//ImGui::NewFrame();
+		//ImGui::GetIO().MouseDrawCursor = false;
 
-		if (TheMenu->GetActiveState())
-		{
-			TheMenu->Draw();
-		}
+		//if (TheMenu->GetActiveState())
+		//{
+		//	TheMenu->Draw();
+		//}
 
-		ImGui::EndFrame();
+		//ImGui::EndFrame();
 
-		ImGui::Render();
+		//ImGui::Render();
+#endif
 	}
 
 	//This updates hitbox and hurtbox data only on the main thread once per game frame.
@@ -236,8 +246,9 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	{
 		GetMainPointers();
 		CheckIfInMatch();
-		if (InMatch)
+		if (InMatch && sCharacter)
 		{
+
 			Emptytied = false;
 			TickUpdates();
 			GetPlayerData();
@@ -322,7 +333,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			DrawHitboxTexture(pDevice, g_hitboxAlpha);
 		}
 
-		
+
 
 
 		//if (BeginHitboxDisplay)
@@ -343,10 +354,13 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	}
 	StopRendering(pDevice);
 
-	if (CurrentThreadId == MainRenderThread && initialized)
-	{
-		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-	}
+#ifdef DEBUG
+
+	//if (CurrentThreadId == MainRenderThread && initialized)
+	//{
+	//	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+	//}
+#endif
 
 	HRESULT result = oEndScene(pDevice);
 	FrameCounter.fetch_add(1);
@@ -484,12 +498,15 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 void OnInitializeHook()
 {
-	TheMenu->Initialize();
+#ifdef DEBUG
 
-	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
-	TheMenu->tramp = tramp;
+	//TheMenu->Initialize();
 
-	TheMenu->PostInit();
+	//Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
+	//TheMenu->tramp = tramp;
+
+	//TheMenu->PostInit();
+#endif
 
 }
 
@@ -520,7 +537,46 @@ void WINAPI HookUpdate()
 {
 	while (true)
 	{
-		TheMenu->Process();
+#ifdef DEBUG
+		//TheMenu->Process();
+#endif
+
+		//if (GetTickCount64() - timer <= 50) 
+		//{
+		//	Sleep(1);
+		//	return;
+		//}
+		//timer = GetTickCount64();
+		if (CheckTheMode() == true)
+		{
+			if (InMatch && sCharacter) {
+				if (GetAsyncKeyState(VK_NEXT))
+				{
+					if (GetTickCount64() - timer <= 150) 
+					{ 
+					
+					}
+					else
+					{
+						timer = GetTickCount64();
+						if (BeginHitboxDisplay)
+						{
+							BeginHitboxDisplay = false;
+						}
+						else
+						{
+							BeginHitboxDisplay = true;
+						}
+					}
+
+				}
+			}
+			else
+			{
+				BeginHitboxDisplay = false;
+			}
+		}
+
 		Sleep(1);
 	}
 }

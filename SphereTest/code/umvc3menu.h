@@ -1336,6 +1336,8 @@ inline std::vector<ChildData> P2C3ActiveChildData;
 
 //Struct I made to get relevant data
 struct ShotData {
+	float LifeTime;
+	float BaseDuration;
 	uint64_t ShotVTAddress;
 	uint64_t rAtkInfoPtr;
 	bool CollIsCapsule;
