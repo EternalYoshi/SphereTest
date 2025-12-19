@@ -1472,6 +1472,8 @@ void DeathDelay();
 
 void KOToggles();
 
+void GetChildData();
+
 void GetDebugData();
 
 //Sets all settings back to default.

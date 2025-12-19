@@ -751,7 +751,7 @@ PrimHitCapsule GetHitboxScreenPos(Hitbox HBox)
 //}
 
 // This is meant to update the Hit/Hurtsphere data and is only meant to be called once per game frame somehow.
-void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes, std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes, std::vector<Hurtbox> P2C3Hurtboxes)
+void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes, std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes, std::vector<Hurtbox> P2C3Hurtboxes, std::vector<Hurtbox> P1ShotHitSpheres, std::vector<Hitbox> P1ShotHitCapsule, std::vector<Hurtbox> P2ShotHitSpheres, std::vector<Hitbox> P2ShotHitCapsule)
 {
 	int write = WriteBuffer.load();
 
@@ -947,8 +947,8 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	//========Shot Stuff WIP.
 
-	EmptyShotLists();
-	GetShots();
+	//EmptyShotLists();
+	//GetShots();
 	data.P1ShotsActiveHitCapsules.clear();
 	data.P2ShotsActiveHitCapsules.clear();
 	data.P1ShotsActiveHitSpheres.clear();
@@ -988,8 +988,8 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{
 
-		EmptyTheChildLists();
-		P1C1ActiveChildData = GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree, P1C1ActiveChildData);
+		
+		//P1C1ActiveChildData = GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree, P1C1ActiveChildData);
 		data.P1C1ChildActiveSpheres.clear();
 		data.P1C1Child1ActiveHitSpheres.clear();
 
@@ -1032,7 +1032,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 2 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{
-		P1C2ActiveChildData = GetChildCharacterData(P1Character2Data, P1Character2ID, Player1CharNodeTree, P1C2ActiveChildData);
+		//P1C2ActiveChildData = GetChildCharacterData(P1Character2Data, P1Character2ID, Player1CharNodeTree, P1C2ActiveChildData);
 		data.P1C2ChildActiveSpheres.clear();
 		data.P1C2Child1ActiveHitSpheres.clear();
 
@@ -1066,7 +1066,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 3 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{
-		P1C3ActiveChildData = GetChildCharacterData(P1Character3Data, P1Character3ID, Player1CharNodeTree, P1C3ActiveChildData);
+		//P1C3ActiveChildData = GetChildCharacterData(P1Character3Data, P1Character3ID, Player1CharNodeTree, P1C3ActiveChildData);
 		data.P1C3ChildActiveSpheres.clear();
 		data.P1C3Child1ActiveHitSpheres.clear();
 
@@ -1100,7 +1100,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 1 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{
-		P2C1ActiveChildData = GetChildCharacterData(P2Character1Data, P2Character1ID, Player2CharNodeTree, P2C1ActiveChildData);
+		//P2C1ActiveChildData = GetChildCharacterData(P2Character1Data, P2Character1ID, Player2CharNodeTree, P2C1ActiveChildData);
 		data.P2C1ChildActiveSpheres.clear();
 		data.P2C1Child1ActiveHitSpheres.clear();
 
@@ -1143,7 +1143,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 2 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{
-		P2C2ActiveChildData = GetChildCharacterData(P2Character2Data, P2Character2ID, Player2CharNodeTree, P2C2ActiveChildData);
+		//P2C2ActiveChildData = GetChildCharacterData(P2Character2Data, P2Character2ID, Player2CharNodeTree, P2C2ActiveChildData);
 		data.P2C2ChildActiveSpheres.clear();
 		data.P2C2Child1ActiveHitSpheres.clear();
 
@@ -1177,7 +1177,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 3 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{
-		P2C3ActiveChildData = GetChildCharacterData(P2Character3Data, P2Character3ID, Player2CharNodeTree, P2C3ActiveChildData);
+		//P2C3ActiveChildData = GetChildCharacterData(P2Character3Data, P2Character3ID, Player2CharNodeTree, P2C3ActiveChildData);
 		data.P2C3ChildActiveSpheres.clear();
 		data.P2C3Child1ActiveHitSpheres.clear();
 

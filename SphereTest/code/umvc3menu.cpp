@@ -3156,6 +3156,23 @@ void GetShots()
 
 }
 
+void GetChildData()
+{
+	P1C1ActiveChildData.clear();
+	P1C2ActiveChildData.clear();
+	P1C3ActiveChildData.clear();
+	P2C1ActiveChildData.clear();
+	P2C2ActiveChildData.clear();
+	P2C3ActiveChildData.clear();
+
+	P1C1ActiveChildData = GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree, P1C1ActiveChildData);
+	P1C2ActiveChildData = GetChildCharacterData(P1Character2Data, P1Character2ID, Player1CharNodeTree, P1C2ActiveChildData);
+	P1C3ActiveChildData = GetChildCharacterData(P1Character3Data, P1Character3ID, Player1CharNodeTree, P1C3ActiveChildData);
+	P2C1ActiveChildData = GetChildCharacterData(P2Character1Data, P2Character1ID, Player2CharNodeTree, P2C1ActiveChildData);
+	P2C2ActiveChildData = GetChildCharacterData(P2Character2Data, P2Character2ID, Player2CharNodeTree, P2C2ActiveChildData);
+	P2C3ActiveChildData = GetChildCharacterData(P2Character3Data, P2Character3ID, Player2CharNodeTree, P2C3ActiveChildData);
+}
+
 //ShotData GetShotData()
 //{
 //

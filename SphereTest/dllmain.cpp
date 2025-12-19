@@ -238,7 +238,8 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	if (CurrentThreadId == MainRenderThread && BeginHitboxDisplay)
 	{
 		UpdateSphereData(P1C1Hurtboxes, P1C2Hurtboxes, P1C3Hurtboxes,
-			P2C1Hurtboxes, P2C2Hurtboxes, P2C3Hurtboxes);
+			P2C1Hurtboxes, P2C2Hurtboxes, P2C3Hurtboxes,
+			P1ShotHitSpheres, P1ShotHitCapsules, P2ShotHitSpheres, P2ShotHitCapsules);
 	}
 
 	//Checks the game mode and if valid does the imgui stuff.
@@ -257,15 +258,21 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			GetHitboxDataPart1();
 			GetCameraStuff();
 			GetEvenMorePlayerData();
-			GetChildCharacters();
+			//EmptyTheChildLists();
+
 			if(Player1CharNodeTree && Player2CharNodeTree)
 			{
-				//GetShots();
+				GetChildCharacters();
+				EmptyShotLists();
+				GetShots();
+				GetChildData();
 			}
 		}
 		else if(!Emptytied)
 		{
 			RemoveAllSpheres();
+			EmptyTheChildLists();
+			EmptyShotLists();
 		}
 	}
 
