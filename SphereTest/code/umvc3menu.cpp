@@ -39,19 +39,27 @@ bool CheckTheMode()
 	//Reads The Needed Pointer.
 	sBattleSetting = *(uint64_t*)_addr(0x140d50e58);
 
-	if (sBattleSetting) {
-		//Reads the match/menu flag.
-		//GameMode = *(uint64_t*)_addr(sBattleSetting + 0x34C);
-		GameMode = *(int*)(sBattleSetting + 0x34C);
+	//Attempt to catch exceptions when closing game.
+	try
+	{
+		if (sBattleSetting) {
+			//Reads the match/menu flag.
+			//GameMode = *(uint64_t*)_addr(sBattleSetting + 0x34C);
+			GameMode = *(int*)(sBattleSetting + 0x34C);
 
-		if (GameMode == 5)
-		{
-			return true;
+			if (GameMode == 5)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
-		else
-		{
-			return false;
-		}
+	}
+	catch(int ExNUM)
+	{
+		return false;
 	}
 	return false;
 }

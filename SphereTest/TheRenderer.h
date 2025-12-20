@@ -16,9 +16,9 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha);
 void RenderTheSpheres(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes,
 	std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes,
 	std::vector<Hurtbox> P2C3Hurtboxes);
-void RenderFromBuffer(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes,
-	std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes,
-	std::vector<Hurtbox> P2C3Hurtboxes);
+//void RenderFromBuffer(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes,
+//	std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes,
+//	std::vector<Hurtbox> P2C3Hurtboxes);
 
 //};
 void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitSphere>& ActiveSpheres);
@@ -35,3 +35,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	std::vector<Hurtbox> P2C3Hurtboxes, std::vector<Hurtbox> P1ShotHitSpheres, std::vector<Hitbox> P1ShotHitCapsule, std::vector<Hurtbox> P2ShotHitSpheres, std::vector<Hitbox> P2ShotHitCapsule);
 
 void RenderSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice);
+
+void RenderGreenSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice);
+
+void RenderHitSpheresAndCapsulesFromBuffer(LPDIRECT3DDEVICE9 pDevice);

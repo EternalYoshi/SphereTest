@@ -299,42 +299,55 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		if (g_renderTargetCreated1 && g_renderTargetCreated2)
 		{
 		
+			//LPDIRECT3DSURFACE9 pOldRenderTarget = NULL;
+			//LPDIRECT3DSURFACE9 pOldDepthStencil = NULL;
+
 			//Need to save our current render targets first.
-			LPDIRECT3DSURFACE9 pOldRenderTarget1 = NULL;
-			LPDIRECT3DSURFACE9 pOldDepthStencil1 = NULL;
-			pDevice->GetRenderTarget(0, &pOldRenderTarget1);
-			pDevice->GetDepthStencilSurface(&pOldDepthStencil1);
+			LPDIRECT3DSURFACE9 pOldRenderTarget = NULL;
+			LPDIRECT3DSURFACE9 pOldDepthStencil = NULL;
+			pDevice->GetRenderTarget(0, &pOldRenderTarget);
+			pDevice->GetDepthStencilSurface(&pOldDepthStencil);
+
+			//Render the green stuff first to the 1st texture.
+			pDevice->SetRenderTarget(0, g_pRenderSurface1);
+			pDevice->SetDepthStencilSurface(g_pDepthStencilSurface1);
+
+			//Clears the texture with transparent background.
+			pDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
+				D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 
 			LPDIRECT3DSURFACE9 pOldRenderTarget2 = NULL;
 			LPDIRECT3DSURFACE9 pOldDepthStencil2 = NULL;
 			pDevice->GetRenderTarget(0, &pOldRenderTarget2);
 			pDevice->GetDepthStencilSurface(&pOldDepthStencil2);
 
-			//Our textures shall be our render targets.
-			pDevice->SetRenderTarget(0, g_pRenderSurface1);
-			pDevice->SetDepthStencilSurface(g_pDepthStencilSurface1);
+			RenderGreenSpheresFromBuffer(pDevice);
 
+			//Now for the red stuff to the 2nd texture.
 			pDevice->SetRenderTarget(0, g_pRenderSurface2);
 			pDevice->SetDepthStencilSurface(g_pDepthStencilSurface2);
 
-			//Clears textures with transparent background.
+			//Clears the texture with transparent background.
 			pDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
 				D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
-		
-			RenderSpheresFromBuffer(pDevice);
+
+			RenderHitSpheresAndCapsulesFromBuffer(pDevice);
 
 			//Restores the original render targets.
-			pDevice->SetRenderTarget(0, pOldRenderTarget1);
-			pDevice->SetDepthStencilSurface(pOldDepthStencil1);
+			pDevice->SetRenderTarget(0, pOldRenderTarget);
+			pDevice->SetDepthStencilSurface(pOldDepthStencil);
 
-			if (pOldRenderTarget1) pOldRenderTarget1->Release();
-			if (pOldDepthStencil1) pOldDepthStencil1->Release();
+			if (pOldRenderTarget) pOldRenderTarget->Release();
+			if (pOldDepthStencil) pOldDepthStencil->Release();
 
-			pDevice->SetRenderTarget(0, pOldRenderTarget2);
-			pDevice->SetDepthStencilSurface(pOldDepthStencil2);
+			//if (pOldRenderTarget1) pOldRenderTarget1->Release();
+			//if (pOldDepthStencil1) pOldDepthStencil1->Release();
 
-			if (pOldRenderTarget2) pOldRenderTarget2->Release();
-			if (pOldDepthStencil2) pOldDepthStencil2->Release();
+			//pDevice->SetRenderTarget(0, pOldRenderTarget2);
+			//pDevice->SetDepthStencilSurface(pOldDepthStencil2);
+
+			//if (pOldRenderTarget2) pOldRenderTarget2->Release();
+			//if (pOldDepthStencil2) pOldDepthStencil2->Release();
 
 			DrawHurtboxTexture(pDevice, g_hitboxAlpha);
 			DrawHitboxTexture(pDevice, g_hitboxAlpha);
