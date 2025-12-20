@@ -129,6 +129,12 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)SphereTest.ini" "$(TargetDir)" /Y /D</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copies the ini to the target directory.</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -458,6 +464,7 @@
     <ClInclude Include="gui\imgui\imstb_rectpack.h" />
     <ClInclude Include="gui\imgui\imstb_textedit.h" />
     <ClInclude Include="gui\imgui\imstb_truetype.h" />
+    <ClInclude Include="iniReader.h" />
     <ClInclude Include="kiero\kiero.h" />
     <ClInclude Include="minhook\include\MinHook.h" />
     <ClInclude Include="minhook\src\buffer.h" />
@@ -493,6 +500,7 @@
     <ClCompile Include="gui\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="gui\imgui\imgui_tables.cpp" />
     <ClCompile Include="gui\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="iniReader.cpp" />
     <ClCompile Include="kiero\kiero.cpp" />
     <ClCompile Include="minhook\src\buffer.c" />
     <ClCompile Include="minhook\src\hde\hde32.c" />
@@ -655,6 +663,7 @@
     <None Include="glm\gtx\vector_angle.inl" />
     <None Include="glm\gtx\vector_query.inl" />
     <None Include="glm\gtx\wrap.inl" />
+    <None Include="SphereTest.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

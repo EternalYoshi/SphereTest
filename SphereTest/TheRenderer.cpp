@@ -68,9 +68,9 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	BYTE alphaValue = (BYTE)(alpha * 255.0f);
 	TEXTUREVERTEX vertices[] = {
 		{0.0f, 0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 0.0f, 0.0f},
-		{1600.0f, 0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 1.0f, 0.0f},
-		{1600.0f, 900.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 1.0f, 1.0f},
-		{0.0f, 900.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 0.0f, 1.0f},
+		{GameWidth, 0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 1.0f, 0.0f},
+		{GameWidth, GameHeight, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 1.0f, 1.0f},
+		{0.0f, GameHeight, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 0.0f, 1.0f},
 	};
 
 	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(TEXTUREVERTEX));
@@ -126,9 +126,9 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	BYTE alphaValue = (BYTE)(alpha * 255.0f);
 	TEXTUREVERTEX vertices[] = {
 		{0.0f, 0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 0.0f, 0.0f},
-		{1600.0f, 0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 1.0f, 0.0f},
-		{1600.0f, 900.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 1.0f, 1.0f},
-		{0.0f, 900.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 0.0f, 1.0f},
+		{GameWidth, 0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 1.0f, 0.0f},
+		{GameWidth, GameHeight, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 1.0f, 1.0f},
+		{0.0f, GameHeight, 0.0f, 1.0f, D3DCOLOR_ARGB(alphaValue, 255, 255, 255), 0.0f, 1.0f},
 	};
 
 	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(TEXTUREVERTEX));
@@ -391,7 +391,7 @@ void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 	{
 
 		float x = ActiveSpheres[v].Position.X;
-		float y = 900.0f - ActiveSpheres[v].Position.Y;
+		float y = GameHeight - ActiveSpheres[v].Position.Y;
 		float rad = ActiveSpheres[v].Radius;
 		DWORD color = ActiveSpheres[v].Color;
 
@@ -468,9 +468,9 @@ void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 	{
 
 		float x1 = ActiveSpheres[v].Position.X;
-		float y1 = 900.0f - ActiveSpheres[v].Position.Y;
+		float y1 = GameHeight - ActiveSpheres[v].Position.Y;
 		float x2 = ActiveSpheres[v].Position2.X;
-		float y2 = 900.0f - ActiveSpheres[v].Position2.Y;
+		float y2 = GameHeight - ActiveSpheres[v].Position2.Y;
 		float rad = ActiveSpheres[v].Radius;
 		DWORD color = ActiveSpheres[v].Color;
 
@@ -613,8 +613,8 @@ PrimHitSphere GetHurtBoxScreenPos(Hurtbox HBox)
 
 	//Then the Projection and view.
 	float FovR = glm::radians(mFOV);
-	glm::highp_mat4 Projection = glm::perspective<float>(FovR, 1600.0f / 900.0f, NearPlane, FarPlane);
-	glm::vec4 View = glm::vec4(0, 0, 1600, 900);
+	glm::highp_mat4 Projection = glm::perspective<float>(FovR, GameWidth / GameHeight, NearPlane, FarPlane);
+	glm::vec4 View = glm::vec4(0, 0, GameWidth, GameHeight);
 
 	//Now for the radius to adapt to zoom levels.
 	glm::vec3 offsetPosition = position + glm::vec3(HBox.CollData.Radius, 0, 0);
@@ -661,8 +661,8 @@ PrimHitSphere GetRedSphereScreenPos(Hurtbox HBox)
 
 	//Then the Projection and view.
 	float FovR = glm::radians(mFOV);
-	glm::highp_mat4 Projection = glm::perspective<float>(FovR, 1600.0f / 900.0f, NearPlane, FarPlane);
-	glm::vec4 View = glm::vec4(0, 0, 1600, 900);
+	glm::highp_mat4 Projection = glm::perspective<float>(FovR, GameWidth / GameHeight, NearPlane, FarPlane);
+	glm::vec4 View = glm::vec4(0, 0, GameWidth, GameHeight);
 
 	//Now for the radius to adapt to zoom levels.
 	glm::vec3 offsetPosition = position + glm::vec3(HBox.CollData.Radius, 0, 0);
@@ -717,9 +717,9 @@ PrimHitCapsule GetHitboxScreenPos(Hitbox HBox)
 	//Then the Projection and view.
 
 	float FovR = glm::radians(mFOV);
-	glm::highp_mat4 Projection = glm::perspective<float>(FovR, 1600.0f / 900.0f, NearPlane, FarPlane);
+	glm::highp_mat4 Projection = glm::perspective<float>(FovR, GameWidth / GameHeight, NearPlane, FarPlane);
 
-	glm::vec4 View = glm::vec4(0, 0, 1600, 900);
+	glm::vec4 View = glm::vec4(0, 0, GameWidth, GameHeight);
 
 	//Now for the radius to adapt to zoom levels.
 	glm::vec3 offsetPosition = position + glm::vec3(HBox.Radius, 0, 0);

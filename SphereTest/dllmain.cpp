@@ -18,6 +18,7 @@
 #include <mutex>
 #include <unordered_set>
 #include "Globals.h"
+#include "IniReader.h"
 
 typedef long(__stdcall* EndScene)(LPDIRECT3DDEVICE9);
 typedef LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
@@ -57,7 +58,7 @@ bool CreateHurtboxRenderTarget(LPDIRECT3DDEVICE9 pDevice)
 	if (g_renderTargetCreated1) return true;
 
 	HRESULT hr = pDevice->CreateTexture(
-		1600, 900, 1,
+		GameWidth, GameHeight, 1,
 		D3DUSAGE_RENDERTARGET,
 		D3DFMT_A8R8G8B8,
 		D3DPOOL_DEFAULT,
@@ -70,7 +71,7 @@ bool CreateHurtboxRenderTarget(LPDIRECT3DDEVICE9 pDevice)
 	g_pRenderTexture1->GetSurfaceLevel(0, &g_pRenderSurface1);
 
 	hr = pDevice->CreateDepthStencilSurface(
-		1600, 900,
+		GameWidth, GameHeight,
 		D3DFMT_D24S8,
 		D3DMULTISAMPLE_NONE, 0,
 		TRUE,
@@ -89,7 +90,7 @@ bool CreateHitboxRenderTarget(LPDIRECT3DDEVICE9 pDevice)
 	if (g_renderTargetCreated2) return true;
 
 	HRESULT hr = pDevice->CreateTexture(
-		1600, 900, 1,
+		GameWidth, GameHeight, 1,
 		D3DUSAGE_RENDERTARGET,
 		D3DFMT_A8R8G8B8,
 		D3DPOOL_DEFAULT,
@@ -102,7 +103,7 @@ bool CreateHitboxRenderTarget(LPDIRECT3DDEVICE9 pDevice)
 	g_pRenderTexture2->GetSurfaceLevel(0, &g_pRenderSurface2);
 
 	hr = pDevice->CreateDepthStencilSurface(
-		1600, 900,
+		GameWidth, GameHeight,
 		D3DFMT_D24S8,
 		D3DMULTISAMPLE_NONE, 0,
 		TRUE,
@@ -570,7 +571,7 @@ void WINAPI HookUpdate()
 		if (CheckTheMode() == true)
 		{
 			if (InMatch && sCharacter) {
-				if (GetAsyncKeyState(VK_NEXT))
+				if (GetAsyncKeyState(ToggleDisplayKey))
 				{
 					if (GetTickCount64() - timer <= 150) 
 					{ 
@@ -610,11 +611,18 @@ BOOL APIENTRY DllMain(HMODULE hMod, DWORD  dwReason, LPVOID lpReserved)
 		if (CheckGame())
 		{
 			//SettingsMgr->Init();
+			//Setup the ini stuff.
+			CIniReader ini;
+
+			GameHeight = ini.ReadFloat("Settings", "GameHeight", VK_SPACE);
+			GameWidth = ini.ReadFloat("Settings", "GameWidth", VK_SPACE);
+			ToggleDisplayKey = ini.ReadInteger("Settings", "ToggleDisplayKey", VK_SPACE);
+
 			DisableThreadLibraryCalls(hMod);
 			CreateThread(nullptr, 0, MainThread, hMod, 0, nullptr);
 			CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)HookUpdate, hMod, 0, nullptr);
 			OnInitializeHook();
-
+			//GameWidth
 		}
 		break;
 

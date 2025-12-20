@@ -20,6 +20,7 @@
 #include "..\gui\imgui\imgui.h"
 #include "sigscan.h"
 #include "..\TheRenderer.h"
+#include "..\Globals.h"
 
 #define UMVC3HOOK_VERSION "0.1"
 
@@ -5990,7 +5991,7 @@ void UMVC3Menu::Draw()
 
 void UMVC3Menu::UpdateControls()
 {
-	if (GetAsyncKeyState(VK_F2))
+	if (GetAsyncKeyState(ToggleDisplayKey))
 	{
 		if (GetTickCount64() - timer <= 150) return;
 		timer = GetTickCount64();

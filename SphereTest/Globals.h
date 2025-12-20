@@ -14,6 +14,10 @@
 //extern LPDIRECT3DSURFACE9 g_pCircleSurface;
 //extern LPDIRECT3DSURFACE9 g_pOldRenderTarget;
 
+inline float GameHeight;
+inline float GameWidth;
+inline int ToggleDisplayKey;
+
 inline IDirect3DBaseTexture9* oldTexture;
 inline IDirect3DBaseTexture9* oldTexture2;
 
@@ -29,6 +33,6 @@ inline LPDIRECT3DSURFACE9 g_pRenderSurface2 = NULL;
 inline LPDIRECT3DSURFACE9 g_pDepthStencilSurface2 = NULL;
 inline bool g_renderTargetCreated2 = false;
 
-inline float g_hitboxAlpha = 0.9f;
+inline float g_hitboxAlpha = 1.0f;
 
 #endif
