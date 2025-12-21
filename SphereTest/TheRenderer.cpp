@@ -1093,7 +1093,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	//========Child Character stuff.
 
-#pragma region Player 1 Character 1 Child Hurtboxes & Hitboxes
+#pragma region Player 1 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{		
 		//P1C1ActiveChildData = GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree, P1C1ActiveChildData);
@@ -1104,11 +1104,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 		{
 			for (int n = 0; n < P1C1ActiveChildData.size(); n++)
 			{
-				//Checks for Maya's Class value to be at 0 and won't render any hurtboxes if at 0.
-				if (P1C1ActiveChildData[n].VTableAddress == 0x140A7A830 && P1C1ActiveChildData[n].SomeClassValue == 0)
+				//Checks for Maya's Class value to be at 0 and won't render any hurtboxes if at 0. Next part of this statement is for Felciia's sisters & Dr. Strange's Afterimage.
+				if ((P1C1ActiveChildData[n].VTableAddress == 0x140A7A830 && P1C1ActiveChildData[n].SomeClassValue == 0) 
+					|| P1C1ActiveChildData[n].VTableAddress == 0x140a74eb0 || P1C1ActiveChildData[n].VTableAddress == 0x140a75380
+					|| P1C1ActiveChildData[n].VTableAddress == 0x140a744c0 || P1C1ActiveChildData[n].VTableAddress == 0x140a84800
+					|| P1C1ActiveChildData[n].VTableAddress == 0x140a7b7f0)
 				{
-					data.P1C1ChildActiveSpheres.clear();
-					data.P1C1Child1ActiveHitSpheres.clear();
+					//data.P1C1ChildActiveSpheres.clear();
+					//data.P1C1Child1ActiveHitSpheres.clear();
 				}
 				else
 				{
@@ -1144,76 +1147,76 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	}
 #pragma endregion
+//
+//#pragma region Player 1 Character 2 Child Hurtboxes & Hitboxes
+//	if (Player1CharNodeTree && Player2CharNodeTree)
+//	{
+//		//P1C2ActiveChildData = GetChildCharacterData(P1Character2Data, P1Character2ID, Player1CharNodeTree, P1C2ActiveChildData);
+//		data.P1C2ChildActiveSpheres.clear();
+//		data.P1C2Child1ActiveHitSpheres.clear();
+//
+//		if (sAction && MatchFlag == 0)
+//		{
+//			for (int n = 0; n < P1C2ActiveChildData.size(); n++)
+//			{
+//				//Hope the binary that works for the main characters works for the child chars too.
+//				if (P1C2ActiveChildData[n].ChildCharStateBinary[25] != '1' && P1C2ActiveChildData[n].ChildCharStateBinary[29] != '1'
+//					&& P1C2ActiveChildData[n].CurAnmchrID != 0x85 && P1C2ActiveChildData[n].CurAnmchrID != 0x155 && P1C2ActiveChildData[n].CurAnmchrID != 0x88)
+//				{
+//					for (int i = 0; i < P1C2ActiveChildData[n].ChildActiveSpheres.size(); i++)
+//					{
+//						data.P1C2ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C2ActiveChildData[n].ChildActiveSpheres[i]));
+//					}
+//				}
+//
+//				if (P1C2ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C2ActiveChildData[n].WeirdFloat != 0 && P1C2ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+//				{
+//					for (int i = 0; i < P1C2ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+//					{
+//						data.P1C2Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C2ActiveChildData[n].Child1ActiveHitSpheres[i]));
+//					}
+//				}
+//			}
+//		}
+//
+//	}
+//#pragma endregion
+//
+//#pragma region Player 1 Character 3 Child Hurtboxes & Hitboxes
+//	if (Player1CharNodeTree && Player2CharNodeTree)
+//	{
+//		//P1C3ActiveChildData = GetChildCharacterData(P1Character3Data, P1Character3ID, Player1CharNodeTree, P1C3ActiveChildData);
+//		data.P1C3ChildActiveSpheres.clear();
+//		data.P1C3Child1ActiveHitSpheres.clear();
+//
+//		if (sAction && MatchFlag == 0)
+//		{
+//			for (int n = 0; n < P1C3ActiveChildData.size(); n++)
+//			{
+//				//Hope the binary that works for the main characters works for the child chars too.
+//				if (P1C3ActiveChildData[n].ChildCharStateBinary[25] != '1' && P1C3ActiveChildData[n].ChildCharStateBinary[29] != '1'
+//					&& P1C3ActiveChildData[n].CurAnmchrID != 0x85 && P1C3ActiveChildData[n].CurAnmchrID != 0x155 && P1C3ActiveChildData[n].CurAnmchrID != 0x88)
+//				{
+//					for (int i = 0; i < P1C3ActiveChildData[n].ChildActiveSpheres.size(); i++)
+//					{
+//						data.P1C3ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C3ActiveChildData[n].ChildActiveSpheres[i]));
+//					}
+//				}
+//
+//				if (P1C3ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C3ActiveChildData[n].WeirdFloat != 0 && P1C3ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+//				{
+//					for (int i = 0; i < P1C3ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+//					{
+//						data.P1C3Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C3ActiveChildData[n].Child1ActiveHitSpheres[i]));
+//					}
+//				}
+//			}
+//		}
+//
+//	}
+//#pragma endregion
 
-#pragma region Player 1 Character 2 Child Hurtboxes & Hitboxes
-	if (Player1CharNodeTree && Player2CharNodeTree)
-	{
-		//P1C2ActiveChildData = GetChildCharacterData(P1Character2Data, P1Character2ID, Player1CharNodeTree, P1C2ActiveChildData);
-		data.P1C2ChildActiveSpheres.clear();
-		data.P1C2Child1ActiveHitSpheres.clear();
-
-		if (sAction && MatchFlag == 0)
-		{
-			for (int n = 0; n < P1C2ActiveChildData.size(); n++)
-			{
-				//Hope the binary that works for the main characters works for the child chars too.
-				if (P1C2ActiveChildData[n].ChildCharStateBinary[25] != '1' && P1C2ActiveChildData[n].ChildCharStateBinary[29] != '1'
-					&& P1C2ActiveChildData[n].CurAnmchrID != 0x85 && P1C2ActiveChildData[n].CurAnmchrID != 0x155 && P1C2ActiveChildData[n].CurAnmchrID != 0x88)
-				{
-					for (int i = 0; i < P1C2ActiveChildData[n].ChildActiveSpheres.size(); i++)
-					{
-						data.P1C2ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C2ActiveChildData[n].ChildActiveSpheres[i]));
-					}
-				}
-
-				if (P1C2ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C2ActiveChildData[n].WeirdFloat != 0 && P1C2ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
-				{
-					for (int i = 0; i < P1C2ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
-					{
-						data.P1C2Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C2ActiveChildData[n].Child1ActiveHitSpheres[i]));
-					}
-				}
-			}
-		}
-
-	}
-#pragma endregion
-
-#pragma region Player 1 Character 3 Child Hurtboxes & Hitboxes
-	if (Player1CharNodeTree && Player2CharNodeTree)
-	{
-		//P1C3ActiveChildData = GetChildCharacterData(P1Character3Data, P1Character3ID, Player1CharNodeTree, P1C3ActiveChildData);
-		data.P1C3ChildActiveSpheres.clear();
-		data.P1C3Child1ActiveHitSpheres.clear();
-
-		if (sAction && MatchFlag == 0)
-		{
-			for (int n = 0; n < P1C3ActiveChildData.size(); n++)
-			{
-				//Hope the binary that works for the main characters works for the child chars too.
-				if (P1C3ActiveChildData[n].ChildCharStateBinary[25] != '1' && P1C3ActiveChildData[n].ChildCharStateBinary[29] != '1'
-					&& P1C3ActiveChildData[n].CurAnmchrID != 0x85 && P1C3ActiveChildData[n].CurAnmchrID != 0x155 && P1C3ActiveChildData[n].CurAnmchrID != 0x88)
-				{
-					for (int i = 0; i < P1C3ActiveChildData[n].ChildActiveSpheres.size(); i++)
-					{
-						data.P1C3ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C3ActiveChildData[n].ChildActiveSpheres[i]));
-					}
-				}
-
-				if (P1C3ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C3ActiveChildData[n].WeirdFloat != 0 && P1C3ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
-				{
-					for (int i = 0; i < P1C3ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
-					{
-						data.P1C3Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C3ActiveChildData[n].Child1ActiveHitSpheres[i]));
-					}
-				}
-			}
-		}
-
-	}
-#pragma endregion
-
-#pragma region Player 2 Character 1 Child Hurtboxes & Hitboxes
+#pragma region Player 2 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
 	{
 		//P2C1ActiveChildData = GetChildCharacterData(P2Character1Data, P2Character1ID, Player2CharNodeTree, P2C1ActiveChildData);
@@ -1224,13 +1227,25 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 		{
 			for (int n = 0; n < P2C1ActiveChildData.size(); n++)
 			{
-				//Hope the binary that works for the main characters works for the child chars too.
-				if (P2C1ActiveChildData[n].ChildCharStateBinary[25] != '1' && P2C1ActiveChildData[n].ChildCharStateBinary[29] != '1'
-					&& P2C1ActiveChildData[n].CurAnmchrID != 0x85 && P2C1ActiveChildData[n].CurAnmchrID != 0x155 && P2C1ActiveChildData[n].CurAnmchrID != 0x88)
+				//Checks for Maya's Class value to be at 0 and won't render any hurtboxes if at 0. Next part of this statement is for Felciia's sisters & Dr. Strange's Afterimage.
+				if (P2C1ActiveChildData[n].VTableAddress == 0x140A7A830 && P2C1ActiveChildData[n].SomeClassValue == 0
+					|| P2C1ActiveChildData[n].VTableAddress == 0x140a74eb0 || P2C1ActiveChildData[n].VTableAddress == 0x140a75380
+					|| P2C1ActiveChildData[n].VTableAddress == 0x140a744c0 || P1C1ActiveChildData[n].VTableAddress == 0x140a84800
+					|| P1C1ActiveChildData[n].VTableAddress == 0x140a7b7f0)
 				{
-					for (int i = 0; i < P2C1ActiveChildData[n].ChildActiveSpheres.size(); i++)
+					//data.P1C1ChildActiveSpheres.clear();
+					//data.P1C1Child1ActiveHitSpheres.clear();
+				}
+				else
+				{
+					//Hope the binary that works for the main characters works for the child chars too.
+					if (P2C1ActiveChildData[n].ChildCharStateBinary[25] != '1' && P2C1ActiveChildData[n].ChildCharStateBinary[29] != '1'
+						&& P2C1ActiveChildData[n].CurAnmchrID != 0x85 && P2C1ActiveChildData[n].CurAnmchrID != 0x155 && P2C1ActiveChildData[n].CurAnmchrID != 0x88)
 					{
-						data.P2C1ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C1ActiveChildData[n].ChildActiveSpheres[i]));
+						for (int i = 0; i < P2C1ActiveChildData[n].ChildActiveSpheres.size(); i++)
+						{
+							data.P2C1ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C1ActiveChildData[n].ChildActiveSpheres[i]));
+						}
 					}
 				}
 
@@ -1256,73 +1271,73 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	}
 #pragma endregion
 
-#pragma region Player 2 Character 2 Child Hurtboxes & Hitboxes
-	if (Player1CharNodeTree && Player2CharNodeTree)
-	{
-		//P2C2ActiveChildData = GetChildCharacterData(P2Character2Data, P2Character2ID, Player2CharNodeTree, P2C2ActiveChildData);
-		data.P2C2ChildActiveSpheres.clear();
-		data.P2C2Child1ActiveHitSpheres.clear();
-
-		if (sAction && MatchFlag == 0)
-		{
-			for (int n = 0; n < P2C2ActiveChildData.size(); n++)
-			{
-				//Hope the binary that works for the main characters works for the child chars too.
-				if (P2C2ActiveChildData[n].ChildCharStateBinary[25] != '1' && P2C2ActiveChildData[n].ChildCharStateBinary[29] != '1'
-					&& P2C2ActiveChildData[n].CurAnmchrID != 0x85 && P2C2ActiveChildData[n].CurAnmchrID != 0x155 && P2C2ActiveChildData[n].CurAnmchrID != 0x88)
-				{
-					for (int i = 0; i < P2C2ActiveChildData[n].ChildActiveSpheres.size(); i++)
-					{
-						data.P2C2ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C2ActiveChildData[n].ChildActiveSpheres[i]));
-					}
-				}
-
-				if (P2C2ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C2ActiveChildData[n].WeirdFloat != 0 && P2C2ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
-				{
-					for (int i = 0; i < P2C2ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
-					{
-						data.P2C2Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C2ActiveChildData[n].Child1ActiveHitSpheres[i]));
-					}
-				}
-			}
-		}
-
-	}
-#pragma endregion
-
-#pragma region Player 2 Character 3 Child Hurtboxes & Hitboxes
-	if (Player1CharNodeTree && Player2CharNodeTree)
-	{
-		//P2C3ActiveChildData = GetChildCharacterData(P2Character3Data, P2Character3ID, Player2CharNodeTree, P2C3ActiveChildData);
-		data.P2C3ChildActiveSpheres.clear();
-		data.P2C3Child1ActiveHitSpheres.clear();
-
-		if (sAction && MatchFlag == 0)
-		{
-			for (int n = 0; n < P2C3ActiveChildData.size(); n++)
-			{
-				//Hope the binary that works for the main characters works for the child chars too.
-				if (P2C3ActiveChildData[n].ChildCharStateBinary[25] != '1' && P2C3ActiveChildData[n].ChildCharStateBinary[29] != '1'
-					&& P2C3ActiveChildData[n].CurAnmchrID != 0x85 && P2C3ActiveChildData[n].CurAnmchrID != 0x155 && P2C3ActiveChildData[n].CurAnmchrID != 0x88)
-				{
-					for (int i = 0; i < P2C3ActiveChildData[n].ChildActiveSpheres.size(); i++)
-					{
-						data.P2C3ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C3ActiveChildData[n].ChildActiveSpheres[i]));
-					}
-				}
-
-				if (P2C3ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C3ActiveChildData[n].WeirdFloat != 0 && P2C3ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
-				{
-					for (int i = 0; i < P2C3ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
-					{
-						data.P2C3Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C3ActiveChildData[n].Child1ActiveHitSpheres[i]));
-					}
-				}
-			}
-		}
-
-	}
-#pragma endregion
+//#pragma region Player 2 Character 2 Child Hurtboxes & Hitboxes
+//	if (Player1CharNodeTree && Player2CharNodeTree)
+//	{
+//		//P2C2ActiveChildData = GetChildCharacterData(P2Character2Data, P2Character2ID, Player2CharNodeTree, P2C2ActiveChildData);
+//		data.P2C2ChildActiveSpheres.clear();
+//		data.P2C2Child1ActiveHitSpheres.clear();
+//
+//		if (sAction && MatchFlag == 0)
+//		{
+//			for (int n = 0; n < P2C2ActiveChildData.size(); n++)
+//			{
+//				//Hope the binary that works for the main characters works for the child chars too.
+//				if (P2C2ActiveChildData[n].ChildCharStateBinary[25] != '1' && P2C2ActiveChildData[n].ChildCharStateBinary[29] != '1'
+//					&& P2C2ActiveChildData[n].CurAnmchrID != 0x85 && P2C2ActiveChildData[n].CurAnmchrID != 0x155 && P2C2ActiveChildData[n].CurAnmchrID != 0x88)
+//				{
+//					for (int i = 0; i < P2C2ActiveChildData[n].ChildActiveSpheres.size(); i++)
+//					{
+//						data.P2C2ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C2ActiveChildData[n].ChildActiveSpheres[i]));
+//					}
+//				}
+//
+//				if (P2C2ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C2ActiveChildData[n].WeirdFloat != 0 && P2C2ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+//				{
+//					for (int i = 0; i < P2C2ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+//					{
+//						data.P2C2Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C2ActiveChildData[n].Child1ActiveHitSpheres[i]));
+//					}
+//				}
+//			}
+//		}
+//
+//	}
+//#pragma endregion
+//
+//#pragma region Player 2 Character 3 Child Hurtboxes & Hitboxes
+//	if (Player1CharNodeTree && Player2CharNodeTree)
+//	{
+//		//P2C3ActiveChildData = GetChildCharacterData(P2Character3Data, P2Character3ID, Player2CharNodeTree, P2C3ActiveChildData);
+//		data.P2C3ChildActiveSpheres.clear();
+//		data.P2C3Child1ActiveHitSpheres.clear();
+//
+//		if (sAction && MatchFlag == 0)
+//		{
+//			for (int n = 0; n < P2C3ActiveChildData.size(); n++)
+//			{
+//				//Hope the binary that works for the main characters works for the child chars too.
+//				if (P2C3ActiveChildData[n].ChildCharStateBinary[25] != '1' && P2C3ActiveChildData[n].ChildCharStateBinary[29] != '1'
+//					&& P2C3ActiveChildData[n].CurAnmchrID != 0x85 && P2C3ActiveChildData[n].CurAnmchrID != 0x155 && P2C3ActiveChildData[n].CurAnmchrID != 0x88)
+//				{
+//					for (int i = 0; i < P2C3ActiveChildData[n].ChildActiveSpheres.size(); i++)
+//					{
+//						data.P2C3ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C3ActiveChildData[n].ChildActiveSpheres[i]));
+//					}
+//				}
+//
+//				if (P2C3ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C3ActiveChildData[n].WeirdFloat != 0 && P2C3ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+//				{
+//					for (int i = 0; i < P2C3ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
+//					{
+//						data.P2C3Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C3ActiveChildData[n].Child1ActiveHitSpheres[i]));
+//					}
+//				}
+//			}
+//		}
+//
+//	}
+//#pragma endregion
 
 
 	data.Valid = true;
@@ -1401,12 +1416,12 @@ void RenderGreenSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 
 	//Render child spheres.
 	ProcessHurtSpheres(pDevice, 32, data.P1C1ChildActiveSpheres);
-	ProcessHurtSpheres(pDevice, 32, data.P1C2ChildActiveSpheres);
-	ProcessHurtSpheres(pDevice, 32, data.P1C3ChildActiveSpheres);
+	//ProcessHurtSpheres(pDevice, 32, data.P1C2ChildActiveSpheres);
+	//ProcessHurtSpheres(pDevice, 32, data.P1C3ChildActiveSpheres);
 
 	ProcessHurtSpheres(pDevice, 32, data.P2C1ChildActiveSpheres);
-	ProcessHurtSpheres(pDevice, 32, data.P2C2ChildActiveSpheres);
-	ProcessHurtSpheres(pDevice, 32, data.P2C3ChildActiveSpheres);
+	//ProcessHurtSpheres(pDevice, 32, data.P2C2ChildActiveSpheres);
+	//ProcessHurtSpheres(pDevice, 32, data.P2C3ChildActiveSpheres);
 
 }
 
@@ -1429,12 +1444,12 @@ void RenderHitSpheresAndCapsulesFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 
 	//Render child spheres.
 	ProcessHitCapsules(pDevice, 32, data.P1C1Child1ActiveHitSpheres);
-	ProcessHitCapsules(pDevice, 32, data.P1C2Child1ActiveHitSpheres);
-	ProcessHitCapsules(pDevice, 32, data.P1C3Child1ActiveHitSpheres);
+	//ProcessHitCapsules(pDevice, 32, data.P1C2Child1ActiveHitSpheres);
+	//ProcessHitCapsules(pDevice, 32, data.P1C3Child1ActiveHitSpheres);
 
 	ProcessHitCapsules(pDevice, 32, data.P2C1Child1ActiveHitSpheres);
-	ProcessHitCapsules(pDevice, 32, data.P2C2Child1ActiveHitSpheres);
-	ProcessHitCapsules(pDevice, 32, data.P2C3Child1ActiveHitSpheres);
+	//ProcessHitCapsules(pDevice, 32, data.P2C2Child1ActiveHitSpheres);
+	//ProcessHitCapsules(pDevice, 32, data.P2C3Child1ActiveHitSpheres);
 
 	//Render Shot HitSpheres.
 	ProcessHitCapsules(pDevice, 32, data.P1ShotsActiveHitCapsules);
