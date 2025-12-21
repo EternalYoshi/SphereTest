@@ -1107,8 +1107,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 				//Checks for Maya's Class value to be at 0 and won't render any hurtboxes if at 0.
 				if (P1C1ActiveChildData[n].VTableAddress == 0x140A7A830 && P1C1ActiveChildData[n].SomeClassValue == 0)
 				{
-					data.P1C1ChildActiveSpheres.clear();
-					data.P1C1Child1ActiveHitSpheres.clear();
+
 				}
 				else
 				{

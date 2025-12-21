@@ -313,7 +313,7 @@ ChildData GetChildCollisionData(uint64_t PlayerPtr, uint64_t ChildPtr)
 	Child.CurAnmchrID = *((int*)(ChildPtr + 0x1310));
 	Child.SomeClassValue = *((int*)(ChildPtr + 0x1510));
 	Child.WeirdFloat = *((float*)(ChildPtr + 0x22F8));
-	Child.VTableAddress = *(uint64_t*)(ChildPtr);
+	Child.VTableAddress = *(uint32_t*)(ChildPtr);
 	if (TempCA)
 	{
 		TempCB = *(uint64_t*)_addr(TempCA + 0x30);

@@ -586,6 +586,13 @@ inline int P2C1CharState;
 inline int P2C2CharState;
 inline int P2C3CharState;
 
+inline std::string P1C1ChrStateBinary;
+inline std::string P1C2ChrStateBinary;
+inline std::string P1C3ChrStateBinary;
+inline std::string P2C1ChrStateBinary;
+inline std::string P2C2ChrStateBinary;
+inline std::string P2C3ChrStateBinary;
+
 inline byte P1C1VulnState;
 inline byte P1C2VulnState;
 inline byte P1C3VulnState;
@@ -1318,13 +1325,16 @@ inline std::vector<PrimHitCapsule> P2C3ActiveHitSpheres;
 //Going to use a struct to get the data that I care about.
 struct ChildData {
 	//int HostCharacterID;
+	uint64_t VTableAddress = 0;
 	PlayerATIStuff ChildActiveATIChunk;
 	std::vector<Hurtbox> ChildActiveSpheres;
 	std::vector<Hitbox> Child1ActiveHitSpheres;
-	int CurAnmchrID;
-	int ChildCharState;
-	byte ChildVulnState;
-	float WeirdFloat;
+	int CurAnmchrID = 0;
+	int ChildCharState = 0;
+	//byte ChildVulnState;
+	float WeirdFloat = 0.0;
+	int SomeClassValue = 0.0;
+	std::string ChildCharStateBinary;
 };
 inline std::vector<ChildData> P1C1ActiveChildData;
 inline std::vector<ChildData> P1C2ActiveChildData;
