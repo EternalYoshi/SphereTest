@@ -969,7 +969,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	data.P1C1ActiveHitSpheres.resize(P1C1HitboxCount);
 	if (sAction && MatchFlag == 0)
 	{
-		if (P1C1HitboxCount && (P1C1ActiveATIChunk.RemainingActiveFrames != 0 && P1C1ActiveATIChunk.FramesBeforeActive < 1))
+		if(P1C1HitboxCount && P1C1cAtkCtrl.AtiID != 0xffffffff && (P1C1cAtkCtrl.ATIActiveFrames == 0 || P1C1cAtkCtrl.ATIActiveFrames == -1))
+		{
+			for (int i = 0; i < P1C1Hitboxes.size(); i++)
+			{
+				data.P1C1ActiveHitSpheres[i] = GetHitboxScreenPos(P1C1Hitboxes[i]);
+			}
+		}
+		else if (P1C1HitboxCount && P1C1cAtkCtrl.AtiID != 0xffffffff && (P1C1cAtkCtrl.RemainingActiveFrames != 0 && P1C1cAtkCtrl.FramesBeforeActive < 1))
 		{
 			for (int i = 0; i < P1C1Hitboxes.size(); i++)
 			{
@@ -984,7 +991,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	data.P1C2ActiveHitSpheres.resize(P1C2HitboxCount);
 	if (sAction && MatchFlag == 0)
 	{
-		if (P1C2HitboxCount && (P1C2ActiveATIChunk.RemainingActiveFrames != 0 && P1C2ActiveATIChunk.FramesBeforeActive < 1))
+		if (P1C2HitboxCount && P1C2cAtkCtrl.AtiID != 0xffffffff && (P1C2cAtkCtrl.ATIActiveFrames == 0 || P1C2cAtkCtrl.ATIActiveFrames == -1))
+		{
+			for (int i = 0; i < P1C2Hitboxes.size(); i++)
+			{
+				data.P1C2ActiveHitSpheres[i] = GetHitboxScreenPos(P1C2Hitboxes[i]);
+			}
+		}
+		else if (P1C2HitboxCount && P1C2cAtkCtrl.AtiID != 0xffffffff && (P1C2cAtkCtrl.RemainingActiveFrames != 0 && P1C2cAtkCtrl.FramesBeforeActive < 1))
 		{
 			for (int i = 0; i < P1C2Hitboxes.size(); i++)
 			{
@@ -999,7 +1013,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	data.P1C3ActiveHitSpheres.resize(P1C3HitboxCount);
 	if (sAction && MatchFlag == 0)
 	{
-		if (P1C3HitboxCount && (P1C3ActiveATIChunk.RemainingActiveFrames != 0 && P1C3ActiveATIChunk.FramesBeforeActive < 1))
+		if (P1C3HitboxCount && P1C3cAtkCtrl.AtiID != 0xffffffff && (P1C3cAtkCtrl.ATIActiveFrames == 0 || P1C3cAtkCtrl.ATIActiveFrames == -1))
+		{
+			for (int i = 0; i < P1C3Hitboxes.size(); i++)
+			{
+				data.P1C3ActiveHitSpheres[i] = GetHitboxScreenPos(P1C3Hitboxes[i]);
+			}
+		}
+		else if (P1C3HitboxCount && P1C3cAtkCtrl.AtiID != 0xffffffff && (P1C3cAtkCtrl.RemainingActiveFrames != 0 && P1C3cAtkCtrl.FramesBeforeActive < 1))
 		{
 			for (int i = 0; i < P1C3Hitboxes.size(); i++)
 			{
@@ -1014,7 +1035,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	data.P2C1ActiveHitSpheres.resize(P2C1HitboxCount);
 	if (sAction && MatchFlag == 0)
 	{
-		if (P2C1HitboxCount && (P2C1ActiveATIChunk.RemainingActiveFrames != 0 && P2C1ActiveATIChunk.FramesBeforeActive < 1))
+		if (P2C1HitboxCount && P2C1cAtkCtrl.AtiID != 0xffffffff && (P2C1cAtkCtrl.ATIActiveFrames == 0 || P2C1cAtkCtrl.ATIActiveFrames == -1))
+		{
+			for (int i = 0; i < P2C1Hitboxes.size(); i++)
+			{
+				data.P2C1ActiveHitSpheres[i] = GetHitboxScreenPos(P2C1Hitboxes[i]);
+			}
+		}
+		else if (P2C1HitboxCount && P2C1cAtkCtrl.AtiID != 0xffffffff && (P2C1cAtkCtrl.RemainingActiveFrames != 0 && P2C1cAtkCtrl.FramesBeforeActive < 1))
 		{
 			for (int i = 0; i < P2C1Hitboxes.size(); i++)
 			{
@@ -1029,7 +1057,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	data.P2C2ActiveHitSpheres.resize(P2C2HitboxCount);
 	if (sAction && MatchFlag == 0)
 	{
-		if (P2C2HitboxCount && (P2C2ActiveATIChunk.RemainingActiveFrames != 0 && P2C2ActiveATIChunk.FramesBeforeActive < 1))
+		if (P2C2HitboxCount && P2C2cAtkCtrl.AtiID != 0xffffffff && (P2C2cAtkCtrl.ATIActiveFrames == 0 || P2C2cAtkCtrl.ATIActiveFrames == -1))
+		{
+			for (int i = 0; i < P2C2Hitboxes.size(); i++)
+			{
+				data.P2C2ActiveHitSpheres[i] = GetHitboxScreenPos(P2C2Hitboxes[i]);
+			}
+		}
+		else if (P2C2HitboxCount && P2C2cAtkCtrl.AtiID != 0xffffffff && (P2C2cAtkCtrl.RemainingActiveFrames != 0 && P2C2cAtkCtrl.FramesBeforeActive < 1))
 		{
 			for (int i = 0; i < P2C2Hitboxes.size(); i++)
 			{
@@ -1044,7 +1079,14 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	data.P2C3ActiveHitSpheres.resize(P2C3HitboxCount);
 	if (sAction && MatchFlag == 0)
 	{
-		if (P2C3HitboxCount && (P2C3ActiveATIChunk.RemainingActiveFrames != 0 && P2C3ActiveATIChunk.FramesBeforeActive < 1))
+		if (P2C3HitboxCount && P2C3cAtkCtrl.AtiID != 0xffffffff && (P2C3cAtkCtrl.ATIActiveFrames == 0 || P2C3cAtkCtrl.ATIActiveFrames == -1))
+		{
+			for (int i = 0; i < P2C3Hitboxes.size(); i++)
+			{
+				data.P2C3ActiveHitSpheres[i] = GetHitboxScreenPos(P2C3Hitboxes[i]);
+			}
+		}
+		else if (P2C3HitboxCount && P2C3cAtkCtrl.AtiID != 0xffffffff && (P2C3cAtkCtrl.RemainingActiveFrames != 0 && P2C3cAtkCtrl.FramesBeforeActive < 1))
 		{
 			for (int i = 0; i < P2C3Hitboxes.size(); i++)
 			{

@@ -948,14 +948,21 @@ struct HBoxInfo {
 	}
 };
 
-struct PlayerATIStuff {
-	int AtiID;
-	float FramesBeforeActive;
-	float RemainingActiveFrames;
-	float MaybeRecoveryFrames;
-	float ATIFrame;
+struct PlayercAtkCtrlStuff {
+	int AtiID = 0;
+	float FramesBeforeActive = 0.0f;
+	float RemainingActiveFrames = 0.0f;
+	float MaybeRecoveryFrames = 0.0f;
+	float ATIFrame = 0.0f;
+	uint32_t rAtkInfoPtr = 0;
+	uint32_t RawATIPointer = 0;
+	char* ATIIdentifier;
+	//int index;
+	int ATIActiveFrames = 0;
+	int ATIStartup = 0;
 };
-
+inline int TempThing;
+inline uint32_t OffsetToATIData;
 struct ShotATIStuff {
 	int AtiID;
 	float FramesBeforeActive;
@@ -964,14 +971,14 @@ struct ShotATIStuff {
 	float ATIFrame;
 };
 
-inline PlayerATIStuff P1C1ActiveATIChunk;
-inline PlayerATIStuff P1C2ActiveATIChunk;
-inline PlayerATIStuff P1C3ActiveATIChunk;
-inline PlayerATIStuff P2C1ActiveATIChunk;
-inline PlayerATIStuff P2C2ActiveATIChunk;
-inline PlayerATIStuff P2C3ActiveATIChunk;
+inline PlayercAtkCtrlStuff P1C1cAtkCtrl;
+inline PlayercAtkCtrlStuff P1C2cAtkCtrl;
+inline PlayercAtkCtrlStuff P1C3cAtkCtrl;
+inline PlayercAtkCtrlStuff P2C1cAtkCtrl;
+inline PlayercAtkCtrlStuff P2C2cAtkCtrl;
+inline PlayercAtkCtrlStuff P2C3cAtkCtrl;
 
-inline std::vector<PlayerATIStuff> ChildCharacterActiveATIChunks;
+inline std::vector<PlayercAtkCtrlStuff> ChildCharacterActiveATIChunks;
 
 inline FighterInstall EmptyInstall =
 {
@@ -1326,7 +1333,7 @@ inline std::vector<PrimHitCapsule> P2C3ActiveHitSpheres;
 struct ChildData {
 	//int HostCharacterID;
 	uint64_t VTableAddress = 0;
-	PlayerATIStuff ChildActiveATIChunk;
+	PlayercAtkCtrlStuff ChildActiveATIChunk;
 	std::vector<Hurtbox> ChildActiveSpheres;
 	std::vector<Hitbox> Child1ActiveHitSpheres;
 	int CurAnmchrID = 0;

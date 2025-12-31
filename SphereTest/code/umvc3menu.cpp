@@ -197,41 +197,144 @@ void GetEvenMorePlayerData()
 
 		//Gets info from the Chunk of the Player Struct that houses current ATI info.
 
-		P1C1ActiveATIChunk.AtiID = *((int*)(P1Character1Data + 0x18A0));
-		P1C1ActiveATIChunk.FramesBeforeActive = *((float*)(P1Character1Data + 0x18AC));
-		P1C1ActiveATIChunk.RemainingActiveFrames = *((float*)(P1Character1Data + 0x18B0));
-		P1C1ActiveATIChunk.MaybeRecoveryFrames = *((float*)(P1Character1Data + 0x18B8));
-		P1C1ActiveATIChunk.ATIFrame = *((float*)(P1Character1Data + 0x18BC));
+		P1C1cAtkCtrl.AtiID = *((int*)(P1Character1Data + 0x18A0));
+		P1C1cAtkCtrl.FramesBeforeActive = *((float*)(P1Character1Data + 0x18AC));
+		P1C1cAtkCtrl.RemainingActiveFrames = *((float*)(P1Character1Data + 0x18B0));
+		P1C1cAtkCtrl.MaybeRecoveryFrames = *((float*)(P1Character1Data + 0x18B8));
+		P1C1cAtkCtrl.ATIFrame = *((float*)(P1Character1Data + 0x18BC));
+		P1C1cAtkCtrl.rAtkInfoPtr = *((uint32_t*)(P1Character1Data + 0x1898));
+		//Validation.
+		if(P1C1cAtkCtrl.rAtkInfoPtr && P1C1cAtkCtrl.AtiID != 0xffffffff)
+		{
+			P1C1cAtkCtrl.RawATIPointer = *((uint32_t*)(P1C1cAtkCtrl.rAtkInfoPtr + 0x70));
+			//Yet another validation check.
+			if(P1C1cAtkCtrl.RawATIPointer)
+			{
+				P1C1cAtkCtrl.ATIIdentifier = (char*)(_addr(P1C1cAtkCtrl.RawATIPointer));
+				TempThing = 16 + (8 * P1C1cAtkCtrl.AtiID) + 4;
+				OffsetToATIData = *((uint32_t*)(P1C1cAtkCtrl.RawATIPointer + TempThing));
 
-		P1C2ActiveATIChunk.AtiID = *((int*)(P1Character2Data + 0x18A0));
-		P1C2ActiveATIChunk.FramesBeforeActive = *((float*)(P1Character2Data + 0x18AC));
-		P1C2ActiveATIChunk.RemainingActiveFrames = *((float*)(P1Character2Data + 0x18B0));
-		P1C2ActiveATIChunk.MaybeRecoveryFrames = *((float*)(P1Character2Data + 0x18B8));
-		P1C2ActiveATIChunk.ATIFrame = *((float*)(P1Character2Data + 0x18BC));
+				P1C1cAtkCtrl.ATIStartup = *((int*)((OffsetToATIData + P1C1cAtkCtrl.ATIIdentifier + 0x4)));
+				P1C1cAtkCtrl.ATIActiveFrames = *((int*)((OffsetToATIData + P1C1cAtkCtrl.ATIIdentifier + 0x8)));
 
-		P1C3ActiveATIChunk.AtiID = *((int*)(P1Character3Data + 0x18A0));
-		P1C3ActiveATIChunk.FramesBeforeActive = *((float*)(P1Character3Data + 0x18AC));
-		P1C3ActiveATIChunk.RemainingActiveFrames = *((float*)(P1Character3Data + 0x18B0));
-		P1C3ActiveATIChunk.MaybeRecoveryFrames = *((float*)(P1Character3Data + 0x18B8));
-		P1C3ActiveATIChunk.ATIFrame = *((float*)(P1Character3Data + 0x18BC));
+			}
+		}
 
-		P2C1ActiveATIChunk.AtiID = *((int*)(P2Character1Data + 0x18A0));
-		P2C1ActiveATIChunk.FramesBeforeActive = *((float*)(P2Character1Data + 0x18AC));
-		P2C1ActiveATIChunk.RemainingActiveFrames = *((float*)(P2Character1Data + 0x18B0));
-		P2C1ActiveATIChunk.MaybeRecoveryFrames = *((float*)(P2Character1Data + 0x18B8));
-		P2C1ActiveATIChunk.ATIFrame = *((float*)(P2Character1Data + 0x18BC));
+		P1C2cAtkCtrl.AtiID = *((int*)(P1Character2Data + 0x18A0));
+		P1C2cAtkCtrl.FramesBeforeActive = *((float*)(P1Character2Data + 0x18AC));
+		P1C2cAtkCtrl.RemainingActiveFrames = *((float*)(P1Character2Data + 0x18B0));
+		P1C2cAtkCtrl.MaybeRecoveryFrames = *((float*)(P1Character2Data + 0x18B8));
+		P1C2cAtkCtrl.ATIFrame = *((float*)(P1Character2Data + 0x18BC));
+		P1C2cAtkCtrl.rAtkInfoPtr = *((uint32_t*)(P1Character2Data + 0x1898));
+		//Validation.
+		if (P1C2cAtkCtrl.rAtkInfoPtr && P1C2cAtkCtrl.AtiID != 0xffffffff)
+		{
+			P1C2cAtkCtrl.RawATIPointer = *((uint32_t*)(P1C2cAtkCtrl.rAtkInfoPtr + 0x70));
+			//Yet another validation check.
+			if (P1C2cAtkCtrl.RawATIPointer)
+			{
+				P1C2cAtkCtrl.ATIIdentifier = (char*)(_addr(P1C2cAtkCtrl.RawATIPointer));
+				TempThing = 16 + (8 * P1C2cAtkCtrl.AtiID) + 4;
+				OffsetToATIData = *((uint32_t*)(P1C2cAtkCtrl.RawATIPointer + TempThing));
 
-		P2C2ActiveATIChunk.AtiID = *((int*)(P2Character2Data + 0x18A0));
-		P2C2ActiveATIChunk.FramesBeforeActive = *((float*)(P2Character2Data + 0x18AC));
-		P2C2ActiveATIChunk.RemainingActiveFrames = *((float*)(P2Character2Data + 0x18B0));
-		P2C2ActiveATIChunk.MaybeRecoveryFrames = *((float*)(P2Character2Data + 0x18B8));
-		P2C2ActiveATIChunk.ATIFrame = *((float*)(P2Character2Data + 0x18BC));
+				P1C2cAtkCtrl.ATIStartup = *((int*)((OffsetToATIData + P1C2cAtkCtrl.ATIIdentifier + 0x4)));
+				P1C2cAtkCtrl.ATIActiveFrames = *((int*)((OffsetToATIData + P1C2cAtkCtrl.ATIIdentifier + 0x8)));
 
-		P2C3ActiveATIChunk.AtiID = *((int*)(P2Character3Data + 0x18A0));
-		P2C3ActiveATIChunk.FramesBeforeActive = *((float*)(P2Character3Data + 0x18AC));
-		P2C3ActiveATIChunk.RemainingActiveFrames = *((float*)(P2Character3Data + 0x18B0));
-		P2C3ActiveATIChunk.MaybeRecoveryFrames = *((float*)(P2Character3Data + 0x18B8));
-		P2C3ActiveATIChunk.ATIFrame = *((float*)(P2Character3Data + 0x18BC));
+			}
+		}
+
+		P1C3cAtkCtrl.AtiID = *((int*)(P1Character3Data + 0x18A0));
+		P1C3cAtkCtrl.FramesBeforeActive = *((float*)(P1Character3Data + 0x18AC));
+		P1C3cAtkCtrl.RemainingActiveFrames = *((float*)(P1Character3Data + 0x18B0));
+		P1C3cAtkCtrl.MaybeRecoveryFrames = *((float*)(P1Character3Data + 0x18B8));
+		P1C3cAtkCtrl.ATIFrame = *((float*)(P1Character3Data + 0x18BC));
+		P1C3cAtkCtrl.rAtkInfoPtr = *((uint32_t*)(P1Character3Data + 0x1898));
+		//Validation.
+		if (P1C3cAtkCtrl.rAtkInfoPtr && P1C3cAtkCtrl.AtiID != 0xffffffff)
+		{
+			P1C3cAtkCtrl.RawATIPointer = *((uint32_t*)(P1C3cAtkCtrl.rAtkInfoPtr + 0x70));
+			//Yet another validation check.
+			if (P1C3cAtkCtrl.RawATIPointer)
+			{
+				P1C3cAtkCtrl.ATIIdentifier = (char*)(_addr(P1C3cAtkCtrl.RawATIPointer));
+				TempThing = 16 + (8 * P1C3cAtkCtrl.AtiID) + 4;
+				OffsetToATIData = *((uint32_t*)(P1C3cAtkCtrl.RawATIPointer + TempThing));
+
+				P1C3cAtkCtrl.ATIStartup = *((int*)((OffsetToATIData + P1C3cAtkCtrl.ATIIdentifier + 0x4)));
+				P1C3cAtkCtrl.ATIActiveFrames = *((int*)((OffsetToATIData + P1C3cAtkCtrl.ATIIdentifier + 0x8)));
+
+			}
+		}
+
+		P2C1cAtkCtrl.AtiID = *((int*)(P2Character1Data + 0x18A0));
+		P2C1cAtkCtrl.FramesBeforeActive = *((float*)(P2Character1Data + 0x18AC));
+		P2C1cAtkCtrl.RemainingActiveFrames = *((float*)(P2Character1Data + 0x18B0));
+		P2C1cAtkCtrl.MaybeRecoveryFrames = *((float*)(P2Character1Data + 0x18B8));
+		P2C1cAtkCtrl.ATIFrame = *((float*)(P2Character1Data + 0x18BC));
+		P2C1cAtkCtrl.rAtkInfoPtr = *((uint32_t*)(P2Character1Data + 0x1898));
+		//Validation.
+		if (P2C1cAtkCtrl.rAtkInfoPtr && P2C1cAtkCtrl.AtiID != 0xffffffff)
+		{
+			P2C1cAtkCtrl.RawATIPointer = *((uint32_t*)(P2C1cAtkCtrl.rAtkInfoPtr + 0x70));
+			//Yet another validation check.
+			if (P2C1cAtkCtrl.RawATIPointer)
+			{
+				P2C1cAtkCtrl.ATIIdentifier = (char*)(_addr(P2C1cAtkCtrl.RawATIPointer));
+				TempThing = 16 + (8 * P2C1cAtkCtrl.AtiID) + 4;
+				OffsetToATIData = *((uint32_t*)(P2C1cAtkCtrl.RawATIPointer + TempThing));
+
+				P2C1cAtkCtrl.ATIStartup = *((int*)((OffsetToATIData + P2C1cAtkCtrl.ATIIdentifier + 0x4)));
+				P2C1cAtkCtrl.ATIActiveFrames = *((int*)((OffsetToATIData + P2C1cAtkCtrl.ATIIdentifier + 0x8)));
+
+			}
+		}
+
+		P2C2cAtkCtrl.AtiID = *((int*)(P2Character2Data + 0x18A0));
+		P2C2cAtkCtrl.FramesBeforeActive = *((float*)(P2Character2Data + 0x18AC));
+		P2C2cAtkCtrl.RemainingActiveFrames = *((float*)(P2Character2Data + 0x18B0));
+		P2C2cAtkCtrl.MaybeRecoveryFrames = *((float*)(P2Character2Data + 0x18B8));
+		P2C2cAtkCtrl.ATIFrame = *((float*)(P2Character2Data + 0x18BC));
+		P2C2cAtkCtrl.rAtkInfoPtr = *((uint32_t*)(P2Character2Data + 0x1898));
+		//Validation.
+		if (P2C2cAtkCtrl.rAtkInfoPtr && P2C2cAtkCtrl.AtiID != 0xffffffff)
+		{
+			P2C2cAtkCtrl.RawATIPointer = *((uint32_t*)(P2C2cAtkCtrl.rAtkInfoPtr + 0x70));
+			//Yet another validation check.
+			if (P2C2cAtkCtrl.RawATIPointer)
+			{
+				P2C2cAtkCtrl.ATIIdentifier = (char*)(_addr(P2C2cAtkCtrl.RawATIPointer));
+				TempThing = 16 + (8 * P2C2cAtkCtrl.AtiID) + 4;
+				OffsetToATIData = *((uint32_t*)(P2C2cAtkCtrl.RawATIPointer + TempThing));
+
+				P2C2cAtkCtrl.ATIStartup = *((int*)((OffsetToATIData + P2C2cAtkCtrl.ATIIdentifier + 0x4)));
+				P2C2cAtkCtrl.ATIActiveFrames = *((int*)((OffsetToATIData + P2C2cAtkCtrl.ATIIdentifier + 0x8)));
+
+			}
+		}
+
+
+		P2C3cAtkCtrl.AtiID = *((int*)(P2Character3Data + 0x18A0));
+		P2C3cAtkCtrl.FramesBeforeActive = *((float*)(P2Character3Data + 0x18AC));
+		P2C3cAtkCtrl.RemainingActiveFrames = *((float*)(P2Character3Data + 0x18B0));
+		P2C3cAtkCtrl.MaybeRecoveryFrames = *((float*)(P2Character3Data + 0x18B8));
+		P2C3cAtkCtrl.ATIFrame = *((float*)(P2Character3Data + 0x18BC));
+		P2C3cAtkCtrl.rAtkInfoPtr = *((uint32_t*)(P2Character3Data + 0x1898));
+		//Validation.
+		if (P2C3cAtkCtrl.rAtkInfoPtr && P2C3cAtkCtrl.AtiID != 0xffffffff)
+		{
+			P2C3cAtkCtrl.RawATIPointer = *((uint32_t*)(P2C3cAtkCtrl.rAtkInfoPtr + 0x70));
+			//Yet another validation check.
+			if (P2C3cAtkCtrl.RawATIPointer)
+			{
+				P2C3cAtkCtrl.ATIIdentifier = (char*)(_addr(P2C3cAtkCtrl.RawATIPointer));
+				TempThing = 16 + (8 * P2C3cAtkCtrl.AtiID) + 4;
+				OffsetToATIData = *((uint32_t*)(P2C3cAtkCtrl.RawATIPointer + TempThing));
+
+				P2C3cAtkCtrl.ATIStartup = *((int*)((OffsetToATIData + P2C3cAtkCtrl.ATIIdentifier + 0x4)));
+				P2C3cAtkCtrl.ATIActiveFrames = *((int*)((OffsetToATIData + P2C3cAtkCtrl.ATIIdentifier + 0x8)));
+
+			}
+		}
 
 	}
 
@@ -302,7 +405,7 @@ ChildData GetChildCollisionData(uint64_t PlayerPtr, uint64_t ChildPtr)
 	uint64_t tttttt = 0;
 	int HitxCount = 0;
 	int HurtXCount = 0;
-	PlayerATIStuff ChildATIChunk;
+	PlayercAtkCtrlStuff ChildATIChunk;
 
 	TempCA = ChildPtr;
 	TempCA = *(uint64_t*)_addr(TempCA + 0x4200);
@@ -469,7 +572,7 @@ std::vector<ChildData> GetChildCharacterData(uint64_t PlayerPtr, int CharacterID
 	uint64_t Child3Ptr = 0;
 	uint64_t Child4Ptr = 0;
 	uint64_t Child5Ptr = 0;
-	PlayerATIStuff ChildATIChunk;
+	PlayercAtkCtrlStuff ChildATIChunk;
 	int HitxCount = 0;
 	int HurtXCount = 0;
 	if (PlayerPtr)
@@ -3171,18 +3274,14 @@ void GetShots()
 void GetChildData()
 {
 	P1C1ActiveChildData.clear();
-	//P1C2ActiveChildData.clear();
-	//P1C3ActiveChildData.clear();
+
 	P2C1ActiveChildData.clear();
-	//P2C2ActiveChildData.clear();
-	//P2C3ActiveChildData.clear();
+
 
 	P1C1ActiveChildData = GetChildCharacterData(P1Character1Data, P1Character1ID, Player1CharNodeTree, P1C1ActiveChildData);
-	//P1C2ActiveChildData = GetChildCharacterData(P1Character2Data, P1Character2ID, Player1CharNodeTree, P1C2ActiveChildData);
-	//P1C3ActiveChildData = GetChildCharacterData(P1Character3Data, P1Character3ID, Player1CharNodeTree, P1C3ActiveChildData);
+
 	P2C1ActiveChildData = GetChildCharacterData(P2Character1Data, P2Character1ID, Player2CharNodeTree, P2C1ActiveChildData);
-	//P2C2ActiveChildData = GetChildCharacterData(P2Character2Data, P2Character2ID, Player2CharNodeTree, P2C2ActiveChildData);
-	//P2C3ActiveChildData = GetChildCharacterData(P2Character3Data, P2Character3ID, Player2CharNodeTree, P2C3ActiveChildData);
+
 }
 
 //ShotData GetShotData()
