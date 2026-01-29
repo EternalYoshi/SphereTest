@@ -805,7 +805,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 1 Hurtboxes
 	data.P1C1ActiveSpheres.clear();
 	data.P1C1ActiveSpheres.resize(P1C1Hurtboxes.size());
-	if (sAction && MatchFlag == 0)
+	if (sAction && MatchFlag == 0 && P1C1Hurtboxes.size() > 0)
 	{
 		//Gotta use binary to use for checking character state. [23] checks for Active collisions, [25] for Invul but throwable,
 		//and [29] for true invul.
@@ -832,7 +832,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 2 Hurtboxes
 	data.P1C2ActiveSpheres.clear();
 	data.P1C2ActiveSpheres.resize(P1C2Hurtboxes.size());
-	if (sAction && MatchFlag == 0)
+	if (sAction && MatchFlag == 0 && P1C2Hurtboxes.size() > 0)
 	{
 		//Gotta use binary to use for checking character state. [23] checks for Active collisions, [25] for Invul but throwable,
 		//and [29] for true invul.
@@ -859,7 +859,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 1 Character 3 Hurtboxes
 	data.P1C3ActiveSpheres.clear();
 	data.P1C3ActiveSpheres.resize(P1C3Hurtboxes.size());
-	if (sAction && MatchFlag == 0)
+	if (sAction && MatchFlag == 0 && P1C3Hurtboxes.size() > 0)
 	{
 		//Gotta use binary to use for checking character state. [23] checks for Active collisions, [25] for Invul but throwable,
 		//and [29] for true invul.
@@ -886,7 +886,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 1 Hurtboxes
 	data.P2C1ActiveSpheres.clear();
 	data.P2C1ActiveSpheres.resize(P2C1Hurtboxes.size());
-	if (sAction && MatchFlag == 0)
+	if (sAction && MatchFlag == 0 && P2C1Hurtboxes.size() > 0)
 	{
 		//Gotta use binary to use for checking character state. [23] checks for Active collisions, [25] for Invul but throwable,
 		//and [29] for true invul.
@@ -913,7 +913,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 2 Hurtboxes
 	data.P2C2ActiveSpheres.clear();
 	data.P2C2ActiveSpheres.resize(P2C2Hurtboxes.size());
-	if (sAction && MatchFlag == 0)
+	if (sAction && MatchFlag == 0 && P2C2Hurtboxes.size() > 0)
 	{
 		//Gotta use binary to use for checking character state. [23] checks for Active collisions, [25] for Invul but throwable,
 		//and [29] for true invul.
@@ -940,7 +940,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 #pragma region Player 2 Character 3 Hurtboxes
 	data.P2C3ActiveSpheres.clear();
 	data.P2C3ActiveSpheres.resize(P2C3Hurtboxes.size());
-	if (sAction && MatchFlag == 0)
+	if (sAction && MatchFlag == 0 && P2C3Hurtboxes.size() > 0)
 	{
 		//Gotta use binary to use for checking character state. [23] checks for Active collisions, [25] for Invul but throwable,
 		//and [29] for true invul.
@@ -1108,25 +1108,37 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 	if (sAction && MatchFlag == 0)
 	{
 		//Player 1 Shots.
-		for (int n = 0; n < P1ShotHitCapsules.size(); n++)
+		if(P1ShotHitCapsules.size() > 0)
 		{
-			data.P1ShotsActiveHitCapsules.push_back(GetHitboxScreenPos(P1ShotHitCapsules[n]));
+			for (int n = 0; n < P1ShotHitCapsules.size(); n++)
+			{
+				data.P1ShotsActiveHitCapsules.push_back(GetHitboxScreenPos(P1ShotHitCapsules[n]));
+			}
 		}
 
-		for (int n = 0; n < P1ShotHitSpheres.size(); n++)
+		if (P1ShotHitSpheres.size() > 0)
 		{
-			data.P1ShotsActiveHitSpheres.push_back(GetRedSphereScreenPos(P1ShotHitSpheres[n]));
+			for (int n = 0; n < P1ShotHitSpheres.size(); n++)
+			{
+				data.P1ShotsActiveHitSpheres.push_back(GetRedSphereScreenPos(P1ShotHitSpheres[n]));
+			}
 		}
 
 		//Player 2 Shots.
-		for (int nn = 0; nn < P2ShotHitCapsules.size(); nn++)
+		if (P2ShotHitCapsules.size() > 0)
 		{
-			data.P2ShotsActiveHitCapsules.push_back(GetHitboxScreenPos(P2ShotHitCapsules[nn]));
+			for (int nn = 0; nn < P2ShotHitCapsules.size(); nn++)
+			{
+				data.P2ShotsActiveHitCapsules.push_back(GetHitboxScreenPos(P2ShotHitCapsules[nn]));
+			}
 		}
 
-		for (int n = 0; n < P2ShotHitSpheres.size(); n++)
+		if (P2ShotHitSpheres.size() > 0)
 		{
-			data.P2ShotsActiveHitSpheres.push_back(GetRedSphereScreenPos(P2ShotHitSpheres[n]));
+			for (int n = 0; n < P2ShotHitSpheres.size(); n++)
+			{
+				data.P2ShotsActiveHitSpheres.push_back(GetRedSphereScreenPos(P2ShotHitSpheres[n]));
+			}
 		}
 
 	}
@@ -1272,8 +1284,8 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 				//Checks for Maya's Class value to be at 0 and won't render any hurtboxes if at 0. Next part of this statement is for Felciia's sisters & Dr. Strange's Afterimage.
 				if (P2C1ActiveChildData[n].VTableAddress == 0x140A7A830 && P2C1ActiveChildData[n].SomeClassValue == 0
 					|| P2C1ActiveChildData[n].VTableAddress == 0x140a74eb0 || P2C1ActiveChildData[n].VTableAddress == 0x140a75380
-					|| P2C1ActiveChildData[n].VTableAddress == 0x140a744c0 || P1C1ActiveChildData[n].VTableAddress == 0x140a84800
-					|| P1C1ActiveChildData[n].VTableAddress == 0x140a7b7f0)
+					|| P2C1ActiveChildData[n].VTableAddress == 0x140a744c0 || P2C1ActiveChildData[n].VTableAddress == 0x140a84800
+					|| P2C1ActiveChildData[n].VTableAddress == 0x140a7b7f0)
 				{
 					//data.P1C1ChildActiveSpheres.clear();
 					//data.P1C1Child1ActiveHitSpheres.clear();

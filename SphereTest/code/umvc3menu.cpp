@@ -3058,6 +3058,12 @@ void GetShots()
 		Player1ShotPointers.push_back(CurrentPtr);
 		ShotData shotstuff;
 
+		shotstuff.StopHitboxLoop = *(int*)_addr(IPtr + 0x48);
+		float Somefloat = 0, SomeFloat2 = 0, SomeFloat3 = 0;
+		Somefloat = *(float*)_addr(IPtr + 0x54);
+		SomeFloat2 = *(float*)_addr(IPtr + 0x5C);
+		SomeFloat3 = *(float*)_addr(IPtr + 0x64);
+
 		TempT = CurrentPtr;
 		//rAtkInfo..?
 		shotstuff.rAtkInfoPtr = CurrentPtr + 0x40;
@@ -3099,7 +3105,7 @@ void GetShots()
 							{
 
 								//Checks if the duration is zero before considering adding those.
-								if(shotstuff.CurrentShotDuration != 0)								
+								if(shotstuff.CurrentShotDuration != 0 && shotstuff.StopHitboxLoop == false)
 								{
 									//Checks if Capsule or Sphere.
 									CollVtable = *(uint64_t*)_addr(CollisionPtr);
@@ -3212,41 +3218,46 @@ void GetShots()
 							//Checks if the pointer actually points to somewhere.
 							if (CollisionPtr)
 							{
-								//Checks if Capsule or Sphere.
-								CollVtable = *(uint64_t*)_addr(CollisionPtr);
 
-								//If Capsule.
-								if (CollVtable == 0x140a6b000)
+								//Checks if the duration is zero before considering adding those.
+								if (shotstuff.CurrentShotDuration != 0)
 								{
-									Hitbox ShotBox;
-									ShotBox.ContainerPos.x = *(float*)(ContainerPtr + 0x20);
-									ShotBox.ContainerPos.y = *(float*)(ContainerPtr + 0x24);
-									ShotBox.ContainerPos.z = *(float*)(ContainerPtr + 0x28);
-									ShotBox.Radius = *(float*)_addr(ContainerPtr + 0x38);
-									ShotBox.PointerToCapsuleData = CollisionPtr;
+									//Checks if Capsule or Sphere.
+									CollVtable = *(uint64_t*)_addr(CollisionPtr);
 
-									ShotBox.CapsulePrimaryPos.x = *((float*)(CollisionPtr + 0x20));
-									ShotBox.CapsulePrimaryPos.y = *((float*)(CollisionPtr + 0x24));
-									ShotBox.CapsulePrimaryPos.z = *((float*)(CollisionPtr + 0x28));
+									//If Capsule.
+									if (CollVtable == 0x140a6b000)
+									{
+										Hitbox ShotBox;
+										ShotBox.ContainerPos.x = *(float*)(ContainerPtr + 0x20);
+										ShotBox.ContainerPos.y = *(float*)(ContainerPtr + 0x24);
+										ShotBox.ContainerPos.z = *(float*)(ContainerPtr + 0x28);
+										ShotBox.Radius = *(float*)_addr(ContainerPtr + 0x38);
+										ShotBox.PointerToCapsuleData = CollisionPtr;
 
-									ShotBox.CapsuleSecondPos.x = *((float*)(CollisionPtr + 0x30));
-									ShotBox.CapsuleSecondPos.y = *((float*)(CollisionPtr + 0x34));
-									ShotBox.CapsuleSecondPos.z = *((float*)(CollisionPtr + 0x38));
+										ShotBox.CapsulePrimaryPos.x = *((float*)(CollisionPtr + 0x20));
+										ShotBox.CapsulePrimaryPos.y = *((float*)(CollisionPtr + 0x24));
+										ShotBox.CapsulePrimaryPos.z = *((float*)(CollisionPtr + 0x28));
 
-									P2ShotHitCapsules.push_back(ShotBox);
-								}
-								//Else if a Sphere.
-								else if (CollVtable == 0x140a6ae10)
-								{
-									Hurtbox ShotSphere;
-									ShotSphere.CollData.Radius = *(float*)_addr(CollisionPtr + 0x2C);
-									ShotSphere.PointerToMoreData = CollisionPtr;
+										ShotBox.CapsuleSecondPos.x = *((float*)(CollisionPtr + 0x30));
+										ShotBox.CapsuleSecondPos.y = *((float*)(CollisionPtr + 0x34));
+										ShotBox.CapsuleSecondPos.z = *((float*)(CollisionPtr + 0x38));
 
-									ShotSphere.CollData.Coordinates.X = *((float*)(CollisionPtr + 0x20));
-									ShotSphere.CollData.Coordinates.Y = *((float*)(CollisionPtr + 0x24));
-									ShotSphere.CollData.Coordinates.Z = *((float*)(CollisionPtr + 0x28));
+										P2ShotHitCapsules.push_back(ShotBox);
+									}
+									//Else if a Sphere.
+									else if (CollVtable == 0x140a6ae10)
+									{
+										Hurtbox ShotSphere;
+										ShotSphere.CollData.Radius = *(float*)_addr(CollisionPtr + 0x2C);
+										ShotSphere.PointerToMoreData = CollisionPtr;
 
-									P2ShotHitSpheres.push_back(ShotSphere);
+										ShotSphere.CollData.Coordinates.X = *((float*)(CollisionPtr + 0x20));
+										ShotSphere.CollData.Coordinates.Y = *((float*)(CollisionPtr + 0x24));
+										ShotSphere.CollData.Coordinates.Z = *((float*)(CollisionPtr + 0x28));
+
+										P2ShotHitSpheres.push_back(ShotSphere);
+									}
 								}
 
 

@@ -1369,6 +1369,11 @@ struct ShotData {
 	//float ThirdRadius;
 	int PeculiarCounter;
 	uint64_t FirstCollPtr;
+	//Bool that shows up that I suspect is relevant.
+	bool StopHitboxLoop;
+	float FramesInBetween = 0;
+	float RepCounterThing = 0;
+
 };
 
 inline std::vector<ShotData> Player1Shots;

@@ -1,9 +1,9 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include <d3d9.h>
-#include "gui\imgui\imgui.h"
-#include "gui\imgui\imgui_impl_win32.h"
-#include "gui\imgui\imgui_impl_dx9.h"
+//#include "gui\imgui\imgui.h"
+//#include "gui\imgui\imgui_impl_win32.h"
+//#include "gui\imgui\imgui_impl_dx9.h"
 #include "mutex"
 #include "utils/MemoryMgr.h"
 #include "utils/Trampoline.h"
@@ -117,21 +117,21 @@ bool CreateHitboxRenderTarget(LPDIRECT3DDEVICE9 pDevice)
 	return true;
 }
 
-void InitImGui(LPDIRECT3DDEVICE9 pDevice)
-{
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
-	ImGui_ImplWin32_Init(window);
-	ImGui_ImplDX9_Init(pDevice);
-
-	ImGuiStyle* style = &ImGui::GetStyle();
-	style->WindowRounding = 6.0f;
-	style->ItemSpacing = ImVec2(7, 5.5);
-	style->FrameRounding = 2.0f;
-	style->FramePadding = ImVec2(6, 4.25);
-
-}
+//void InitImGui(LPDIRECT3DDEVICE9 pDevice)
+//{
+//	ImGui::CreateContext();
+//	ImGuiIO& io = ImGui::GetIO();
+//	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+//	ImGui_ImplWin32_Init(window);
+//	ImGui_ImplDX9_Init(pDevice);
+//
+//	ImGuiStyle* style = &ImGui::GetStyle();
+//	style->WindowRounding = 6.0f;
+//	style->ItemSpacing = ImVec2(7, 5.5);
+//	style->FrameRounding = 2.0f;
+//	style->FramePadding = ImVec2(6, 4.25);
+//
+//}
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
@@ -551,6 +551,14 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 			attached = true;
 		}
 	} while (!attached);
+
+	//Experiment time.
+	moduleBase = (uintptr_t)GetModuleHandle("umvc3.exe");
+	//uint64_t reflectionData = *(uint64_t*)(moduleBase + 8);
+	//SomeStruct* reflectionPtr = *(SomeStruct**)(moduleBase + 8);
+	//DWORD_PTR vTable = (DWORD_PTR)VirtualAlloc((LPVOID)(moduleBase - 0x1000), 0x1000, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+
+
 	return true;
 }
 
@@ -629,9 +637,9 @@ BOOL APIENTRY DllMain(HMODULE hMod, DWORD  dwReason, LPVOID lpReserved)
 	case DLL_PROCESS_DETACH:
 		if (ImGuiInitialized)
 		{
-			ImGui_ImplDX9_Shutdown();
-			ImGui_ImplWin32_Shutdown();
-			ImGui::DestroyContext();
+			//ImGui_ImplDX9_Shutdown();
+			//ImGui_ImplWin32_Shutdown();
+			//ImGui::DestroyContext();
 		}
 		kiero::shutdown();
 		break;

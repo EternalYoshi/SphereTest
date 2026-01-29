@@ -517,9 +517,6 @@
     <ClCompile Include="utils\Patterns.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="gui\imgui\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Library Include="minhook\lib\libMinHook.x64.lib" />
   </ItemGroup>
   <ItemGroup>
