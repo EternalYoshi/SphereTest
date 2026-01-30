@@ -3753,7 +3753,7 @@ static std::string HashToTypeName(uint64_t Hash)
 		return "uShotOptionRoundTrip";
 
 	case 0x140ae3ca0:
-		return "uShotVulcanJigenZan";// AKA Judgment Cut.
+		return "uShotVulcanJigenZan";//AKA Judgment Cut.
 
 	case 0x140ae40f0:
 		return "uShotVulcanRapidSlash";

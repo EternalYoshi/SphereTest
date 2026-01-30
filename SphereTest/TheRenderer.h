@@ -24,11 +24,10 @@ void RenderTheSpheres(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtbo
 void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitSphere>& ActiveSpheres);
 void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitCapsule>& ActiveSpheres);
 
-// A structure for our custom vertex type
 struct CUSTOMVERTEX
 {
-	FLOAT x, y, z, rhw; // The transformed position for the vertex
-	DWORD color;        // The vertex color
+	FLOAT x, y, z, rhw;
+	DWORD color;
 };
 void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes,
 	std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes,

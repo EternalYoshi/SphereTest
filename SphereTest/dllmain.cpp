@@ -36,7 +36,6 @@ static std::unordered_set<DWORD> renderThreads;
 static std::atomic<int> FrameCounter{ 0 };
 static thread_local int LastRenderedFrame = -1;
 
-// Add these globals with your other function pointers
 typedef HRESULT(__stdcall* Reset)(LPDIRECT3DDEVICE9, D3DPRESENT_PARAMETERS*);
 Reset oReset = nullptr;
 
@@ -177,7 +176,7 @@ static bool CheckGame()
 
 long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 {
-	//Attempts to Track rendering threads.
+	//Attempts to Track rendering threads. For some reason, Marvel 3 has 2 rendering threads.
 	CurrentThreadId = GetCurrentThreadId();
 
 	{
@@ -191,7 +190,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			//	CurrentThreadId, renderThreads.size());
 			OutputDebugStringA(buf);
 
-			// First thread becomes the main render thread
+			//First thread detected will be the main rendering thread.
 			if (MainRenderThread == 0) {
 				MainRenderThread = CurrentThreadId;
 			}
@@ -212,8 +211,6 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		initialized = true;
 		//hitboxRenderer = new HitboxRender();
 	}
-
-
 
 	//Becuase of the above, also ONLY render ImGui stuff on main thread.
 	if (CurrentThreadId == MainRenderThread && initialized)
@@ -277,7 +274,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 		}
 	}
 
-	//// Render once per frame using thread_local tracking.
+	////Render once per frame using thread_local tracking.
 	//CurrentFrame = FrameCounter.load();
 
 	StartRendering(pDevice);
@@ -365,7 +362,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 		//LastRenderedFrame = CurrentFrame;
 
-		//// Debug output to confirm rendering
+		////Debug output to confirm what's going on with rendering.
 		//char buf[256];
 		//sprintf_s(buf, "Rendered spheres on thread %lu, frame %d\n", CurrentThreadId, CurrentFrame);
 		//printf(buf, "Rendered spheres on thread %lu, frame %d\n", CurrentThreadId, CurrentFrame);
@@ -388,134 +385,6 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 	return result;
 }
-
-//Backup of End Scene.
-/*
-long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
-{
-	//Attempts to Track rendering threads.
-	CurrentThreadId = GetCurrentThreadId();
-
-	{
-		std::lock_guard<std::mutex> lock(renderMutex);
-		if (renderThreads.find(CurrentThreadId) == renderThreads.end()) {
-			renderThreads.insert(CurrentThreadId);
-			char buf[256];
-			sprintf_s(buf, "Thread detected: %lu (Total threads: %zu)\n",
-				CurrentThreadId, renderThreads.size());
-			printf(buf, "Thread detected: %lu (Total threads: %zu)\n",
-				CurrentThreadId, renderThreads.size());
-			OutputDebugStringA(buf);
-
-			// First thread becomes the main render thread
-			if (MainRenderThread == 0) {
-				MainRenderThread = CurrentThreadId;
-			}
-		}
-	}
-
-
-	//For now, only do the ImGui stuff on the Main Thread.
-	if (CurrentThreadId == MainRenderThread && !initialized)
-	{
-		D3DDEVICE_CREATION_PARAMETERS params;
-		pDevice->GetCreationParameters(&params);
-		window = params.hFocusWindow;
-		oWndProc = (WNDPROC)SetWindowLongPtr(window, GWLP_WNDPROC, (LONG_PTR)WndProc);
-		InitImGui(pDevice);
-		initialized = true;
-		//hitboxRenderer = new HitboxRender();
-	}
-
-
-
-	//Becuase of the above, also ONLY render ImGui stuff on main thread.
-	if (CurrentThreadId == MainRenderThread && initialized)
-	{
-		ImGui_ImplDX9_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-		ImGui::GetIO().MouseDrawCursor = false;
-
-		if (TheMenu->GetActiveState())
-		{
-			TheMenu->Draw();
-		}
-
-		ImGui::EndFrame();
-
-		ImGui::Render();
-	}
-
-	// UPDATE sphere data only on the main thread (once per frame)
-	if (CurrentThreadId == MainRenderThread && BeginHitboxDisplay)
-	{
-		UpdateSphereData(P1C1Hurtboxes, P1C2Hurtboxes, P1C3Hurtboxes,
-			P2C1Hurtboxes, P2C2Hurtboxes, P2C3Hurtboxes);
-	}
-
-
-	if (CheckTheMode() == true)
-	{
-		GetMainPointers();
-		CheckIfInMatch();
-		if (InMatch)
-		{
-			TickUpdates();
-			GetPlayerData();
-			GetCharacterIDs();
-			GetHurtboxData();
-			GetHitboxDataPart1();
-			GetCameraStuff();
-			GetEvenMorePlayerData();
-			GetChildCharacters();
-		}
-	}
-
-	//// Render once per frame using thread_local tracking.
-	//CurrentFrame = FrameCounter.load();
-
-	StartRendering(pDevice);
-
-	if (BeginHitboxDisplay)
-	{
-
-
-		//Intended to Prevent Ghosting.
-		pDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
-		RenderSpheresFromBuffer(pDevice);
-
-
-		//if (BeginHitboxDisplay)
-		//{
-		//	RenderTheSpheres(pDevice, P1C1Hurtboxes, P1C2Hurtboxes, P1C3Hurtboxes, P2C1Hurtboxes, P2C2Hurtboxes, P2C3Hurtboxes);
-		//}
-		//StopRendering(pDevice);
-
-		//LastRenderedFrame = CurrentFrame;
-
-		//// Debug output to confirm rendering
-		//char buf[256];
-		//sprintf_s(buf, "Rendered spheres on thread %lu, frame %d\n", CurrentThreadId, CurrentFrame);
-		//printf(buf, "Rendered spheres on thread %lu, frame %d\n", CurrentThreadId, CurrentFrame);
-		//OutputDebugStringA(buf);
-
-
-	}
-	StopRendering(pDevice);
-
-	if (CurrentThreadId == MainRenderThread && initialized)
-	{
-		ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-	}
-
-	HRESULT result = oEndScene(pDevice);
-	FrameCounter.fetch_add(1);
-
-	return result;
-}
-
-*/
 
 void OnInitializeHook()
 {
@@ -606,6 +475,59 @@ void WINAPI HookUpdate()
 			}
 		}
 
+		if (CheckTheMode() == true)
+		{
+			if (InMatch && sCharacter) {
+				if (GetAsyncKeyState(ToggleOpacityAdd))
+				{
+					if (GetTickCount64() - timer <= 150)
+					{
+
+					}
+					else
+					{
+						timer = GetTickCount64();
+						if (g_hitboxAlpha >= 1.0)
+						{
+							g_hitboxAlpha = 1.0;
+						}
+						else
+						{
+							g_hitboxAlpha = g_hitboxAlpha + 0.5;
+						}
+					}
+
+				}
+			}
+		}
+
+		if (CheckTheMode() == true)
+		{
+			if (InMatch && sCharacter) {
+				if (GetAsyncKeyState(ToggleOpacitySub))
+				{
+					if (GetTickCount64() - timer <= 150)
+					{
+
+					}
+					else
+					{
+						timer = GetTickCount64();
+						if (g_hitboxAlpha <= 0.0)
+						{
+							g_hitboxAlpha = 0.0;
+						}
+						else
+						{
+							g_hitboxAlpha = g_hitboxAlpha - 0.5;
+						}
+					}
+
+				}
+			}
+		}
+
+
 		Sleep(1);
 	}
 }
@@ -625,6 +547,8 @@ BOOL APIENTRY DllMain(HMODULE hMod, DWORD  dwReason, LPVOID lpReserved)
 			GameHeight = ini.ReadFloat("Settings", "GameHeight", VK_SPACE);
 			GameWidth = ini.ReadFloat("Settings", "GameWidth", VK_SPACE);
 			ToggleDisplayKey = ini.ReadInteger("Settings", "ToggleDisplayKey", VK_SPACE);
+			ToggleOpacityAdd = ini.ReadInteger("Settings", "ToggleOpacityAdd", VK_SPACE);
+			ToggleOpacitySub = ini.ReadInteger("Settings", "ToggleOpacitySub", VK_SPACE);
 
 			DisableThreadLibraryCalls(hMod);
 			CreateThread(nullptr, 0, MainThread, hMod, 0, nullptr);

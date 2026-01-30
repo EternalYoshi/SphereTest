@@ -17,6 +17,8 @@
 inline float GameHeight;
 inline float GameWidth;
 inline int ToggleDisplayKey;
+inline int ToggleOpacityAdd;
+inline int ToggleOpacitySub;
 
 inline IDirect3DBaseTexture9* oldTexture;
 inline IDirect3DBaseTexture9* oldTexture2;

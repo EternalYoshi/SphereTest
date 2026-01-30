@@ -14,7 +14,7 @@
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZRHW|D3DFVF_DIFFUSE)
 #define D3DFVF_TEXTUREVERTEX (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 //IDirect3DBaseTexture9* oldTexture;
-LPDIRECT3DVERTEXBUFFER9 g_pVB = NULL; // Buffer to hold vertices
+LPDIRECT3DVERTEXBUFFER9 g_pVB = NULL;
 #define D3DX_PI 3.1415926535897932384626
 
 struct TEXTUREVERTEX {
@@ -37,7 +37,7 @@ void ReleaseHitboxRenderTarget()
 
 void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 {
-	// Backups up the state.
+	//Backups up the render state.
 	DWORD alphaBlend, srcBlend, destBlend, fvf, zwriteenable;
 	DWORD alphaOp, alphaArg1, alphaArg2;
 	//IDirect3DBaseTexture9* oldTexture;
@@ -53,7 +53,7 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAARG1, &alphaArg1);
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAARG2, &alphaArg2);
 
-	// Setting up textured quad with alpha enabled.
+	//Setting up textured quad with alpha enabled.
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -95,7 +95,7 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 
 void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 {
-	// Backup state
+	//Backups up the render state.
 	DWORD alphaBlend, srcBlend, destBlend, fvf, zwriteenable;
 	DWORD alphaOp, alphaArg1, alphaArg2;
 	//IDirect3DBaseTexture9* oldTexture;
@@ -111,7 +111,7 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAARG1, &alphaArg1);
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAARG2, &alphaArg2);
 
-	// Set up for textured quad with alpha
+	//Setup for a transparent textured quad.
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
@@ -133,9 +133,7 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 
 	pDevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, vertices, sizeof(TEXTUREVERTEX));
 
-
-
-	// Restore state
+	//Restores the state.
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, alphaBlend);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, destBlend);
@@ -153,22 +151,20 @@ void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 }
 
 bool CreateHitboxTarget(IDirect3DDevice9* device, int width, int height) {
-	// Create texture with render target usage
+	//This creates a texture with render target usage. Has a format with alpha channel as well.
 	HRESULT hr = device->CreateTexture(
 		width, height, 1,
 		D3DUSAGE_RENDERTARGET,
-		D3DFMT_A8R8G8B8, // Format with alpha channel
+		D3DFMT_A8R8G8B8,
 		D3DPOOL_DEFAULT,
 		&g_pRenderTexture1,
 		NULL
 	);
 
-	if (FAILED(hr)) return false;
-
-	// Get the surface
+	if (FAILED(hr)) return false;	
 	g_pRenderTexture1->GetSurfaceLevel(0, &g_pRenderSurface1);
 
-	// Create depth stencil surface for the render target
+	//For the render target.
 	hr = device->CreateDepthStencilSurface(
 		width, height,
 		D3DFMT_D24S8,
@@ -185,11 +181,10 @@ bool CreateHitboxTarget(IDirect3DDevice9* device, int width, int height) {
 }
 
 bool CreateCapsuleTarget(IDirect3DDevice9* device, int width, int height) {
-	// Create texture with render target usage
 	HRESULT hr = device->CreateTexture(
 		width, height, 1,
 		D3DUSAGE_RENDERTARGET,
-		D3DFMT_A8R8G8B8, // Format with alpha channel
+		D3DFMT_A8R8G8B8,
 		D3DPOOL_DEFAULT,
 		&g_pRenderTexture2,
 		NULL
@@ -197,10 +192,8 @@ bool CreateCapsuleTarget(IDirect3DDevice9* device, int width, int height) {
 
 	if (FAILED(hr)) return false;
 
-	// Get the surface
 	g_pRenderTexture2->GetSurfaceLevel(0, &g_pRenderSurface2);
 
-	// Create depth stencil surface for the render target
 	hr = device->CreateDepthStencilSurface(
 		width, height,
 		D3DFMT_D24S8,
@@ -216,7 +209,6 @@ bool CreateCapsuleTarget(IDirect3DDevice9* device, int width, int height) {
 	return true;
 }
 
-// Sphere data buffer structure
 struct SphereDataBuffer {
 	//Player Character Hurtboxes.
 	std::vector<PrimHitSphere> P1C1ActiveSpheres;
@@ -269,7 +261,7 @@ static std::mutex BufferMutex;
 
 //Borrowed from HKHaan & Altimor's code.
 
-// Restores device state to parameters saved in render_start.
+//Restores device state to parameters saved in render_start.
 std::function<void(IDirect3DDevice9*)> StopRendering;
 
 void StartRendering(IDirect3DDevice9* device)
@@ -280,7 +272,7 @@ void StartRendering(IDirect3DDevice9* device)
 
 	//Default resolution I'm working with is 1600x900...
 
-	// Back up device state.
+	//Back up device state.
 	DWORD alpha_blend_enable, dest_blend, src_blend, dest_blend_alpha, src_blend_alpha, fvf, alpha_test_enable, alpharef, alphafunc;
 	IDirect3DPixelShader9* pixel_shader;
 	IDirect3DBaseTexture9* texture;
@@ -310,7 +302,7 @@ void StartRendering(IDirect3DDevice9* device)
 
 	StopRendering = [=](IDirect3DDevice9* device)
 	{
-		// Restore device state.
+		//Restore device state.
 		device->SetRenderState(D3DRS_ALPHABLENDENABLE, alpha_blend_enable);
 		device->SetRenderState(D3DRS_ALPHATESTENABLE, alpha_test_enable);
 		device->SetRenderState(D3DRS_ALPHAREF, alpharef);
@@ -333,7 +325,9 @@ void StartRendering(IDirect3DDevice9* device)
 void circleFilled(LPDIRECT3DDEVICE9 pDevice, float x, float y, float rad, int resolution, DWORD color)
 {
 	std::vector<CUSTOMVERTEX> circle(resolution + 2);
-	float pi = D3DX_PI;        // Full circle
+
+	//Data for a Full circle.
+	float pi = D3DX_PI;
 
 	circle[0].x = x;
 	circle[0].y = y;
@@ -350,7 +344,7 @@ void circleFilled(LPDIRECT3DDEVICE9 pDevice, float x, float y, float rad, int re
 		circle[i].color = color;
 	}
 
-	// Rotate matrix
+	//Rotation matrix.
 	int _res = resolution + 2;
 	for (int i = 0; i < _res; i++)
 	{
@@ -377,13 +371,13 @@ void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 	//Check if empty.
 	if (ActiveSpheres.empty()) return;
 
-	float pi = D3DX_PI;        // Full circle
+	float pi = D3DX_PI;
 
-	// Calculate total vertices needed
+	//Calculates the required vertex count.
 	int verticesPerCircle = resolution + 2;
 	int totalVertices = verticesPerCircle * ActiveSpheres.size();
 
-	// Pre-allocate combined vertex array
+	//Pre-allocating combined vertex array.
 	std::vector<CUSTOMVERTEX> allVertices;
 	allVertices.reserve(totalVertices);
 
@@ -395,7 +389,7 @@ void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 		float rad = ActiveSpheres[v].Radius;
 		DWORD color = ActiveSpheres[v].Color;
 
-		// Center vertex
+		//The center vert.
 		CUSTOMVERTEX center;
 		center.x = x;
 		center.y = y;
@@ -417,7 +411,7 @@ void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 
 	}
 
-	// Create single vertex buffer for all circles
+	//Create a single vertex buffer for all the circles.
 	LPDIRECT3DVERTEXBUFFER9 pVB = NULL;
 	pDevice->CreateVertexBuffer(totalVertices * sizeof(CUSTOMVERTEX),
 		D3DUSAGE_WRITEONLY,
@@ -434,7 +428,7 @@ void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 	pDevice->SetStreamSource(0, pVB, 0, sizeof(CUSTOMVERTEX));
 	pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 
-	// Draw all circles in one call using multiple triangle fans
+	//Draws all circles in a call that uses multiple triangle fans.
 	for (int i = 0; i < ActiveSpheres.size(); i++)
 	{
 		int startVertex = i * verticesPerCircle;
@@ -451,16 +445,15 @@ void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 	//Check if empty.
 	if (ActiveSpheres.empty()) return;
 
-	float pi = D3DX_PI;        // Full circle
+	float pi = D3DX_PI;
 
-	// Calculate total vertices needed
 	int verticesPerSphere = resolution + 2;
 	//Need Rectangles to fill in the space between the two spheres to make the capsule shape.
 	int verticesPerRect = 4;
 	int verticesPerCapsule = (verticesPerSphere * 2) + verticesPerRect;
 	int totalVertices = verticesPerCapsule * ActiveSpheres.size();
 
-	// Pre-allocate combined vertex array
+	//Pre-allocates the combined vertex array.
 	std::vector<CUSTOMVERTEX> allVertices;
 	allVertices.reserve(totalVertices);
 
@@ -479,11 +472,11 @@ void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 		float dy = y2 - y1;
 		float length = sqrt(dx * dx + dy * dy);
 
-		// Perpendicular vector (normalized)
+		//Normalized perpendicular vector.
 		float perpX = -dy / length * rad;
 		float perpY = dx / length * rad;
 
-		// For the 1st Sphere.
+		//For the 1st Sphere.
 		CUSTOMVERTEX center1;
 		center1.x = x1;
 		center1.y = y1;
@@ -555,7 +548,7 @@ void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 
 	}
 
-	// Create single vertex buffer for all circles
+	//Creates single vertex buffer for all the above shapes.
 	LPDIRECT3DVERTEXBUFFER9 pVB = NULL;
 	pDevice->CreateVertexBuffer(totalVertices * sizeof(CUSTOMVERTEX),
 		D3DUSAGE_WRITEONLY,
@@ -572,7 +565,7 @@ void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::ve
 	pDevice->SetStreamSource(0, pVB, 0, sizeof(CUSTOMVERTEX));
 	pDevice->SetFVF(D3DFVF_CUSTOMVERTEX);
 
-	// Draw all circles in one call using multiple triangle fans
+	//Draws all circles in a single call via multiple triangle fans.
 	for (int i = 0; i < ActiveSpheres.size(); i++)
 	{
 		int startVertex = i * verticesPerCapsule;
@@ -606,9 +599,9 @@ PrimHitSphere GetHurtBoxScreenPos(Hurtbox HBox)
 
 	//Next the view matrix.
 	glm::mat4 viewMatrix = glm::lookAt(
-		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),    // CameraPos
-		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),	 // TargetPos
-		glm::vec3(0, 1, 0)									 // CameraUp
+		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),
+		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),
+		glm::vec3(0, 1, 0)
 	);
 
 	//Then the Projection and view.
@@ -654,9 +647,9 @@ PrimHitSphere GetBlueHurtBoxScreenPos(Hurtbox HBox)
 
 	//Next the view matrix.
 	glm::mat4 viewMatrix = glm::lookAt(
-		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),    // CameraPos
-		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),	 // TargetPos
-		glm::vec3(0, 1, 0)									 // CameraUp
+		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),
+		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),
+		glm::vec3(0, 1, 0)
 	);
 
 	//Then the Projection and view.
@@ -702,9 +695,9 @@ PrimHitSphere GetRedSphereScreenPos(Hurtbox HBox)
 
 	//Next the view matrix.
 	glm::mat4 viewMatrix = glm::lookAt(
-		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),    // CameraPos
-		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),	 // TargetPos
-		glm::vec3(0, 1, 0)									 // CameraUp
+		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),
+		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),
+		glm::vec3(0, 1, 0)
 	);
 
 	//Then the Projection and view.
@@ -757,9 +750,9 @@ PrimHitCapsule GetHitboxScreenPos(Hitbox HBox)
 
 	//Next the view matrix.
 	glm::mat4 viewMatrix = glm::lookAt(
-		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),    // CameraPos
-		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),	 // TargetPos
-		glm::vec3(0, 1, 0)									 // CameraUp
+		glm::vec3(CameraPos.x, CameraPos.y, CameraPos.z),
+		glm::vec3(TargetPos.x, TargetPos.y, TargetPos.z),
+		glm::vec3(0, 1, 0)
 	);
 
 	//Then the Projection and view.
@@ -793,7 +786,7 @@ PrimHitCapsule GetHitboxScreenPos(Hitbox HBox)
 
 }
 
-// This is meant to update the Hit/Hurtsphere data and is only meant to be called once per game frame somehow.
+//This is meant to update the Hit/Hurtsphere data and is only meant to be called once per game frame somehow.
 void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P1C2Hurtboxes, std::vector<Hurtbox> P1C3Hurtboxes, std::vector<Hurtbox> P2C1Hurtboxes, std::vector<Hurtbox> P2C2Hurtboxes, std::vector<Hurtbox> P2C3Hurtboxes, std::vector<Hurtbox> P1ShotHitSpheres, std::vector<Hitbox> P1ShotHitCapsule, std::vector<Hurtbox> P2ShotHitSpheres, std::vector<Hitbox> P2ShotHitCapsule)
 {
 	int write = WriteBuffer.load();
@@ -1143,8 +1136,6 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	}
 
-
-
 	//========Child Character stuff.
 
 #pragma region Player 1 Child Hurtboxes & Hitboxes
@@ -1396,7 +1387,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	data.Valid = true;
 
-	// Swap buffers
+	//Swaps buffers.
 	int oldWrite = write;
 	int oldRead = ReadBuffer.load();
 	WriteBuffer.store(oldRead);
