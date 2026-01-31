@@ -39,15 +39,17 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 {
 	//Backups up the render state.
 	DWORD alphaBlend, srcBlend, destBlend, fvf, zwriteenable;
-	DWORD alphaOp, alphaArg1, alphaArg2;
+	DWORD alphaOp, alphaArg1, alphaArg2, zenable;
 	//IDirect3DBaseTexture9* oldTexture;
 	//IDirect3DBaseTexture9* oldTexture2;
 
+	//pDevice->GetRenderState(D3DRS_ZENABLE, &zenable);
 	pDevice->GetRenderState(D3DRS_ALPHABLENDENABLE, &alphaBlend);
 	pDevice->GetRenderState(D3DRS_SRCBLEND, &srcBlend);
 	pDevice->GetRenderState(D3DRS_DESTBLEND, &destBlend);
 	pDevice->GetRenderState(D3DRS_ZWRITEENABLE, &zwriteenable);
 	pDevice->GetFVF(&fvf);
+
 	pDevice->GetTexture(0, &oldTexture);
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAOP, &alphaOp);
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAARG1, &alphaArg1);
@@ -80,7 +82,6 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, destBlend);
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, zwriteenable);
-
 
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, alphaOp);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, alphaArg1);
@@ -618,7 +619,7 @@ PrimHitSphere GetHurtBoxScreenPos(Hurtbox HBox)
 
 	PrimHitSphere NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 128, 60, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 128, 255, 0);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
@@ -666,7 +667,7 @@ PrimHitSphere GetBlueHurtBoxScreenPos(Hurtbox HBox)
 
 	PrimHitSphere NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(0, 0, 150, 128, 60, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(0, 0, 150, 128, 255, 0);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
@@ -714,7 +715,7 @@ PrimHitSphere GetRedSphereScreenPos(Hurtbox HBox)
 
 	PrimHitSphere NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 60, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 255, 0);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
@@ -772,7 +773,7 @@ PrimHitCapsule GetHitboxScreenPos(Hitbox HBox)
 
 	PrimHitCapsule NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 60, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 255, 0);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;

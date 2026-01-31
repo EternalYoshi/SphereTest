@@ -493,7 +493,7 @@ void WINAPI HookUpdate()
 						}
 						else
 						{
-							g_hitboxAlpha = g_hitboxAlpha + 0.5;
+							g_hitboxAlpha = g_hitboxAlpha + 0.1;
 						}
 					}
 
@@ -519,7 +519,7 @@ void WINAPI HookUpdate()
 						}
 						else
 						{
-							g_hitboxAlpha = g_hitboxAlpha - 0.5;
+							g_hitboxAlpha = g_hitboxAlpha - 0.1;
 						}
 					}
 
