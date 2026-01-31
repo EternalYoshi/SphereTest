@@ -35,8 +35,19 @@ void ReleaseHitboxRenderTarget()
 	g_renderTargetCreated2 = false;
 }
 
+// Gets the resolution scale and plugs that into the globals.
+void GetGameResolution(LPDIRECT3DDEVICE9 pDevice)
+{	
+	D3DVIEWPORT9 viewport;
+	pDevice->GetViewport(&viewport);
+	GameHeight = viewport.Height;
+	GameWidth = viewport.Width;
+}
+
 void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 {
+	//GetGameResolution(pDevice);
+
 	//Backups up the render state.
 	DWORD alphaBlend, srcBlend, destBlend, fvf, zwriteenable;
 	DWORD alphaOp, alphaArg1, alphaArg2, zenable;
@@ -44,10 +55,11 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	//IDirect3DBaseTexture9* oldTexture2;
 
 	//pDevice->GetRenderState(D3DRS_ZENABLE, &zenable);
+
 	pDevice->GetRenderState(D3DRS_ALPHABLENDENABLE, &alphaBlend);
 	pDevice->GetRenderState(D3DRS_SRCBLEND, &srcBlend);
 	pDevice->GetRenderState(D3DRS_DESTBLEND, &destBlend);
-	pDevice->GetRenderState(D3DRS_ZWRITEENABLE, &zwriteenable);
+	//pDevice->GetRenderState(D3DRS_ZWRITEENABLE, &zwriteenable);
 	pDevice->GetFVF(&fvf);
 
 	pDevice->GetTexture(0, &oldTexture);
@@ -55,11 +67,14 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAARG1, &alphaArg1);
 	pDevice->GetTextureStageState(0, D3DTSS_ALPHAARG2, &alphaArg2);
 
-	//Setting up textured quad with alpha enabled.
+	//Attempt at Setting up textured quad with alpha enabled.
+	pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
+
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+	//pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -81,7 +96,7 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, alphaBlend);
 	pDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, destBlend);
-	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, zwriteenable);
+	//pDevice->SetRenderState(D3DRS_ZWRITEENABLE, zwriteenable);
 
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, alphaOp);
 	pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, alphaArg1);
@@ -96,6 +111,8 @@ void DrawHurtboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 
 void DrawHitboxTexture(LPDIRECT3DDEVICE9 pDevice, float alpha)
 {
+	//GetGameResolution(pDevice);
+
 	//Backups up the render state.
 	DWORD alphaBlend, srcBlend, destBlend, fvf, zwriteenable;
 	DWORD alphaOp, alphaArg1, alphaArg2;
@@ -1403,6 +1420,8 @@ void RenderSpheresFromBuffer(LPDIRECT3DDEVICE9 pDevice)
 		return;
 
 	const SphereDataBuffer& data = FBuffers[read];
+
+	GetGameResolution(pDevice);
 
 	//Renders all hurtboxes.
 	ProcessHurtSpheres(pDevice, 32, data.P1C1ActiveSpheres);

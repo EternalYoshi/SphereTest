@@ -14,8 +14,8 @@
 //extern LPDIRECT3DSURFACE9 g_pCircleSurface;
 //extern LPDIRECT3DSURFACE9 g_pOldRenderTarget;
 
-inline float GameHeight;
-inline float GameWidth;
+inline float GameHeight = 0;
+inline float GameWidth = 0;
 inline int ToggleDisplayKey;
 inline int ToggleOpacityAdd;
 inline int ToggleOpacitySub;

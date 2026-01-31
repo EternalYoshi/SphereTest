@@ -23,7 +23,7 @@ void RenderTheSpheres(LPDIRECT3DDEVICE9 pDevice, std::vector<Hurtbox> P1C1Hurtbo
 //};
 void ProcessHurtSpheres(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitSphere>& ActiveSpheres);
 void ProcessHitCapsules(LPDIRECT3DDEVICE9 pDevice, int resolution, const std::vector<PrimHitCapsule>& ActiveSpheres);
-
+void GetGameResolution(LPDIRECT3DDEVICE9 pDevice);
 struct CUSTOMVERTEX
 {
 	FLOAT x, y, z, rhw;

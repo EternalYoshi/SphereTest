@@ -176,6 +176,8 @@ static bool CheckGame()
 
 long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 {
+	GetGameResolution(pDevice);
+
 	//Attempts to Track rendering threads. For some reason, Marvel 3 has 2 rendering threads.
 	CurrentThreadId = GetCurrentThreadId();
 
@@ -544,8 +546,8 @@ BOOL APIENTRY DllMain(HMODULE hMod, DWORD  dwReason, LPVOID lpReserved)
 			//Setup the ini stuff.
 			CIniReader ini;
 
-			GameHeight = ini.ReadFloat("Settings", "GameHeight", VK_SPACE);
-			GameWidth = ini.ReadFloat("Settings", "GameWidth", VK_SPACE);
+			//GameHeight = ini.ReadFloat("Settings", "GameHeight", VK_SPACE);
+			//GameWidth = ini.ReadFloat("Settings", "GameWidth", VK_SPACE);
 			ToggleDisplayKey = ini.ReadInteger("Settings", "ToggleDisplayKey", VK_SPACE);
 			ToggleOpacityAdd = ini.ReadInteger("Settings", "ToggleOpacityAdd", VK_SPACE);
 			ToggleOpacitySub = ini.ReadInteger("Settings", "ToggleOpacitySub", VK_SPACE);
