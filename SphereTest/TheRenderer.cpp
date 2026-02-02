@@ -636,7 +636,7 @@ PrimHitSphere GetHurtBoxScreenPos(Hurtbox HBox)
 
 	PrimHitSphere NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 128, 255, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(0, 128, 0, 255);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
@@ -684,7 +684,7 @@ PrimHitSphere GetBlueHurtBoxScreenPos(Hurtbox HBox)
 
 	PrimHitSphere NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(0, 0, 150, 128, 255, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(0, 0, 150, 255);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
@@ -732,7 +732,7 @@ PrimHitSphere GetRedSphereScreenPos(Hurtbox HBox)
 
 	PrimHitSphere NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 255, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 255);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
@@ -790,7 +790,7 @@ PrimHitCapsule GetHitboxScreenPos(Hitbox HBox)
 
 	PrimHitCapsule NewBoxR;
 	NewBoxR.Enabled = true;
-	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 128, 255, 0);
+	NewBoxR.Color = D3DCOLOR_RGBA(200, 0, 0, 255);
 	NewBoxR.Radius = screenRadius;
 	NewBoxR.Position.X = result.x;
 	NewBoxR.Position.Y = result.y;
