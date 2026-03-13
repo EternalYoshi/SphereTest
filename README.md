@@ -18,4 +18,4 @@ By default, the hotkeys to toggle the display and change opacity are the Numpad 
 
 Thanks to Gneiss, anotak, HKHaan for finding many of the pointers and locations that made getting to this point possible, and Jason & n3 for help and other misc things.
 
-- Eternal Yoshi
+~ Eternal Yoshi
