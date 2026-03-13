@@ -51,7 +51,6 @@ bool ImGuiInitialized = false;
 
 static int64 timer = GetTickCount64();
 
-
 bool CreateHurtboxRenderTarget(LPDIRECT3DDEVICE9 pDevice)
 {
 	if (g_renderTargetCreated1) return true;
@@ -405,8 +404,9 @@ void OnInitializeHook()
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
 	//Waits a hot moment to ensure the game's own DX9 backend can initiate before we do anything.
-	Sleep(5000);
+	Sleep(3000);
 	//Notifications->Init();
+
 	bool attached = false;
 	do
 	{

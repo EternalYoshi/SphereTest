@@ -1373,7 +1373,11 @@ struct ShotData {
 	bool StopHitboxLoop;
 	float FramesInBetween = 0;
 	float RepCounterThing = 0;
-
+	int WeirdValue = 0;
+	float FramesBeforeStartup = 0;
+	float RemainingActiveFrames = 0;
+	int ATIID = 0;
+	int ATIActiveFrames = 0;
 };
 
 inline std::vector<ShotData> Player1Shots;

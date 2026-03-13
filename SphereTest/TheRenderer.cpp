@@ -1154,7 +1154,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	}
 
-	//========Child Character stuff.
+	//========Child Character stuff. Turns out child characters are in the node tree on a Team basis rather than a character basis.
 
 #pragma region Player 1 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
@@ -1210,74 +1210,6 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	}
 #pragma endregion
-//
-//#pragma region Player 1 Character 2 Child Hurtboxes & Hitboxes
-//	if (Player1CharNodeTree && Player2CharNodeTree)
-//	{
-//		//P1C2ActiveChildData = GetChildCharacterData(P1Character2Data, P1Character2ID, Player1CharNodeTree, P1C2ActiveChildData);
-//		data.P1C2ChildActiveSpheres.clear();
-//		data.P1C2Child1ActiveHitSpheres.clear();
-//
-//		if (sAction && MatchFlag == 0)
-//		{
-//			for (int n = 0; n < P1C2ActiveChildData.size(); n++)
-//			{
-//				//Hope the binary that works for the main characters works for the child chars too.
-//				if (P1C2ActiveChildData[n].ChildCharStateBinary[25] != '1' && P1C2ActiveChildData[n].ChildCharStateBinary[29] != '1'
-//					&& P1C2ActiveChildData[n].CurAnmchrID != 0x85 && P1C2ActiveChildData[n].CurAnmchrID != 0x155 && P1C2ActiveChildData[n].CurAnmchrID != 0x88)
-//				{
-//					for (int i = 0; i < P1C2ActiveChildData[n].ChildActiveSpheres.size(); i++)
-//					{
-//						data.P1C2ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C2ActiveChildData[n].ChildActiveSpheres[i]));
-//					}
-//				}
-//
-//				if (P1C2ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C2ActiveChildData[n].WeirdFloat != 0 && P1C2ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
-//				{
-//					for (int i = 0; i < P1C2ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
-//					{
-//						data.P1C2Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C2ActiveChildData[n].Child1ActiveHitSpheres[i]));
-//					}
-//				}
-//			}
-//		}
-//
-//	}
-//#pragma endregion
-//
-//#pragma region Player 1 Character 3 Child Hurtboxes & Hitboxes
-//	if (Player1CharNodeTree && Player2CharNodeTree)
-//	{
-//		//P1C3ActiveChildData = GetChildCharacterData(P1Character3Data, P1Character3ID, Player1CharNodeTree, P1C3ActiveChildData);
-//		data.P1C3ChildActiveSpheres.clear();
-//		data.P1C3Child1ActiveHitSpheres.clear();
-//
-//		if (sAction && MatchFlag == 0)
-//		{
-//			for (int n = 0; n < P1C3ActiveChildData.size(); n++)
-//			{
-//				//Hope the binary that works for the main characters works for the child chars too.
-//				if (P1C3ActiveChildData[n].ChildCharStateBinary[25] != '1' && P1C3ActiveChildData[n].ChildCharStateBinary[29] != '1'
-//					&& P1C3ActiveChildData[n].CurAnmchrID != 0x85 && P1C3ActiveChildData[n].CurAnmchrID != 0x155 && P1C3ActiveChildData[n].CurAnmchrID != 0x88)
-//				{
-//					for (int i = 0; i < P1C3ActiveChildData[n].ChildActiveSpheres.size(); i++)
-//					{
-//						data.P1C3ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P1C3ActiveChildData[n].ChildActiveSpheres[i]));
-//					}
-//				}
-//
-//				if (P1C3ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C3ActiveChildData[n].WeirdFloat != 0 && P1C3ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
-//				{
-//					for (int i = 0; i < P1C3ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
-//					{
-//						data.P1C3Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P1C3ActiveChildData[n].Child1ActiveHitSpheres[i]));
-//					}
-//				}
-//			}
-//		}
-//
-//	}
-//#pragma endregion
 
 #pragma region Player 2 Child Hurtboxes & Hitboxes
 	if (Player1CharNodeTree && Player2CharNodeTree)
@@ -1333,74 +1265,6 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 
 	}
 #pragma endregion
-
-//#pragma region Player 2 Character 2 Child Hurtboxes & Hitboxes
-//	if (Player1CharNodeTree && Player2CharNodeTree)
-//	{
-//		//P2C2ActiveChildData = GetChildCharacterData(P2Character2Data, P2Character2ID, Player2CharNodeTree, P2C2ActiveChildData);
-//		data.P2C2ChildActiveSpheres.clear();
-//		data.P2C2Child1ActiveHitSpheres.clear();
-//
-//		if (sAction && MatchFlag == 0)
-//		{
-//			for (int n = 0; n < P2C2ActiveChildData.size(); n++)
-//			{
-//				//Hope the binary that works for the main characters works for the child chars too.
-//				if (P2C2ActiveChildData[n].ChildCharStateBinary[25] != '1' && P2C2ActiveChildData[n].ChildCharStateBinary[29] != '1'
-//					&& P2C2ActiveChildData[n].CurAnmchrID != 0x85 && P2C2ActiveChildData[n].CurAnmchrID != 0x155 && P2C2ActiveChildData[n].CurAnmchrID != 0x88)
-//				{
-//					for (int i = 0; i < P2C2ActiveChildData[n].ChildActiveSpheres.size(); i++)
-//					{
-//						data.P2C2ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C2ActiveChildData[n].ChildActiveSpheres[i]));
-//					}
-//				}
-//
-//				if (P2C2ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C2ActiveChildData[n].WeirdFloat != 0 && P2C2ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
-//				{
-//					for (int i = 0; i < P2C2ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
-//					{
-//						data.P2C2Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C2ActiveChildData[n].Child1ActiveHitSpheres[i]));
-//					}
-//				}
-//			}
-//		}
-//
-//	}
-//#pragma endregion
-//
-//#pragma region Player 2 Character 3 Child Hurtboxes & Hitboxes
-//	if (Player1CharNodeTree && Player2CharNodeTree)
-//	{
-//		//P2C3ActiveChildData = GetChildCharacterData(P2Character3Data, P2Character3ID, Player2CharNodeTree, P2C3ActiveChildData);
-//		data.P2C3ChildActiveSpheres.clear();
-//		data.P2C3Child1ActiveHitSpheres.clear();
-//
-//		if (sAction && MatchFlag == 0)
-//		{
-//			for (int n = 0; n < P2C3ActiveChildData.size(); n++)
-//			{
-//				//Hope the binary that works for the main characters works for the child chars too.
-//				if (P2C3ActiveChildData[n].ChildCharStateBinary[25] != '1' && P2C3ActiveChildData[n].ChildCharStateBinary[29] != '1'
-//					&& P2C3ActiveChildData[n].CurAnmchrID != 0x85 && P2C3ActiveChildData[n].CurAnmchrID != 0x155 && P2C3ActiveChildData[n].CurAnmchrID != 0x88)
-//				{
-//					for (int i = 0; i < P2C3ActiveChildData[n].ChildActiveSpheres.size(); i++)
-//					{
-//						data.P2C3ChildActiveSpheres.push_back(GetHurtBoxScreenPos(P2C3ActiveChildData[n].ChildActiveSpheres[i]));
-//					}
-//				}
-//
-//				if (P2C3ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P2C3ActiveChildData[n].WeirdFloat != 0 && P2C3ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
-//				{
-//					for (int i = 0; i < P2C3ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
-//					{
-//						data.P2C3Child1ActiveHitSpheres.push_back(GetHitboxScreenPos(P2C3ActiveChildData[n].Child1ActiveHitSpheres[i]));
-//					}
-//				}
-//			}
-//		}
-//
-//	}
-//#pragma endregion
 
 
 	data.Valid = true;
