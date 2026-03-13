@@ -9,7 +9,7 @@ I was referencing the Vita version's display while making this and had to make o
 # Currently known issues.
 - Shot files have too many moving parts; some shots may display collisions despite not being active at the frames they do.
 - Some of Strider's collisions incorrectly display when they aern't active because he's an anomoly when it comes to character states, and Vajra doesn't display.
-- Some child characters don't display collisions much if at all.
+- Some child characters don't display collisions properly.
 - The displays don't show up properly in captures and streams; you'll have to screenshot or stream your whole screen for best results.
 
 # Installation
