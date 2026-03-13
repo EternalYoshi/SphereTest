@@ -1189,7 +1189,7 @@ void UpdateSphereData(std::vector<Hurtbox> P1C1Hurtboxes, std::vector<Hurtbox> P
 					}
 				}
 
-				if(P1C1ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C1ActiveChildData[n].WeirdFloat != 0 && P1C1ActiveChildData[n].ChildActiveATIChunk.AtiID != -1)
+				if ((P1C1ActiveChildData[n].VTableAddress == 0x140a84800 && P1C1ActiveChildData[n].ChildActiveATIChunk.RemainingActiveFrames != 0 && P1C1ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C1ActiveChildData[n].ChildActiveATIChunk.AtiID != -1) || (P1C1ActiveChildData[n].ChildActiveATIChunk.FramesBeforeActive < 1 && P1C1ActiveChildData[n].WeirdFloat != 0 && P1C1ActiveChildData[n].ChildActiveATIChunk.AtiID != -1))
 				{
 					for (int i = 0; i < P1C1ActiveChildData[n].Child1ActiveHitSpheres.size(); i++)
 					{
