@@ -13,7 +13,7 @@ I was referencing the Vita version's display while making this and had to make o
 - The displays don't show up properly in captures and streams; you'll have to screenshot or stream your whole screen for best results.
 
 # Hotkeys
-- If you want to change the hotkeys, you can open the .ini and change the values inside. They use VK values, and you can find a list here:
+- If you want to change the hotkeys, you can open the .ini and change the values inside. This uses VK values in hex, and you can find a list of VK values for your desired keys here:
 https://cherrytree.at/misc/vk.htm
 
 # Installation
