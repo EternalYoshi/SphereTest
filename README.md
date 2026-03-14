@@ -12,6 +12,10 @@ I was referencing the Vita version's display while making this and had to make o
 - Some child characters don't display collisions properly.
 - The displays don't show up properly in captures and streams; you'll have to screenshot or stream your whole screen for best results.
 
+# Hotkeys
+- If you want to change the hotkeys, you can open the .ini and change the values inside. They use VK values, and you can find a list here:
+https://cherrytree.at/misc/vk.htm
+
 # Installation
 The .asi and .ini included in the releases goes in the same directory as the game exe. You will also need the Ultimate ASI Loader's dinput8.dll, but if you have Clone Engine, Community Edition, or Color Expansion installed, you already have the needed dinput8.dll.
 By default, the hotkeys to toggle the display and change opacity are the Numpad PGDN, Numpad +, and Numpad - keys. You can change these in the ini using VK, or Virtual Key code values.
