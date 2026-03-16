@@ -159,7 +159,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="code\Localizer.h" />
     <ClInclude Include="code\sigscan.h" />
     <ClInclude Include="code\umvc3menu.h" />
     <ClInclude Include="code\umvc3utils.h" />
@@ -456,14 +455,6 @@
     <ClInclude Include="glm\vec4.hpp" />
     <ClInclude Include="glm\vector_relational.hpp" />
     <ClInclude Include="Globals.h" />
-    <ClInclude Include="gui\imgui\imconfig.h" />
-    <ClInclude Include="gui\imgui\imgui.h" />
-    <ClInclude Include="gui\imgui\imgui_impl_dx9.h" />
-    <ClInclude Include="gui\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="gui\imgui\imgui_internal.h" />
-    <ClInclude Include="gui\imgui\imstb_rectpack.h" />
-    <ClInclude Include="gui\imgui\imstb_textedit.h" />
-    <ClInclude Include="gui\imgui\imstb_truetype.h" />
     <ClInclude Include="iniReader.h" />
     <ClInclude Include="kiero\kiero.h" />
     <ClInclude Include="minhook\include\MinHook.h" />
@@ -485,7 +476,6 @@
     <ClInclude Include="utils\Trampoline.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code\Localizer.cpp" />
     <ClCompile Include="code\sigscan.cpp" />
     <ClCompile Include="code\umvc3menu.cpp" />
     <ClCompile Include="code\umvc3utils.cpp" />
@@ -493,13 +483,6 @@
     <ClCompile Include="glm\detail\glm.cpp" />
     <ClCompile Include="glm\glm.cppm" />
     <ClCompile Include="Globals.cpp" />
-    <ClCompile Include="gui\imgui\imgui.cpp" />
-    <ClCompile Include="gui\imgui\imgui_demo.cpp" />
-    <ClCompile Include="gui\imgui\imgui_draw.cpp" />
-    <ClCompile Include="gui\imgui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="gui\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="gui\imgui\imgui_tables.cpp" />
-    <ClCompile Include="gui\imgui\imgui_widgets.cpp" />
     <ClCompile Include="iniReader.cpp" />
     <ClCompile Include="kiero\kiero.cpp" />
     <ClCompile Include="minhook\src\buffer.c" />

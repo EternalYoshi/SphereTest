@@ -17,7 +17,7 @@
 #include <ctime>
 #include "umvc3utils.h"
 #include "..\minhook\include\MinHook.h"
-#include "..\gui\imgui\imgui.h"
+//#include "..\gui\imgui\imgui.h"
 #include "sigscan.h"
 #include "..\TheRenderer.h"
 #include "..\Globals.h"
