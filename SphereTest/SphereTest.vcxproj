@@ -130,7 +130,7 @@
       <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)SphereTest.ini" "$(TargetDir)" /Y /D</Command>
+      <Command>E: &amp;&amp; cd $(TargetDir) &amp;&amp; del SphereTest.asi &amp;&amp; del SphereTest.ini &amp;&amp; rename "$(TargetPath)" "SphereTest.asi" &amp;&amp; xcopy "$(ProjectDir)SphereTest.ini" "$(TargetDir)"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copies the ini to the target directory.</Message>

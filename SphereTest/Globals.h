@@ -17,8 +17,10 @@
 inline float GameHeight = 0;
 inline float GameWidth = 0;
 inline int ToggleDisplayKey;
-inline int ToggleOpacityAdd;
-inline int ToggleOpacitySub;
+inline int ToggleOpacityAddHurtbox;
+inline int ToggleOpacitySubHurtbox;
+inline int ToggleOpacityAddHitbox;
+inline int ToggleOpacitySubHitbox;
 
 inline IDirect3DBaseTexture9* oldTexture;
 inline IDirect3DBaseTexture9* oldTexture2;
@@ -36,5 +38,6 @@ inline LPDIRECT3DSURFACE9 g_pDepthStencilSurface2 = NULL;
 inline bool g_renderTargetCreated2 = false;
 
 inline float g_hitboxAlpha = 1.0f;
+inline float g_hurtboxAlpha = 1.0f;
 
 #endif

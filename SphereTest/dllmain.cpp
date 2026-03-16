@@ -348,7 +348,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 			//if (pOldRenderTarget2) pOldRenderTarget2->Release();
 			//if (pOldDepthStencil2) pOldDepthStencil2->Release();
 
-			DrawHurtboxTexture(pDevice, g_hitboxAlpha);
+			DrawHurtboxTexture(pDevice, g_hurtboxAlpha);
 			DrawHitboxTexture(pDevice, g_hitboxAlpha);
 		}
 
@@ -480,7 +480,7 @@ void WINAPI HookUpdate()
 		if (CheckTheMode() == true)
 		{
 			if (InMatch && sCharacter) {
-				if (GetAsyncKeyState(ToggleOpacityAdd))
+				if (GetAsyncKeyState(ToggleOpacityAddHitbox))
 				{
 					if (GetTickCount64() - timer <= 150)
 					{
@@ -506,7 +506,7 @@ void WINAPI HookUpdate()
 		if (CheckTheMode() == true)
 		{
 			if (InMatch && sCharacter) {
-				if (GetAsyncKeyState(ToggleOpacitySub))
+				if (GetAsyncKeyState(ToggleOpacitySubHitbox))
 				{
 					if (GetTickCount64() - timer <= 150)
 					{
@@ -529,6 +529,57 @@ void WINAPI HookUpdate()
 			}
 		}
 
+		if (CheckTheMode() == true)
+		{
+			if (InMatch && sCharacter) {
+				if (GetAsyncKeyState(ToggleOpacityAddHurtbox))
+				{
+					if (GetTickCount64() - timer <= 150)
+					{
+
+					}
+					else
+					{
+						timer = GetTickCount64();
+						if (g_hurtboxAlpha >= 1.0)
+						{
+							g_hurtboxAlpha = 1.0;
+						}
+						else
+						{
+							g_hurtboxAlpha = g_hurtboxAlpha + 0.1;
+						}
+					}
+
+				}
+			}
+		}
+
+		if (CheckTheMode() == true)
+		{
+			if (InMatch && sCharacter) {
+				if (GetAsyncKeyState(ToggleOpacitySubHurtbox))
+				{
+					if (GetTickCount64() - timer <= 150)
+					{
+
+					}
+					else
+					{
+						timer = GetTickCount64();
+						if (g_hurtboxAlpha <= 0.0)
+						{
+							g_hurtboxAlpha = 0.0;
+						}
+						else
+						{
+							g_hurtboxAlpha = g_hurtboxAlpha - 0.1;
+						}
+					}
+
+				}
+			}
+		}
 
 		Sleep(1);
 	}
@@ -549,8 +600,10 @@ BOOL APIENTRY DllMain(HMODULE hMod, DWORD  dwReason, LPVOID lpReserved)
 			//GameHeight = ini.ReadFloat("Settings", "GameHeight", VK_SPACE);
 			//GameWidth = ini.ReadFloat("Settings", "GameWidth", VK_SPACE);
 			ToggleDisplayKey = ini.ReadInteger("Settings", "ToggleDisplayKey", VK_SPACE);
-			ToggleOpacityAdd = ini.ReadInteger("Settings", "ToggleOpacityAdd", VK_SPACE);
-			ToggleOpacitySub = ini.ReadInteger("Settings", "ToggleOpacitySub", VK_SPACE);
+			ToggleOpacityAddHitbox = ini.ReadInteger("Settings", "ToggleOpacityAddHitbox", VK_SPACE);
+			ToggleOpacitySubHitbox = ini.ReadInteger("Settings", "ToggleOpacitySubHitbox", VK_SPACE);
+			ToggleOpacityAddHurtbox = ini.ReadInteger("Settings", "ToggleOpacityAddHurtbox", VK_SPACE);
+			ToggleOpacitySubHurtbox = ini.ReadInteger("Settings", "ToggleOpacitySubHurtbox", VK_SPACE);
 
 			DisableThreadLibraryCalls(hMod);
 			CreateThread(nullptr, 0, MainThread, hMod, 0, nullptr);
